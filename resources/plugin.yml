@@ -1,0 +1,18 @@
+main: com.solarrabbit.largeraids.LargeRaids
+name: LargeRaids
+version: ${project.version}
+author: SolarRabbit
+api-version: 1.17
+
+commands:
+  lrreload:
+    description: Reloads LargeRaids plugin configurations.
+    permission: largeraids.admin
+  lrstart:
+    description: Start a large raid.
+    permission: largeraids.admin
+
+permissions:
+  largeraids.admin:
+    description: Allow access to GoatHorn commands.
+    default: op

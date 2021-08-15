@@ -1,0 +1,6 @@
+config:
+  invalid-wave-number: Invalid number of waves! The number of wave must be at HIGHER than the default number of waves based on the world's difficulty!
+
+difficulty:
+  ongoing-peaceful: All large raids ended due to difficulty change to peaceful...
+  attempt-peaceful: Attempted to spawn large raid but failed due to world's peaceful difficulty...

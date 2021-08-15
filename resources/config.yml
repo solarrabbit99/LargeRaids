@@ -1,0 +1,15 @@
+############################################################
+# +------------------------------------------------------+ #
+# |                  Main Configurations                 | #
+# +------------------------------------------------------+ #
+############################################################
+
+raid:
+  # The number of waves must be at HIGHER than the default number of waves based on the world's difficulty (which is 3 for EASY, 5 for NORMAL, 7 for HARD).
+  waves: 20
+
+hero-of-the-village:
+  # Level 12 is enough to grant a player a cost of 1 emerald for any default trades.
+  level: 12
+  # In minutes.
+  duration: 40
