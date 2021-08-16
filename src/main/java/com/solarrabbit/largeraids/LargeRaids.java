@@ -25,6 +25,7 @@ import com.solarrabbit.largeraids.command.ReloadPlugin;
 import com.solarrabbit.largeraids.command.StartRaidCommand;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -73,10 +74,27 @@ public final class LargeRaids extends JavaPlugin {
     }
 
     private void testConfig() {
+        int totalWaves = this.getConfig().getInt("raid.waves");
         for (World world : getServer().getWorlds()) {
-            if (this.getConfig().getInt("raid.waves") < LargeRaid.getDefaultWaveNumber(world) + 1) {
+            if (totalWaves < LargeRaid.getDefaultWaveNumber(world) + 1) {
                 this.log(this.messages.getString("config.invalid-wave-number"), Level.FAIL);
-                break;
+                return;
+            }
+        }
+        ConfigurationSection section = this.getConfig().getConfigurationSection("raid.mobs");
+        for (String mob : section.getKeys(false)) {
+            if (section.getIntegerList(mob).size() < totalWaves) {
+                this.log(this.messages.getString("config.invalid-mob-array-length"), Level.FAIL);
+                return;
+            }
+        }
+        for (int i = 0; i < totalWaves; i++) {
+            final int wave = i;
+            int totalRaiders = section.getKeys(false).stream().map(key -> section.getIntegerList(key).get(wave))
+                    .reduce(0, (x, y) -> x + y);
+            if (totalRaiders == 0) {
+                this.log(this.messages.getString("config.zero-raider-wave"), Level.FAIL);
+                return;
             }
         }
     }

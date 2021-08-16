@@ -16,8 +16,10 @@ public class StartRaidCommand implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (sender instanceof Player)
-            new LargeRaid(this.plugin, ((Player) sender).getLocation()).startRaid();
+        if (sender instanceof Player) {
+            Player player = (Player) sender;
+            new LargeRaid(this.plugin, player.getLocation()).startRaid(player);
+        }
         return true;
     }
 }

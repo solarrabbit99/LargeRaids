@@ -1,12 +1,11 @@
 package com.solarrabbit.largeraids;
 
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 import com.solarrabbit.largeraids.PluginLogger.Level;
 import org.bukkit.Raid;
-import org.bukkit.entity.EntityType;
+import org.bukkit.Raid.RaidStatus;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDeathEvent;
@@ -17,8 +16,6 @@ import org.bukkit.event.raid.RaidTriggerEvent;
 import org.bukkit.event.raid.RaidStopEvent.Reason;
 
 public class RaidListener implements Listener {
-    private static final EntityType[] RAIDERTYPES = new EntityType[] { EntityType.PILLAGER, EntityType.VINDICATOR,
-            EntityType.RAVAGER, EntityType.WITCH, EntityType.EVOKER, EntityType.RAVAGER, EntityType.ILLUSIONER };
     public static final Set<LargeRaid> currentRaids = new HashSet<>();
     private LargeRaids plugin;
 
@@ -28,6 +25,10 @@ public class RaidListener implements Listener {
 
     public static void addLargeRaid(LargeRaid raid) {
         currentRaids.add(raid);
+    }
+
+    public static void removeLargeRaid(LargeRaid raid) {
+        currentRaids.remove(raid);
     }
 
     @EventHandler
@@ -45,7 +46,12 @@ public class RaidListener implements Listener {
     public void onFinish(RaidFinishEvent evt) {
         Raid raid = evt.getRaid();
         matchingLargeRaid(raid).ifPresent(largeRaid -> {
-            largeRaid.awardHeroes();
+            RaidStatus status = raid.getStatus();
+            if (status == RaidStatus.VICTORY) {
+                largeRaid.announceVictory();
+            } else if (status == RaidStatus.LOSS) {
+                largeRaid.announceDefeat();
+            }
             currentRaids.remove(largeRaid);
         });
     }
@@ -60,8 +66,7 @@ public class RaidListener implements Listener {
 
     @EventHandler
     public void onRaiderDeath(EntityDeathEvent evt) {
-        EntityType type = evt.getEntityType();
-        if (!Arrays.asList(RAIDERTYPES).contains(type))
+        if (RaiderConfig.valueOf(evt.getEntityType()) == null)
             return;
         for (LargeRaid largeRaid : currentRaids) {
             if (largeRaid.getRemainingRaiders().isEmpty() && !largeRaid.isLastWave()) {

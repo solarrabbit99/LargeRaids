@@ -5,8 +5,24 @@
 ############################################################
 
 raid:
-  # The number of waves must be at HIGHER than the default number of waves based on the world's difficulty (which is 3 for EASY, 5 for NORMAL, 7 for HARD).
+  # The number of waves must be at HIGHER than the default number of waves based on the
+  # world's difficulty (which is 3 for EASY, 5 for NORMAL, 7 for HARD). The length of the
+  # arrays under the `mobs` configuration section below must also be at least the number
+  # of waves. Each wave must have at least one raider.
   waves: 20
+  play-defeat-sound: ENTITY_ENDER_DRAGON_DEATH
+  play-victory-sound: ENTITY_ENDER_DRAGON_DEATH
+  announce-waves:
+    title: true
+    message: false
+  # Do not add any other mobs, they will not spawn...
+  mobs:
+    pillager: [5, 7, 7, 8, 8, 8, 8, 9, 9, 9, 9, 9, 9, 9, 9, 10, 10, 10, 10, 10]
+    vindicator: [0, 3, 5, 5, 5, 5, 5, 6, 7, 7, 7, 8, 8, 8, 9, 9, 9, 10, 10, 10]
+    ravager: [0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3]
+    witch: [0, 0, 0, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3]
+    evoker: [0, 0, 0, 0, 1, 2, 2, 3, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 4, 4]
+    illusioner: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 2, 2, 2, 3, 3, 3]
 
 hero-of-the-village:
   # Level 12 is enough to grant a player a cost of 1 emerald for any default trades.

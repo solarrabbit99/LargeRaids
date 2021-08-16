@@ -18,6 +18,7 @@ import org.bukkit.Sound;
 import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.craftbukkit.v1_17_R1.CraftWorld;
+import org.bukkit.craftbukkit.v1_17_R1.entity.CraftRaider;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Raider;
@@ -28,7 +29,6 @@ import net.minecraft.server.level.ServerLevel;
 
 public class LargeRaid {
     private static final int RADIUS = 96;
-    // private static final double ENCHANTCHANCE = 0.75;
     private final LargeRaids plugin;
     private final int totalWaves;
     private Location centre;
@@ -44,7 +44,7 @@ public class LargeRaid {
         this.pendingHeroes = new HashSet<>();
     }
 
-    public void startRaid() {
+    public void startRaid(Player starter) {
         if (this.centre.getWorld().getDifficulty() == Difficulty.PEACEFUL) {
             this.plugin.log(this.plugin.getMessage("difficulty.attempt-peaceful"), Level.WARN);
             return;
@@ -52,15 +52,19 @@ public class LargeRaid {
         if (getNMSRaid() != null)
             return;
 
-        Iterator<Player> iter = this.getPlayersInRadius().iterator();
-        if (iter.hasNext()) {
-            iter.next().addPotionEffect(new PotionEffect(PotionEffectType.BAD_OMEN, 1, 5));
-            RaidListener.addLargeRaid(this);
-            this.broadcastWave();
-        }
+        starter.addPotionEffect(new PotionEffect(PotionEffectType.BAD_OMEN, 1, 5));
+        RaidListener.addLargeRaid(this);
+        Bukkit.getScheduler().runTaskLater(this.plugin, () -> {
+            if (this.currentRaid == null)
+                RaidListener.removeLargeRaid(this);
+        }, 2);
+
     }
 
     public void setRaid(Raid raid) {
+        if (this.currentWave == 1) {
+            this.broadcastWave();
+        }
         this.currentRaid = raid;
         this.centre = raid.getLocation();
     }
@@ -94,10 +98,26 @@ public class LargeRaid {
     }
 
     public void spawnNextWave() {
+        List<Raider> raiders = this.currentRaid.getRaiders();
+        Location spawnLocation = this.getWaveSpawnLocation();
+        net.minecraft.world.entity.raid.Raid nmsRaid = getNMSRaid();
 
+        for (RaiderConfig raider : RaiderConfig.values()) {
+            raider.spawnWave(this.currentWave, spawnLocation)
+                    .forEach(mob -> nmsRaid.addWaveMob(getVanillaWave(), ((CraftRaider) mob).getHandle(), false));
+        }
+
+        raiders.forEach(raider -> {
+            nmsRaid.removeFromRaid(((CraftRaider) raider).getHandle(), true);
+            raider.remove();
+        });
     }
 
-    public void awardHeroes() {
+    public void announceVictory() {
+        Sound sound = Sound.valueOf(this.plugin.getConfig().getString("raid.play-victory-sound"));
+        if (sound != null)
+            getPlayersInRadius().forEach(player -> player.playSound(player.getLocation(), sound, 100, 1));
+
         currentRaid.getHeroes().forEach(uuid -> pendingHeroes.add(uuid));
         ConfigurationSection conf = this.plugin.getConfig().getConfigurationSection("hero-of-the-village");
         int level = conf.getInt("level");
@@ -105,9 +125,13 @@ public class LargeRaid {
         this.pendingHeroes.forEach(
                 uuid -> Optional.ofNullable(Bukkit.getPlayer(uuid)).filter(Player::isOnline).ifPresent(player -> {
                     player.addPotionEffect(new PotionEffect(PotionEffectType.HERO_OF_THE_VILLAGE, duration, level));
-                    // TODO spawn particles
-                    player.playSound(player.getLocation(), Sound.ENTITY_ENDER_DRAGON_DEATH, 100, 1);
                 }));
+    }
+
+    public void announceDefeat() {
+        Sound sound = Sound.valueOf(this.plugin.getConfig().getString("raid.play-defeat-sound"));
+        if (sound != null)
+            getPlayersInRadius().forEach(player -> player.playSound(player.getLocation(), sound, 100, 1));
     }
 
     public List<Raider> getRemainingRaiders() {
@@ -116,6 +140,16 @@ public class LargeRaid {
 
     public boolean isLastWave() {
         return this.currentWave == this.totalWaves;
+    }
+
+    private int getVanillaWave() {
+        return needTrigger() ? 1
+                : this.currentWave - (this.totalWaves - getDefaultWaveNumber(this.centre.getWorld()) - 1);
+    }
+
+    private Location getWaveSpawnLocation() {
+        List<Raider> list = this.currentRaid.getRaiders();
+        return list.isEmpty() ? null : list.get(0).getLocation();
     }
 
     private Set<Player> getPlayersInRadius() {
@@ -134,8 +168,16 @@ public class LargeRaid {
     }
 
     private void broadcastWave() {
-        this.getPlayersInRadius().forEach(player -> player
-                .sendTitle(ChatColor.GOLD + (isLastWave() ? "Final Wave" : "Wave " + currentWave), null, 10, 70, 20));
+        boolean title = this.plugin.getConfig().getBoolean("raid.announce-waves.title");
+        boolean message = this.plugin.getConfig().getBoolean("raid.announce-waves.message");
+        this.getPlayersInRadius().forEach(player -> {
+            if (title)
+                player.sendTitle(ChatColor.GOLD + (isLastWave() ? "Final Wave" : "Wave " + currentWave), null, 10, 70,
+                        20);
+            if (message)
+                player.sendMessage(
+                        ChatColor.GOLD + "Spawning " + (isLastWave() ? "final wave" : "wave " + currentWave) + "...");
+        });
     }
 
     private boolean needTrigger() {
