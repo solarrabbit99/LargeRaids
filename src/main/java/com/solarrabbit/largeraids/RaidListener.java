@@ -3,7 +3,6 @@ package com.solarrabbit.largeraids;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
-import com.solarrabbit.largeraids.PluginLogger.Level;
 import org.bukkit.Raid;
 import org.bukkit.Raid.RaidStatus;
 import org.bukkit.event.EventHandler;
@@ -13,15 +12,9 @@ import org.bukkit.event.raid.RaidFinishEvent;
 import org.bukkit.event.raid.RaidSpawnWaveEvent;
 import org.bukkit.event.raid.RaidStopEvent;
 import org.bukkit.event.raid.RaidTriggerEvent;
-import org.bukkit.event.raid.RaidStopEvent.Reason;
 
 public class RaidListener implements Listener {
     public static final Set<LargeRaid> currentRaids = new HashSet<>();
-    private LargeRaids plugin;
-
-    public RaidListener(LargeRaids plugin) {
-        this.plugin = plugin;
-    }
 
     public static void addLargeRaid(LargeRaid raid) {
         currentRaids.add(raid);
@@ -52,16 +45,14 @@ public class RaidListener implements Listener {
             } else if (status == RaidStatus.LOSS) {
                 largeRaid.announceDefeat();
             }
-            currentRaids.remove(largeRaid);
         });
     }
 
     @EventHandler
-    public void onPeaceful(RaidStopEvent evt) {
-        if (evt.getReason() == Reason.PEACE) {
-            this.plugin.log(this.plugin.getMessage("difficulty.ongoing-peaceful"), Level.WARN);
-            currentRaids.clear();
-        }
+    public void onRaidStop(RaidStopEvent evt) {
+        matchingLargeRaid(evt.getRaid()).ifPresent(largeRaid -> {
+            currentRaids.remove(largeRaid);
+        });
     }
 
     @EventHandler
@@ -69,7 +60,7 @@ public class RaidListener implements Listener {
         if (RaiderConfig.valueOf(evt.getEntityType()) == null)
             return;
         for (LargeRaid largeRaid : currentRaids) {
-            if (largeRaid.getRemainingRaiders().isEmpty() && !largeRaid.isLastWave()) {
+            if (!largeRaid.isLoading() && largeRaid.getRemainingRaiders().isEmpty() && !largeRaid.isLastWave()) {
                 largeRaid.triggerNextWave();
             }
             break;

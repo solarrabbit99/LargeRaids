@@ -39,7 +39,7 @@ public final class LargeRaids extends JavaPlugin {
         this.saveDefaultConfig();
         this.logger = new PluginLogger();
 
-        this.getServer().getPluginManager().registerEvents(new RaidListener(this), this);
+        this.getServer().getPluginManager().registerEvents(new RaidListener(), this);
         this.getCommand("lrstart").setExecutor(new StartRaidCommand(this));
         this.getCommand("lrreload").setExecutor(new ReloadPlugin(this));
 

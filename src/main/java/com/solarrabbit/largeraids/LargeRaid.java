@@ -35,6 +35,7 @@ public class LargeRaid {
     private Raid currentRaid;
     private int currentWave;
     private Set<UUID> pendingHeroes;
+    private boolean loading;
 
     public LargeRaid(LargeRaids plugin, Location location) {
         this.plugin = plugin;
@@ -67,6 +68,7 @@ public class LargeRaid {
         }
         this.currentRaid = raid;
         this.centre = raid.getLocation();
+        this.loading = true;
     }
 
     public boolean isSimilar(Raid raid) {
@@ -74,6 +76,10 @@ public class LargeRaid {
         BlockPos blkPos = new BlockPos(centre.getX(), centre.getY(), centre.getZ());
         ServerLevel level = ((CraftWorld) centre.getWorld()).getHandle();
         return level.getRaidAt(blkPos) == getNMSRaid();
+    }
+
+    public boolean isLoading() {
+        return this.loading;
     }
 
     public void triggerNextWave() {
@@ -111,6 +117,8 @@ public class LargeRaid {
             nmsRaid.removeFromRaid(((CraftRaider) raider).getHandle(), true);
             raider.remove();
         });
+
+        this.loading = false;
     }
 
     public void announceVictory() {
