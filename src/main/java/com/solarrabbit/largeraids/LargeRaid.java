@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Stream;
 import com.mojang.authlib.GameProfile;
 import com.solarrabbit.largeraids.PluginLogger.Level;
 import org.bukkit.Bukkit;
@@ -120,9 +121,9 @@ public class LargeRaid {
     }
 
     public void announceVictory() {
-        Sound sound = Sound.valueOf(this.plugin.getConfig().getString("raid.play-victory-sound"));
+        Sound sound = getSound(this.plugin.getConfig().getString("raid.play-victory-sound", null));
         if (sound != null)
-            getPlayersInRadius().forEach(player -> player.playSound(player.getLocation(), sound, 100, 1));
+            getPlayersInRadius().forEach(player -> player.playSound(player.getLocation(), sound, 50, 1));
 
         currentRaid.getHeroes().forEach(uuid -> pendingHeroes.add(uuid));
         ConfigurationSection conf = this.plugin.getConfig().getConfigurationSection("hero-of-the-village");
@@ -135,9 +136,9 @@ public class LargeRaid {
     }
 
     public void announceDefeat() {
-        Sound sound = Sound.valueOf(this.plugin.getConfig().getString("raid.play-defeat-sound"));
+        Sound sound = getSound(this.plugin.getConfig().getString("raid.play-defeat-sound", null));
         if (sound != null)
-            getPlayersInRadius().forEach(player -> player.playSound(player.getLocation(), sound, 100, 1));
+            getPlayersInRadius().forEach(player -> player.playSound(player.getLocation(), sound, 50, 1));
     }
 
     public List<Raider> getRemainingRaiders() {
@@ -207,6 +208,10 @@ public class LargeRaid {
                 player.sendMessage(
                         ChatColor.GOLD + "Spawning " + (isLastWave() ? "final wave" : "wave " + currentWave) + "...");
         });
+    }
+
+    private Sound getSound(String name) {
+        return Stream.of(Sound.values()).filter(value -> value.name().equals(name)).findFirst().orElse(null);
     }
 
     private boolean needTrigger() {
