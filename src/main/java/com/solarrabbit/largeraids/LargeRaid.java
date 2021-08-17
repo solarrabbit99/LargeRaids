@@ -3,11 +3,11 @@ package com.solarrabbit.largeraids;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
+import com.mojang.authlib.GameProfile;
 import com.solarrabbit.largeraids.PluginLogger.Level;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -17,6 +17,8 @@ import org.bukkit.Raid;
 import org.bukkit.Sound;
 import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.craftbukkit.v1_17_R1.CraftRaid;
+import org.bukkit.craftbukkit.v1_17_R1.CraftServer;
 import org.bukkit.craftbukkit.v1_17_R1.CraftWorld;
 import org.bukkit.craftbukkit.v1_17_R1.entity.CraftRaider;
 import org.bukkit.entity.Entity;
@@ -25,7 +27,10 @@ import org.bukkit.entity.Raider;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import net.minecraft.core.BlockPos;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.raid.Raids;
+import net.minecraft.world.level.saveddata.SavedData;
 
 public class LargeRaid {
     private static final int RADIUS = 96;
@@ -53,13 +58,9 @@ public class LargeRaid {
         if (getNMSRaid() != null)
             return;
 
-        starter.addPotionEffect(new PotionEffect(PotionEffectType.BAD_OMEN, 1, 5));
-        RaidListener.addLargeRaid(this);
-        Bukkit.getScheduler().runTaskLater(this.plugin, () -> {
-            if (this.currentRaid == null)
-                RaidListener.removeLargeRaid(this);
-        }, 2);
-
+        triggerRaid(this.centre);
+        if (this.currentRaid != null)
+            RaidListener.addLargeRaid(this);
     }
 
     public void setRaid(Raid raid) {
@@ -95,12 +96,9 @@ public class LargeRaid {
         currentRaid.getHeroes().forEach(uuid -> pendingHeroes.add(uuid));
         getNMSRaid().stop();
 
-        Iterator<Player> iter = this.getPlayersInRadius().iterator();
-        if (iter.hasNext()) {
-            iter.next().addPotionEffect(new PotionEffect(PotionEffectType.BAD_OMEN, 1, 5));
-            this.currentWave++;
-            this.broadcastWave();
-        }
+        triggerRaid(this.centre);
+        this.currentWave++;
+        this.broadcastWave();
     }
 
     public void spawnNextWave() {
@@ -173,6 +171,29 @@ public class LargeRaid {
         BlockPos blkPos = new BlockPos(centre.getX(), centre.getY(), centre.getZ());
         ServerLevel level = ((CraftWorld) centre.getWorld()).getHandle();
         return level.getRaidAt(blkPos);
+    }
+
+    private void triggerRaid(Location location) {
+        MinecraftServer nmsServer = ((CraftServer) Bukkit.getServer()).getServer();
+        ServerLevel nmsWorld = ((CraftWorld) location.getWorld()).getHandle();
+        GameProfile profile = new GameProfile(UUID.randomUUID(), "LargeRaids");
+        net.minecraft.server.level.ServerPlayer abstractPlayer = new net.minecraft.server.level.ServerPlayer(nmsServer,
+                nmsWorld, profile);
+        ((net.minecraft.world.entity.Entity) abstractPlayer).setPos(location.getX(), location.getY(), location.getZ());
+
+        Raids raids = nmsWorld.getRaids();
+        try {
+            raids.createOrExtendRaid(abstractPlayer);
+        } catch (NullPointerException e) {
+            // Exception caused by failure to send packets to non-existing npc
+        }
+        ((SavedData) raids).setDirty();
+
+        net.minecraft.world.entity.raid.Raid raid = this.getNMSRaid();
+        if (raid != null) {
+            raid.setBadOmenLevel(5);
+            this.setRaid(new CraftRaid(raid));
+        }
     }
 
     private void broadcastWave() {

@@ -11,23 +11,12 @@ import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.raid.RaidFinishEvent;
 import org.bukkit.event.raid.RaidSpawnWaveEvent;
 import org.bukkit.event.raid.RaidStopEvent;
-import org.bukkit.event.raid.RaidTriggerEvent;
 
 public class RaidListener implements Listener {
     public static final Set<LargeRaid> currentRaids = new HashSet<>();
 
     public static void addLargeRaid(LargeRaid raid) {
         currentRaids.add(raid);
-    }
-
-    public static void removeLargeRaid(LargeRaid raid) {
-        currentRaids.remove(raid);
-    }
-
-    @EventHandler
-    public void onTrigger(RaidTriggerEvent evt) {
-        Raid raid = evt.getRaid();
-        matchingLargeRaid(raid).ifPresent(largeRaid -> largeRaid.setRaid(raid));
     }
 
     @EventHandler
