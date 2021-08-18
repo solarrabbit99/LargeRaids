@@ -104,12 +104,16 @@ public class LargeRaid {
 
     public void spawnNextWave() {
         List<Raider> raiders = this.currentRaid.getRaiders();
-        Location spawnLocation = this.getWaveSpawnLocation();
+        Location loc = this.getWaveSpawnLocation();
         net.minecraft.world.entity.raid.Raid nmsRaid = getNMSRaid();
 
         for (RaiderConfig raider : RaiderConfig.values()) {
-            raider.spawnWave(this.currentWave, spawnLocation)
-                    .forEach(mob -> nmsRaid.addWaveMob(getVanillaWave(), ((CraftRaider) mob).getHandle(), false));
+            for (int i = 0; i < raider.getSpawnNumber(this.currentWave); i++) {
+                net.minecraft.world.entity.raid.Raider mob = raider.getNMSType()
+                        .create(((CraftWorld) centre.getWorld()).getHandle());
+                nmsRaid.joinRaid(getDefaultWaveNumber(this.centre.getWorld()), mob,
+                        new BlockPos(loc.getX(), loc.getY(), loc.getZ()), false);
+            }
         }
 
         raiders.forEach(raider -> {
@@ -147,11 +151,6 @@ public class LargeRaid {
 
     public boolean isLastWave() {
         return this.currentWave == this.totalWaves;
-    }
-
-    private int getVanillaWave() {
-        return needTrigger() ? 1
-                : this.currentWave - (this.totalWaves - getDefaultWaveNumber(this.centre.getWorld()) - 1);
     }
 
     private Location getWaveSpawnLocation() {

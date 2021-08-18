@@ -1,40 +1,37 @@
 package com.solarrabbit.largeraids;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.stream.Stream;
-
-import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Raider;
 import org.bukkit.plugin.java.JavaPlugin;
+import net.minecraft.world.entity.raid.Raider;
 
 public enum RaiderConfig {
-    PILLAGER(EntityType.PILLAGER), VINDICATOR(EntityType.VINDICATOR), RAVAGER(EntityType.RAVAGER),
-    WITCH(EntityType.WITCH), EVOKER(EntityType.EVOKER), ILLUSIONER(EntityType.ILLUSIONER);
+    PILLAGER(EntityType.PILLAGER, net.minecraft.world.entity.EntityType.PILLAGER),
+    VINDICATOR(EntityType.VINDICATOR, net.minecraft.world.entity.EntityType.VINDICATOR),
+    RAVAGER(EntityType.RAVAGER, net.minecraft.world.entity.EntityType.RAVAGER),
+    WITCH(EntityType.WITCH, net.minecraft.world.entity.EntityType.WITCH),
+    EVOKER(EntityType.EVOKER, net.minecraft.world.entity.EntityType.EVOKER),
+    ILLUSIONER(EntityType.ILLUSIONER, net.minecraft.world.entity.EntityType.ILLUSIONER);
 
     private final EntityType type;
+    private final net.minecraft.world.entity.EntityType<? extends Raider> nmsType;
 
-    private RaiderConfig(EntityType type) {
+    private RaiderConfig(EntityType type, net.minecraft.world.entity.EntityType<? extends Raider> nmsType) {
         this.type = type;
-    }
-
-    public List<Raider> spawnWave(int wave, Location location) {
-        int number = getSpawnNumber(wave);
-        List<Raider> result = new ArrayList<>(number);
-        for (int i = 0; i < number; i++) {
-            result.add((Raider) location.getWorld().spawnEntity(location, this.type));
-        }
-        return result;
+        this.nmsType = nmsType;
     }
 
     public static RaiderConfig valueOf(EntityType entity) {
         return Stream.of(values()).filter(value -> value.type == entity).findFirst().orElse(null);
     }
 
-    private int getSpawnNumber(int wave) {
+    public int getSpawnNumber(int wave) {
         return getMobsConfiguration().getIntegerList(this.name().toLowerCase()).get(wave - 1);
+    }
+
+    public net.minecraft.world.entity.EntityType<? extends Raider> getNMSType() {
+        return this.nmsType;
     }
 
     private ConfigurationSection getMobsConfiguration() {
