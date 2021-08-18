@@ -17,6 +17,7 @@ import org.bukkit.Location;
 import org.bukkit.Raid;
 import org.bukkit.Sound;
 import org.bukkit.World;
+import org.bukkit.Raid.RaidStatus;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.craftbukkit.v1_17_R1.CraftRaid;
 import org.bukkit.craftbukkit.v1_17_R1.CraftServer;
@@ -51,7 +52,7 @@ public class LargeRaid {
         this.pendingHeroes = new HashSet<>();
     }
 
-    public void startRaid(Player starter) {
+    public void startRaid() {
         if (this.centre.getWorld().getDifficulty() == Difficulty.PEACEFUL) {
             this.plugin.log(this.plugin.getMessage("difficulty.attempt-peaceful"), Level.WARN);
             return;
@@ -60,14 +61,16 @@ public class LargeRaid {
             return;
 
         triggerRaid(this.centre);
-        if (this.currentRaid != null)
-            RaidListener.addLargeRaid(this);
+
+        Bukkit.getScheduler().runTaskLater(this.plugin, () -> {
+            if (this.currentRaid.getStatus() == RaidStatus.ONGOING) {
+                this.broadcastWave();
+                RaidListener.addLargeRaid(this);
+            }
+        }, 2);
     }
 
     public void setRaid(Raid raid) {
-        if (this.currentWave == 1) {
-            this.broadcastWave();
-        }
         this.currentRaid = raid;
         this.centre = raid.getLocation();
         this.loading = true;
@@ -190,10 +193,8 @@ public class LargeRaid {
         ((SavedData) raids).setDirty();
 
         net.minecraft.world.entity.raid.Raid raid = this.getNMSRaid();
-        if (raid != null) {
-            raid.setBadOmenLevel(5);
-            this.setRaid(new CraftRaid(raid));
-        }
+        raid.setBadOmenLevel(5);
+        this.setRaid(new CraftRaid(raid));
     }
 
     private void broadcastWave() {
