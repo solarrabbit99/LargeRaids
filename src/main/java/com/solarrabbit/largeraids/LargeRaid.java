@@ -65,8 +65,11 @@ public class LargeRaid {
 
         Bukkit.getScheduler().runTaskLater(this.plugin, () -> {
             if (this.currentRaid.getStatus() == RaidStatus.ONGOING) {
-                this.broadcastWave();
                 RaidListener.addLargeRaid(this);
+                this.broadcastWave();
+                Sound sound = getSound(this.plugin.getConfig().getString("raid.sounds.summon", null));
+                if (sound != null)
+                    playSoundToPlayers(sound);
             }
         }, 2);
     }
@@ -123,9 +126,9 @@ public class LargeRaid {
     }
 
     public void announceVictory() {
-        Sound sound = getSound(this.plugin.getConfig().getString("raid.play-victory-sound", null));
+        Sound sound = getSound(this.plugin.getConfig().getString("raid.sounds.victory", null));
         if (sound != null)
-            getPlayersInRadius().forEach(player -> player.playSound(player.getLocation(), sound, 50, 1));
+            playSoundToPlayers(sound);
 
         currentRaid.getHeroes().forEach(uuid -> pendingHeroes.add(uuid));
         ConfigurationSection conf = this.plugin.getConfig().getConfigurationSection("hero-of-the-village");
@@ -138,9 +141,9 @@ public class LargeRaid {
     }
 
     public void announceDefeat() {
-        Sound sound = getSound(this.plugin.getConfig().getString("raid.play-defeat-sound", null));
+        Sound sound = getSound(this.plugin.getConfig().getString("raid.sounds.defeat", null));
         if (sound != null)
-            getPlayersInRadius().forEach(player -> player.playSound(player.getLocation(), sound, 50, 1));
+            playSoundToPlayers(sound);
     }
 
     public List<Raider> getRemainingRaiders() {
@@ -155,6 +158,10 @@ public class LargeRaid {
         this.currentRaid = raid;
         this.centre = raid.getLocation();
         this.loading = true;
+    }
+
+    private void playSoundToPlayers(Sound sound) {
+        getPlayersInRadius().forEach(player -> player.playSound(player.getLocation(), sound, 50, 1));
     }
 
     private Location getWaveSpawnLocation() {

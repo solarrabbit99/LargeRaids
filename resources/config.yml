@@ -11,8 +11,10 @@ raid:
   # of waves. Each wave must have at least one raider.
   waves: 20
   # To disable sounds, leave the sound fields blank.
-  play-defeat-sound: ENTITY_ENDER_DRAGON_DEATH
-  play-victory-sound: ENTITY_ENDER_DRAGON_DEATH
+  sounds:
+    summon: ITEM_TRIDENT_THUNDER
+    victory: ENTITY_ENDER_DRAGON_DEATH
+    defeat: ENTITY_ENDER_DRAGON_DEATH
   announce-waves:
     title: true
     message: false
