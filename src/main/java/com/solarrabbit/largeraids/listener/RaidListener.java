@@ -36,6 +36,7 @@ public class RaidListener implements Listener {
             } else if (status == RaidStatus.LOSS) {
                 largeRaid.announceDefeat();
             }
+            currentRaids.remove(largeRaid);
         });
     }
 

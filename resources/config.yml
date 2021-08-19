@@ -30,3 +30,17 @@ hero-of-the-village:
   level: 12
   # In minutes.
   duration: 40
+
+############################################################
+# +------------------------------------------------------+ #
+# |                   Trigger Mechanism                  | #
+# +------------------------------------------------------+ #
+#  We present the following triggering mechanisms. It's    #
+#  adviced that you only enable one of them at any point   #
+#  in time although they should technically work with      #
+#  each other.                                             #
+############################################################
+
+trigger:
+  drop-totem-in-lava:
+    enabled: true

@@ -23,12 +23,15 @@ import java.io.InputStreamReader;
 import com.solarrabbit.largeraids.PluginLogger.Level;
 import com.solarrabbit.largeraids.command.ReloadPlugin;
 import com.solarrabbit.largeraids.command.StartRaidCommand;
+import com.solarrabbit.largeraids.listener.DropTotemTriggerListener;
 import com.solarrabbit.largeraids.listener.RaidListener;
 import org.bukkit.Bukkit;
+import org.bukkit.NamespacedKey;
 import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public final class LargeRaids extends JavaPlugin {
@@ -46,6 +49,7 @@ public final class LargeRaids extends JavaPlugin {
 
         this.loadMessages();
         this.testConfig();
+        this.registerTriggers();
     }
 
     public void log(String message, Level level) {
@@ -54,6 +58,10 @@ public final class LargeRaids extends JavaPlugin {
             this.logger.sendMessage("Disabling plugin...", level);
             Bukkit.getPluginManager().disablePlugin(this);
         }
+    }
+
+    public NamespacedKey getNamespacedKey(String key) {
+        return new NamespacedKey(this, key);
     }
 
     public void reload() {
@@ -98,6 +106,16 @@ public final class LargeRaids extends JavaPlugin {
                 return;
             }
         }
+    }
+
+    private void registerTriggers() {
+        PluginManager manager = this.getServer().getPluginManager();
+        if (testTrigger("drop-totem-in-lava"))
+            manager.registerEvents(new DropTotemTriggerListener(), this);
+    }
+
+    private boolean testTrigger(String trigger) {
+        return getConfig().getBoolean("trigger." + trigger + ".enabled");
     }
 
 }
