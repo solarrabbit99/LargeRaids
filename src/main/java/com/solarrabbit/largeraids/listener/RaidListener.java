@@ -5,6 +5,7 @@ import java.util.Optional;
 import java.util.Set;
 import com.solarrabbit.largeraids.LargeRaid;
 import com.solarrabbit.largeraids.RaiderConfig;
+import org.bukkit.Location;
 import org.bukkit.Raid;
 import org.bukkit.Raid.RaidStatus;
 import org.bukkit.event.EventHandler;
@@ -15,10 +16,14 @@ import org.bukkit.event.raid.RaidSpawnWaveEvent;
 import org.bukkit.event.raid.RaidStopEvent;
 
 public class RaidListener implements Listener {
-    public static final Set<LargeRaid> currentRaids = new HashSet<>();
+    private static final Set<LargeRaid> currentRaids = new HashSet<>();
 
     public static void addLargeRaid(LargeRaid raid) {
         currentRaids.add(raid);
+    }
+
+    public static void removeLargeRaid(LargeRaid raid) {
+        currentRaids.remove(raid);
     }
 
     @EventHandler
@@ -57,6 +62,10 @@ public class RaidListener implements Listener {
             }
             break;
         }
+    }
+
+    public static Optional<LargeRaid> matchingLargeRaid(Location location) {
+        return currentRaids.stream().filter(largeRaid -> largeRaid.isSimilar(location)).findFirst();
     }
 
     private Optional<LargeRaid> matchingLargeRaid(Raid raid) {

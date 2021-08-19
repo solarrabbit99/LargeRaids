@@ -74,10 +74,18 @@ public class LargeRaid {
         }, 2);
     }
 
+    public void stopRaid() {
+        this.getNMSRaid().stop();
+        RaidListener.removeLargeRaid(this);
+    }
+
     public boolean isSimilar(Raid raid) {
-        Location centre = raid.getLocation();
-        BlockPos blkPos = new BlockPos(centre.getX(), centre.getY(), centre.getZ());
-        ServerLevel level = ((CraftWorld) centre.getWorld()).getHandle();
+        return isSimilar(raid.getLocation());
+    }
+
+    public boolean isSimilar(Location location) {
+        BlockPos blkPos = new BlockPos(location.getX(), location.getY(), location.getZ());
+        ServerLevel level = ((CraftWorld) location.getWorld()).getHandle();
         return level.getRaidAt(blkPos) == getNMSRaid();
     }
 

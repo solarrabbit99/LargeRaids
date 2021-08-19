@@ -23,6 +23,7 @@ import java.io.InputStreamReader;
 import com.solarrabbit.largeraids.PluginLogger.Level;
 import com.solarrabbit.largeraids.command.ReloadPlugin;
 import com.solarrabbit.largeraids.command.StartRaidCommand;
+import com.solarrabbit.largeraids.command.StopRaidCommand;
 import com.solarrabbit.largeraids.listener.DropTotemTriggerListener;
 import com.solarrabbit.largeraids.listener.RaidListener;
 import org.bukkit.Bukkit;
@@ -45,6 +46,7 @@ public final class LargeRaids extends JavaPlugin {
 
         this.getServer().getPluginManager().registerEvents(new RaidListener(), this);
         this.getCommand("lrstart").setExecutor(new StartRaidCommand(this));
+        this.getCommand("lrstop").setExecutor(new StopRaidCommand());
         this.getCommand("lrreload").setExecutor(new ReloadPlugin(this));
 
         this.loadMessages();

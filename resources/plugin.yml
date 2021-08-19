@@ -11,6 +11,9 @@ commands:
   lrstart:
     description: Start a large raid.
     permission: largeraids.admin
+  lrstop:
+    description: Stop a large raid.
+    permission: largeraids.admin
 
 permissions:
   largeraids.admin:
