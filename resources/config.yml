@@ -44,5 +44,9 @@ hero-of-the-village:
 ############################################################
 
 trigger:
+  # Dropping totems of undying in lava will trigger a large raid if in vacinity of a
+  # village.
   drop-totem-in-lava:
     enabled: true
+    # Instead of totems, you can use other items for summoning (e.g NETHER_STAR)
+    substitute-item:

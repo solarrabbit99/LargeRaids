@@ -16,7 +16,7 @@ public class DropTotemTriggerListener extends TriggerListener {
     @EventHandler
     public void onDropTotem(PlayerDropItemEvent evt) {
         Item entity = evt.getItemDrop();
-        if (entity.getItemStack().getType() != Material.TOTEM_OF_UNDYING)
+        if (entity.getItemStack().getType() != getSummoningMaterial())
             return;
 
         PersistentDataContainer pdc = entity.getPersistentDataContainer();
@@ -34,6 +34,12 @@ public class DropTotemTriggerListener extends TriggerListener {
             entity.remove();
             this.triggerRaid(entity.getLocation());
         }
+    }
+
+    private Material getSummoningMaterial() {
+        String name = this.getPlugin().getConfig().getString("trigger.drop-totem-in-lava.substitute-item", "");
+        Material result = Material.matchMaterial(name);
+        return result == null ? Material.TOTEM_OF_UNDYING : result;
     }
 
     private NamespacedKey getNamespacedKey() {
