@@ -10,6 +10,7 @@ import java.util.UUID;
 import java.util.stream.Stream;
 import com.mojang.authlib.GameProfile;
 import com.solarrabbit.largeraids.PluginLogger.Level;
+import com.solarrabbit.largeraids.listener.RaidListener;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Difficulty;
@@ -68,12 +69,6 @@ public class LargeRaid {
                 RaidListener.addLargeRaid(this);
             }
         }, 2);
-    }
-
-    public void setRaid(Raid raid) {
-        this.currentRaid = raid;
-        this.centre = raid.getLocation();
-        this.loading = true;
     }
 
     public boolean isSimilar(Raid raid) {
@@ -154,6 +149,12 @@ public class LargeRaid {
 
     public boolean isLastWave() {
         return this.currentWave == this.totalWaves;
+    }
+
+    private void setRaid(Raid raid) {
+        this.currentRaid = raid;
+        this.centre = raid.getLocation();
+        this.loading = true;
     }
 
     private Location getWaveSpawnLocation() {

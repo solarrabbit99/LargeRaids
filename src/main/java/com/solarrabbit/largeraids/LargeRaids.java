@@ -23,6 +23,7 @@ import java.io.InputStreamReader;
 import com.solarrabbit.largeraids.PluginLogger.Level;
 import com.solarrabbit.largeraids.command.ReloadPlugin;
 import com.solarrabbit.largeraids.command.StartRaidCommand;
+import com.solarrabbit.largeraids.listener.RaidListener;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;

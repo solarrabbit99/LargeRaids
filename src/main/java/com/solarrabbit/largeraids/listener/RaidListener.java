@@ -1,8 +1,10 @@
-package com.solarrabbit.largeraids;
+package com.solarrabbit.largeraids.listener;
 
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
+import com.solarrabbit.largeraids.LargeRaid;
+import com.solarrabbit.largeraids.RaiderConfig;
 import org.bukkit.Raid;
 import org.bukkit.Raid.RaidStatus;
 import org.bukkit.event.EventHandler;
