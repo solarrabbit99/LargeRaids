@@ -38,13 +38,13 @@ hero-of-the-village:
 # |                   Trigger Mechanism                  | #
 # +------------------------------------------------------+ #
 #  We present the following triggering mechanisms. It's    #
-#  adviced that you only enable one of them at any point   #
+#  advised that you only enable one of them at any point   #
 #  in time although they should technically work with      #
 #  each other.                                             #
 ############################################################
 
 trigger:
-  # Dropping totems of undying in lava will trigger a large raid if in vacinity of a
+  # Dropping totems of undying in lava will trigger a large raid if in vicinity of a
   # village.
   drop-totem-in-lava:
     enabled: true
