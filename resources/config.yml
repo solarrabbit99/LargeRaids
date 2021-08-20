@@ -44,9 +44,21 @@ hero-of-the-village:
 ############################################################
 
 trigger:
-  # Dropping totems of undying in lava will trigger a large raid if in vicinity of a
+  # Dropping summoning items in lava will trigger a large raid if in vicinity of a
   # village.
-  drop-totem-in-lava:
+  drop-item-in-lava:
     enabled: true
-    # Instead of totems, you can use other items for summoning (e.g NETHER_STAR)
-    substitute-item:
+    # Note: The summoning item stated here will not lose its primary functionality. For
+    # example, totems will still be consumed and revive the player holding it.
+    item:
+      # Totem by default if the input material is invalid/left blank. Instead of totems,
+      # you can use rarer items for summoning (e.g NETHER_STAR).
+      material: TOTEM_OF_UNDYING
+      display-name: "&6Large Raid Summoner"
+      lore:
+        - "&5Drop the item into lava in a village"
+        - "&5to summon a large raid!"
+      custom-model-data:
+      # Avoid using armor/tools for material if this is enabled. It applies mending to
+      # the item for the glint.
+      enchantment-glint: true

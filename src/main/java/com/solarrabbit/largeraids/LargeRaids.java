@@ -21,10 +21,11 @@ package com.solarrabbit.largeraids;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import com.solarrabbit.largeraids.PluginLogger.Level;
+import com.solarrabbit.largeraids.command.GiveSummonItemCommand;
 import com.solarrabbit.largeraids.command.ReloadPlugin;
 import com.solarrabbit.largeraids.command.StartRaidCommand;
 import com.solarrabbit.largeraids.command.StopRaidCommand;
-import com.solarrabbit.largeraids.listener.DropTotemTriggerListener;
+import com.solarrabbit.largeraids.listener.DropInLavaTriggerListener;
 import com.solarrabbit.largeraids.listener.RaidListener;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
@@ -47,6 +48,7 @@ public final class LargeRaids extends JavaPlugin {
         this.getServer().getPluginManager().registerEvents(new RaidListener(), this);
         this.getCommand("lrstart").setExecutor(new StartRaidCommand(this));
         this.getCommand("lrstop").setExecutor(new StopRaidCommand());
+        this.getCommand("lrgive").setExecutor(new GiveSummonItemCommand());
         this.getCommand("lrreload").setExecutor(new ReloadPlugin(this));
 
         this.loadMessages();
@@ -69,6 +71,7 @@ public final class LargeRaids extends JavaPlugin {
     public void reload() {
         this.reloadConfig();
         this.testConfig();
+        this.registerTriggers();
     }
 
     public String getMessage(String node) {
@@ -112,8 +115,8 @@ public final class LargeRaids extends JavaPlugin {
 
     private void registerTriggers() {
         PluginManager manager = this.getServer().getPluginManager();
-        if (testTrigger("drop-totem-in-lava"))
-            manager.registerEvents(new DropTotemTriggerListener(), this);
+        if (testTrigger("drop-item-in-lava"))
+            manager.registerEvents(new DropInLavaTriggerListener(), this);
     }
 
     private boolean testTrigger(String trigger) {

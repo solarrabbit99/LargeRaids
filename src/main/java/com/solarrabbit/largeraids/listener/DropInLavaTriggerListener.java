@@ -1,6 +1,6 @@
 package com.solarrabbit.largeraids.listener;
 
-import org.bukkit.Material;
+import com.solarrabbit.largeraids.item.SummonItem;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Item;
@@ -11,12 +11,12 @@ import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 
-public class DropTotemTriggerListener extends TriggerListener {
+public class DropInLavaTriggerListener extends TriggerListener {
 
     @EventHandler
     public void onDropTotem(PlayerDropItemEvent evt) {
         Item entity = evt.getItemDrop();
-        if (entity.getItemStack().getType() != getSummoningMaterial())
+        if (!SummonItem.isSummonItem(entity.getItemStack()))
             return;
 
         PersistentDataContainer pdc = entity.getPersistentDataContainer();
@@ -24,7 +24,7 @@ public class DropTotemTriggerListener extends TriggerListener {
     }
 
     @EventHandler
-    public void onTotemBurnInLava(EntityDamageEvent evt) {
+    public void onItemBurnInLava(EntityDamageEvent evt) {
         if (evt.getEntityType() != EntityType.DROPPED_ITEM)
             return;
         Item entity = (Item) evt.getEntity();
@@ -36,14 +36,8 @@ public class DropTotemTriggerListener extends TriggerListener {
         }
     }
 
-    private Material getSummoningMaterial() {
-        String name = this.getPlugin().getConfig().getString("trigger.drop-totem-in-lava.substitute-item", "");
-        Material result = Material.matchMaterial(name);
-        return result == null ? Material.TOTEM_OF_UNDYING : result;
-    }
-
     private NamespacedKey getNamespacedKey() {
-        return this.getPlugin().getNamespacedKey("voodoo_doll");
+        return this.getPlugin().getNamespacedKey("dropped-summon-item");
     }
 
 }
