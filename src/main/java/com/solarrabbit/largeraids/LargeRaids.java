@@ -33,6 +33,8 @@ import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -114,6 +116,9 @@ public final class LargeRaids extends JavaPlugin {
     }
 
     private void registerTriggers() {
+        PlayerDropItemEvent.getHandlerList().unregister(this);
+        EntityDamageEvent.getHandlerList().unregister(this);
+
         PluginManager manager = this.getServer().getPluginManager();
         if (testTrigger("drop-item-in-lava"))
             manager.registerEvents(new DropInLavaTriggerListener(), this);

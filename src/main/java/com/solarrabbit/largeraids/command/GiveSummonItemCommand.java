@@ -43,7 +43,8 @@ public class GiveSummonItemCommand implements CommandExecutor {
             inventory.addItem(new SummonItem())
                     .forEach((index, item) -> receiver.getWorld().dropItem(receiver.getLocation(), item));
         }
-        requester.sendMessage(ChatColor.GREEN + "Gave " + receiver.getName() + " " + requestAmount + " summoning item");
+        requester.sendMessage(ChatColor.GREEN + "Gave " + receiver.getName() + " " + requestAmount + " summoning "
+                + (requestAmount == 1 ? "item" : "items"));
     }
 
     private int getPositiveInteger(String str) {
