@@ -56,8 +56,8 @@ trigger:
       material: TOTEM_OF_UNDYING
       display-name: "&6Large Raid Summoner"
       lore:
-        - "&5Drop the item into lava in a village"
-        - "&5to summon a large raid!"
+        # - "&5Drop the item into lava in a village"
+        # - "&5to summon a large raid!"
       custom-model-data:
       # Avoid using armor/tools for material if this is enabled. It applies mending to
       # the item for the glint.

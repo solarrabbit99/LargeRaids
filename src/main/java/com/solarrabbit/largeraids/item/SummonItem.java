@@ -20,11 +20,12 @@ public class SummonItem extends ItemStack {
     public SummonItem() {
         super(Material.TOTEM_OF_UNDYING);
         ConfigurationSection conf = getPlugin().getConfig().getConfigurationSection("trigger.drop-item-in-lava.item");
-        Optional.ofNullable(conf.getString("material")).map(name -> Material.matchMaterial(name))
+        Optional.ofNullable(conf.getString("material", null)).map(name -> Material.matchMaterial(name))
                 .ifPresent(material -> this.setType(material));
 
         ItemMeta meta = this.getItemMeta();
-        Optional.ofNullable(conf.getString("display-name")).ifPresent(name -> meta.setDisplayName(formatColor(name)));
+        Optional.ofNullable(conf.getString("display-name", null))
+                .ifPresent(name -> meta.setDisplayName(formatColor(name)));
         List<String> lore = conf.getStringList("lore");
         lore.replaceAll(str -> formatColor(str));
         meta.setLore(lore);
