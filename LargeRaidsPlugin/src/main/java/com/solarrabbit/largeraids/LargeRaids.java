@@ -48,7 +48,7 @@ public final class LargeRaids extends JavaPlugin {
         this.logger = new PluginLogger();
 
         this.getServer().getPluginManager().registerEvents(new RaidListener(), this);
-        this.getCommand("lrstart").setExecutor(new StartRaidCommand(this));
+        this.getCommand("lrstart").setExecutor(new StartRaidCommand());
         this.getCommand("lrstop").setExecutor(new StopRaidCommand());
         this.getCommand("lrgive").setExecutor(new GiveSummonItemCommand());
         this.getCommand("lrreload").setExecutor(new ReloadPlugin(this));
@@ -92,7 +92,7 @@ public final class LargeRaids extends JavaPlugin {
     private void testConfig() {
         int totalWaves = this.getConfig().getInt("raid.waves");
         for (World world : getServer().getWorlds()) {
-            if (totalWaves < LargeRaid.getDefaultWaveNumber(world) + 1) {
+            if (totalWaves < AbstractLargeRaid.getDefaultWaveNumber(world) + 1) {
                 this.log(this.messages.getString("config.invalid-wave-number"), Level.FAIL);
                 return;
             }

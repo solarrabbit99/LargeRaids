@@ -1,4 +1,4 @@
-package com.solarrabbit.largeraids;
+package com.solarrabbit.largeraids.v1_17;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -9,6 +9,8 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Stream;
 import com.mojang.authlib.GameProfile;
+import com.solarrabbit.largeraids.AbstractLargeRaid;
+import com.solarrabbit.largeraids.LargeRaids;
 import com.solarrabbit.largeraids.PluginLogger.Level;
 import com.solarrabbit.largeraids.listener.RaidListener;
 import org.bukkit.Bukkit;
@@ -35,7 +37,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.raid.Raids;
 import net.minecraft.world.level.saveddata.SavedData;
 
-public class LargeRaid {
+public class LargeRaid implements AbstractLargeRaid {
     private static final int RADIUS = 96;
     private final LargeRaids plugin;
     private final int totalWaves;

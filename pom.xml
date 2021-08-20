@@ -3,38 +3,17 @@
 	<groupId>solarrabbit</groupId>
 	<artifactId>LargeRaids</artifactId>
 	<version>Beta-1.2</version>
+	<packaging>pom</packaging>
+	<modules>
+		<module>LargeRaidsPlugin</module>
+		<module>API</module>
+		<module>1_17</module>
+	</modules>
 	<properties>
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<maven.compiler.target>1.8</maven.compiler.target>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
-	<repositories>
-		<repository>
-			<id>spigot-repo</id>
-			<url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
-		</repository>
-	</repositories>
-	<dependencies>
-		<dependency>
-			<groupId>org.spigotmc</groupId>
-			<artifactId>spigot</artifactId>
-			<version>1.17.1-R0.1-SNAPSHOT</version>
-			<classifier>remapped-mojang</classifier>
-			<scope>provided</scope>
-		</dependency>
-	</dependencies>
-	<build>
-		<finalName>${project.name}</finalName>
-		<resources>
-			<resource>
-				<directory>${project.basedir}/resources</directory>
-				<filtering>true</filtering>
-				<includes>
-					<include>**/*.yml</include>
-				</includes>
-			</resource>
-		</resources>
-	</build>
 	<profiles>
 		<profile>
 			<id>conf</id>
@@ -45,8 +24,34 @@
 						<artifactId>maven-jar-plugin</artifactId>
 						<version>2.4</version>
 						<configuration>
-							<outputDirectory>${project.basedir}/../../test_servers</outputDirectory>
+							<outputDirectory>${project.basedir}/../../../test_servers</outputDirectory>
 						</configuration>
+					</plugin>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-shade-plugin</artifactId>
+						<version>3.1.0</version>
+						<executions>
+							<execution>
+								<phase>package</phase>
+								<goals>
+									<goal>shade</goal>
+								</goals>
+								<configuration>
+									<filters>
+										<filter>
+											<!-- still have to figure this out -->
+											<artifact>solarrabbit:API:**</artifact>
+											<excludes>
+												<exclude>com/solarrabbit/largeraids/LargeRaids</exclude>
+												<exclude>com/solarrabbit/largeraids/PluginLogger</exclude>
+											</excludes>
+										</filter>
+									</filters>
+									<createDependencyReducedPom>false</createDependencyReducedPom>
+								</configuration>
+							</execution>
+						</executions>
 					</plugin>
 				</plugins>
 			</build>

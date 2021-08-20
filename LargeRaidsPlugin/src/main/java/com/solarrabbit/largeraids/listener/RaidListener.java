@@ -3,8 +3,8 @@ package com.solarrabbit.largeraids.listener;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
-import com.solarrabbit.largeraids.LargeRaid;
-import com.solarrabbit.largeraids.RaiderConfig;
+import com.solarrabbit.largeraids.AbstractLargeRaid;
+import com.solarrabbit.largeraids.VersionUtil;
 import org.bukkit.Location;
 import org.bukkit.Raid;
 import org.bukkit.Raid.RaidStatus;
@@ -16,13 +16,13 @@ import org.bukkit.event.raid.RaidSpawnWaveEvent;
 import org.bukkit.event.raid.RaidStopEvent;
 
 public class RaidListener implements Listener {
-    private static final Set<LargeRaid> currentRaids = new HashSet<>();
+    private static final Set<AbstractLargeRaid> currentRaids = new HashSet<>();
 
-    public static void addLargeRaid(LargeRaid raid) {
+    public static void addLargeRaid(AbstractLargeRaid raid) {
         currentRaids.add(raid);
     }
 
-    public static void removeLargeRaid(LargeRaid raid) {
+    public static void removeLargeRaid(AbstractLargeRaid raid) {
         currentRaids.remove(raid);
     }
 
@@ -54,9 +54,9 @@ public class RaidListener implements Listener {
 
     @EventHandler
     public void onRaiderDeath(EntityDeathEvent evt) {
-        if (RaiderConfig.valueOf(evt.getEntityType()) == null)
+        if (VersionUtil.getRaiderConfig(evt.getEntityType()) == null)
             return;
-        for (LargeRaid largeRaid : currentRaids) {
+        for (AbstractLargeRaid largeRaid : currentRaids) {
             if (!largeRaid.isLoading() && largeRaid.getRemainingRaiders().isEmpty() && !largeRaid.isLastWave()) {
                 largeRaid.triggerNextWave();
             }
@@ -64,11 +64,11 @@ public class RaidListener implements Listener {
         }
     }
 
-    public static Optional<LargeRaid> matchingLargeRaid(Location location) {
+    public static Optional<AbstractLargeRaid> matchingLargeRaid(Location location) {
         return currentRaids.stream().filter(largeRaid -> largeRaid.isSimilar(location)).findFirst();
     }
 
-    private Optional<LargeRaid> matchingLargeRaid(Raid raid) {
+    private Optional<AbstractLargeRaid> matchingLargeRaid(Raid raid) {
         return currentRaids.stream().filter(largeRaid -> largeRaid.isSimilar(raid)).findFirst();
     }
 }

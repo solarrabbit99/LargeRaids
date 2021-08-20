@@ -1,7 +1,7 @@
 package com.solarrabbit.largeraids.listener;
 
-import com.solarrabbit.largeraids.LargeRaid;
 import com.solarrabbit.largeraids.LargeRaids;
+import com.solarrabbit.largeraids.VersionUtil;
 import org.bukkit.Location;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -9,7 +9,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 public abstract class TriggerListener implements Listener {
 
     protected void triggerRaid(Location loc) {
-        new LargeRaid(this.getPlugin(), loc).startRaid();
+        VersionUtil.createLargeRaid(loc).startRaid();
     }
 
     protected LargeRaids getPlugin() {
