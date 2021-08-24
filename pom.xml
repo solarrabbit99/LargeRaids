@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>solarrabbit</groupId>
 	<artifactId>LargeRaids</artifactId>
-	<version>Beta-1.2</version>
+	<version>${revision}</version>
 	<packaging>pom</packaging>
 	<modules>
 		<module>LargeRaidsPlugin</module>
@@ -12,9 +12,11 @@
 		<module>1_15</module>
 		<module>1_14</module>
 	</modules>
+
 	<properties>
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<maven.compiler.target>1.8</maven.compiler.target>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<revision>Beta-1.3</revision>
 	</properties>
 </project>

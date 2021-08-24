@@ -3,7 +3,7 @@
 	<parent>
 		<groupId>solarrabbit</groupId>
 		<artifactId>LargeRaids</artifactId>
-		<version>Beta-1.2</version>
+		<version>${revision}</version>
 	</parent>
 	<artifactId>API</artifactId>
 
