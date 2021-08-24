@@ -8,53 +8,13 @@
 		<module>LargeRaidsPlugin</module>
 		<module>API</module>
 		<module>1_17</module>
+		<module>1_16</module>
+		<module>1_15</module>
+		<module>1_14</module>
 	</modules>
 	<properties>
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<maven.compiler.target>1.8</maven.compiler.target>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
-	<profiles>
-		<profile>
-			<id>conf</id>
-			<build>
-				<plugins>
-					<plugin>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-jar-plugin</artifactId>
-						<version>2.4</version>
-						<configuration>
-							<outputDirectory>${project.basedir}/../../../test_servers</outputDirectory>
-						</configuration>
-					</plugin>
-					<plugin>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-shade-plugin</artifactId>
-						<version>3.1.0</version>
-						<executions>
-							<execution>
-								<phase>package</phase>
-								<goals>
-									<goal>shade</goal>
-								</goals>
-								<configuration>
-									<filters>
-										<filter>
-											<!-- still have to figure this out -->
-											<artifact>solarrabbit:API:**</artifact>
-											<excludes>
-												<exclude>com/solarrabbit/largeraids/LargeRaids</exclude>
-												<exclude>com/solarrabbit/largeraids/PluginLogger</exclude>
-											</excludes>
-										</filter>
-									</filters>
-									<createDependencyReducedPom>false</createDependencyReducedPom>
-								</configuration>
-							</execution>
-						</executions>
-					</plugin>
-				</plugins>
-			</build>
-		</profile>
-	</profiles>
 </project>

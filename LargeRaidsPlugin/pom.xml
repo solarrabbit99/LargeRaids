@@ -7,12 +7,6 @@
 	</parent>
 	<artifactId>LargeRaidsPlugin</artifactId>
 
-	<repositories>
-		<repository>
-			<id>spigot-repo</id>
-			<url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
-		</repository>
-	</repositories>
 	<dependencies>
 		<dependency>
 			<groupId>org.spigotmc</groupId>
@@ -31,6 +25,21 @@
 			<artifactId>1_17</artifactId>
 			<version>Beta-1.2</version>
 		</dependency>
+		<dependency>
+			<groupId>solarrabbit</groupId>
+			<artifactId>1_16</artifactId>
+			<version>Beta-1.2</version>
+		</dependency>
+		<dependency>
+			<groupId>solarrabbit</groupId>
+			<artifactId>1_15</artifactId>
+			<version>Beta-1.2</version>
+		</dependency>
+		<dependency>
+			<groupId>solarrabbit</groupId>
+			<artifactId>1_14</artifactId>
+			<version>Beta-1.2</version>
+		</dependency>
 	</dependencies>
 
 	<build>
@@ -46,4 +55,37 @@
 		</resources>
 	</build>
 
+	<profiles>
+		<profile>
+			<id>conf</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-jar-plugin</artifactId>
+						<version>2.4</version>
+						<configuration>
+							<outputDirectory>${project.basedir}/../../../test_servers</outputDirectory>
+						</configuration>
+					</plugin>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-shade-plugin</artifactId>
+						<version>3.1.0</version>
+						<executions>
+							<execution>
+								<phase>package</phase>
+								<goals>
+									<goal>shade</goal>
+								</goals>
+								<configuration>
+									<createDependencyReducedPom>false</createDependencyReducedPom>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
 </project>

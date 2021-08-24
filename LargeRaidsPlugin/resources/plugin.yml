@@ -2,7 +2,7 @@ main: com.solarrabbit.largeraids.LargeRaids
 name: LargeRaids
 version: ${project.version}
 author: SolarRabbit
-api-version: 1.17
+api-version: 1.14
 
 commands:
   lrreload:
