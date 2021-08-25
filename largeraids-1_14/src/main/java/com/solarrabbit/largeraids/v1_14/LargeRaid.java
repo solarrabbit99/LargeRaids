@@ -8,6 +8,7 @@ import com.solarrabbit.largeraids.LargeRaids;
 import com.solarrabbit.largeraids.PluginLogger.Level;
 import com.solarrabbit.largeraids.listener.RaidListener;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Difficulty;
 import org.bukkit.Location;
 import org.bukkit.Sound;
@@ -33,7 +34,10 @@ public class LargeRaid extends AbstractLargeRaid {
     @Override
     public void startRaid() {
         if (this.centre.getWorld().getDifficulty() == Difficulty.PEACEFUL) {
-            this.plugin.log(this.plugin.getMessage("difficulty.attempt-peaceful"), Level.WARN);
+            String peacefulMessage = this.plugin.getMessage("difficulty.attempt-peaceful");
+            this.plugin.log(peacefulMessage, Level.WARN);
+            if (this.player != null)
+                player.sendMessage(ChatColor.YELLOW + peacefulMessage);
             return;
         }
         if (getNMSRaid() != null)

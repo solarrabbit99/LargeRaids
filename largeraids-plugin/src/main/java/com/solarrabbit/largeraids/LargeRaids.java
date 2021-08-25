@@ -78,7 +78,7 @@ public final class LargeRaids extends JavaPlugin {
     }
 
     public String getMessage(String node) {
-        return this.messages.getString(node);
+        return this.messages.getString(node, "");
     }
 
     private void loadMessages() {
