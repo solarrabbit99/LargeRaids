@@ -108,12 +108,17 @@ public abstract class AbstractLargeRaid {
         boolean title = this.plugin.getConfig().getBoolean("raid.announce-waves.title");
         boolean message = this.plugin.getConfig().getBoolean("raid.announce-waves.message");
         this.getPlayersInRadius().forEach(player -> {
-            if (title)
-                player.sendTitle(ChatColor.GOLD + (isLastWave() ? "Final Wave" : "Wave " + currentWave), null, 10, 70,
-                        20);
-            if (message)
-                player.sendMessage(
-                        ChatColor.GOLD + "Spawning " + (isLastWave() ? "final wave" : "wave " + currentWave) + "...");
+            if (title) {
+                String defaultStr = this.plugin.getConfig().getString("wave-broadcast.title.default");
+                String finalStr = this.plugin.getConfig().getString("wave-broadcast.title.final");
+                player.sendTitle(ChatColor.GOLD + (isLastWave() ? finalStr : String.format(defaultStr, currentWave)),
+                        null, 10, 70, 20);
+            }
+            if (message) {
+                String defaultStr = this.plugin.getConfig().getString("wave-broadcast.message.default");
+                String finalStr = this.plugin.getConfig().getString("wave-broadcast.message.final");
+                player.sendMessage(ChatColor.GOLD + (isLastWave() ? finalStr : String.format(defaultStr, currentWave)));
+            }
         });
     }
 

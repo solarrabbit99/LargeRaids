@@ -67,3 +67,18 @@ trigger:
   # Raids will trigger for players staying up in villages till midnight on a new moon.
   new-moon:
     enabled: false
+
+############################################################
+# +------------------------------------------------------+ #
+# |                       Messages                       | #
+# +------------------------------------------------------+ #
+############################################################
+
+attempt-peaceful: Attempted to spawn large raid but failed due to world's peaceful difficulty...
+wave-broadcast:
+  title:
+    default: Wave %s
+    final: Final Wave
+  message:
+    default: Spawning wave %s...
+    final: Spawning final wave...

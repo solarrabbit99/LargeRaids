@@ -34,7 +34,7 @@ public class LargeRaid extends AbstractLargeRaid {
     @Override
     public void startRaid() {
         if (this.centre.getWorld().getDifficulty() == Difficulty.PEACEFUL) {
-            String peacefulMessage = this.plugin.getMessage("difficulty.attempt-peaceful");
+            String peacefulMessage = this.plugin.getConfig().getString("attempt-peaceful");
             this.plugin.log(peacefulMessage, Level.WARN);
             if (this.player != null)
                 player.sendMessage(ChatColor.YELLOW + peacefulMessage);
