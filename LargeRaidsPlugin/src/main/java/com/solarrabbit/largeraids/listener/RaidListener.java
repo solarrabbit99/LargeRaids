@@ -4,10 +4,10 @@ import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 import com.solarrabbit.largeraids.AbstractLargeRaid;
-import com.solarrabbit.largeraids.VersionUtil;
 import org.bukkit.Location;
 import org.bukkit.Raid;
 import org.bukkit.Raid.RaidStatus;
+import org.bukkit.entity.Raider;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDeathEvent;
@@ -54,7 +54,7 @@ public class RaidListener implements Listener {
 
     @EventHandler
     public void onRaiderDeath(EntityDeathEvent evt) {
-        if (VersionUtil.getRaiderConfig(evt.getEntityType()) == null)
+        if (!(evt.getEntity() instanceof Raider))
             return;
         for (AbstractLargeRaid largeRaid : currentRaids) {
             if (!largeRaid.isLoading() && largeRaid.getRemainingRaiders().isEmpty() && !largeRaid.isLastWave()) {

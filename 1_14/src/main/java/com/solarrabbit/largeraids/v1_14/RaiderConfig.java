@@ -1,14 +1,13 @@
 package com.solarrabbit.largeraids.v1_14;
 
 import java.util.stream.Stream;
-import com.solarrabbit.largeraids.AbstractRaiderConfig;
 import com.solarrabbit.largeraids.LargeRaids;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.EntityType;
 import org.bukkit.plugin.java.JavaPlugin;
 import net.minecraft.server.v1_14_R1.EntityRaider;
 
-public enum RaiderConfig implements AbstractRaiderConfig {
+enum RaiderConfig {
     PILLAGER(EntityType.PILLAGER, net.minecraft.server.v1_14_R1.EntityTypes.PILLAGER),
     VINDICATOR(EntityType.VINDICATOR, net.minecraft.server.v1_14_R1.EntityTypes.VINDICATOR),
     RAVAGER(EntityType.RAVAGER, net.minecraft.server.v1_14_R1.EntityTypes.RAVAGER),
