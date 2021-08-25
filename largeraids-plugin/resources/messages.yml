@@ -2,6 +2,3 @@ config:
   invalid-wave-number: Invalid number of waves! The number of wave must be at HIGHER than the default number of waves based on the world's difficulty!
   invalid-mob-array-length: The length of the arrays under the `mobs` configuration section below must be at least the number of waves!
   zero-raider-wave: Each wave must have at least one raider!
-
-difficulty:
-  ongoing-peaceful: All large raids ended due to difficulty change to peaceful...
