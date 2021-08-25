@@ -66,4 +66,4 @@ trigger:
       enchantment-glint: true
   # Raids will trigger for players staying up in villages till midnight on a new moon.
   new-moon:
-    enabled: true
+    enabled: false
