@@ -1,6 +1,10 @@
 package com.solarrabbit.largeraids.listener;
 
+import java.util.UUID;
+
 import com.solarrabbit.largeraids.item.SummonItem;
+
+import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Item;
@@ -31,8 +35,10 @@ public class DropInLavaTriggerListener extends TriggerListener {
         if (!entity.getPersistentDataContainer().has(this.getNamespacedKey(), PersistentDataType.STRING))
             return;
         if (evt.getCause() == DamageCause.LAVA) {
+            UUID uuid = UUID.fromString(
+                    entity.getPersistentDataContainer().get(this.getNamespacedKey(), PersistentDataType.STRING));
             entity.remove();
-            this.triggerRaid(entity.getLocation());
+            this.triggerRaid(entity.getLocation(), Bukkit.getPlayer(uuid));
         }
     }
 

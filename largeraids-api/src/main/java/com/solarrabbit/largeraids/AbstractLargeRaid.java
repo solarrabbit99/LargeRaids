@@ -32,10 +32,12 @@ public abstract class AbstractLargeRaid {
     protected int currentWave;
     protected Set<UUID> pendingHeroes;
     protected boolean loading;
+    protected Player trigger;
 
-    public AbstractLargeRaid(LargeRaids plugin, Location location) {
+    public AbstractLargeRaid(LargeRaids plugin, Location location, Player trigger) {
         this.plugin = plugin;
         this.centre = location; // Not yet a real centre...
+        this.trigger = trigger;
         this.totalWaves = plugin.getConfig().getInt("raid.waves");
         this.currentWave = 1;
         this.pendingHeroes = new HashSet<>();

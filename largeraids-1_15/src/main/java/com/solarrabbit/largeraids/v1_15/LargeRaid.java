@@ -16,6 +16,7 @@ import org.bukkit.craftbukkit.v1_15_R1.CraftRaid;
 import org.bukkit.craftbukkit.v1_15_R1.CraftServer;
 import org.bukkit.craftbukkit.v1_15_R1.CraftWorld;
 import org.bukkit.craftbukkit.v1_15_R1.entity.CraftRaider;
+import org.bukkit.entity.Player;
 import org.bukkit.entity.Raider;
 import net.minecraft.server.v1_15_R1.BlockPosition;
 import net.minecraft.server.v1_15_R1.MinecraftServer;
@@ -25,8 +26,8 @@ import net.minecraft.server.v1_15_R1.PlayerInteractManager;
 
 public class LargeRaid extends AbstractLargeRaid {
 
-    public LargeRaid(LargeRaids plugin, Location location) {
-        super(plugin, location);
+    public LargeRaid(LargeRaids plugin, Location location, Player player) {
+        super(plugin, location, player);
     }
 
     @Override

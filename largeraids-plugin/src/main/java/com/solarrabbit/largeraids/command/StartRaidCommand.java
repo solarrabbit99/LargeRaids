@@ -12,7 +12,7 @@ public class StartRaidCommand implements CommandExecutor {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player) {
             Player player = (Player) sender;
-            VersionUtil.createLargeRaid(player.getLocation()).startRaid();
+            VersionUtil.createLargeRaid(player.getLocation(), player).startRaid();
         }
         return true;
     }
