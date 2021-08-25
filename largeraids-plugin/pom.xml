@@ -85,6 +85,7 @@
 											<artifact>com.solarrabbit:largeraids-api</artifact>
 											<includes>
 												<include>com/solarrabbit/largeraids/AbstractLargeRaid.class</include>
+												<include>com/solarrabbit/largeraids/AbstractLargeRaid$1.class</include>
 											</includes>
 										</filter>
 									</filters>
