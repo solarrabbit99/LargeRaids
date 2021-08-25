@@ -59,8 +59,8 @@ public class RaidListener implements Listener {
         for (AbstractLargeRaid largeRaid : currentRaids) {
             if (!largeRaid.isLoading() && largeRaid.getRemainingRaiders().isEmpty() && !largeRaid.isLastWave()) {
                 largeRaid.triggerNextWave();
+                break;
             }
-            break;
         }
     }
 
