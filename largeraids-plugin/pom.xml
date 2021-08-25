@@ -88,6 +88,12 @@
 												<include>com/solarrabbit/largeraids/AbstractLargeRaid$1.class</include>
 											</includes>
 										</filter>
+										<filter>
+											<artifact>*:*</artifact>
+											<excludes>
+												<exclude>META-INF/maven/**/*</exclude>
+											</excludes>
+										</filter>
 									</filters>
 								</configuration>
 							</execution>
