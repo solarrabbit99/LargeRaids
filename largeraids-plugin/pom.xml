@@ -80,6 +80,14 @@
 								</goals>
 								<configuration>
 									<createDependencyReducedPom>false</createDependencyReducedPom>
+									<filters>
+										<filter>
+											<artifact>com.solarrabbit:largeraids-api</artifact>
+											<includes>
+												<include>com/solarrabbit/largeraids/AbstractLargeRaid.class</include>
+											</includes>
+										</filter>
+									</filters>
 								</configuration>
 							</execution>
 						</executions>
