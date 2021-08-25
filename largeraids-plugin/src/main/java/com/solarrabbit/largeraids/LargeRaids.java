@@ -26,6 +26,7 @@ import com.solarrabbit.largeraids.command.ReloadPlugin;
 import com.solarrabbit.largeraids.command.StartRaidCommand;
 import com.solarrabbit.largeraids.command.StopRaidCommand;
 import com.solarrabbit.largeraids.listener.DropInLavaTriggerListener;
+import com.solarrabbit.largeraids.listener.NewMoonTriggerListener;
 import com.solarrabbit.largeraids.listener.RaidListener;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
@@ -118,10 +119,13 @@ public final class LargeRaids extends JavaPlugin {
     private void registerTriggers() {
         PlayerDropItemEvent.getHandlerList().unregister(this);
         EntityDamageEvent.getHandlerList().unregister(this);
+        Bukkit.getScheduler().cancelTasks(this);
 
         PluginManager manager = this.getServer().getPluginManager();
         if (testTrigger("drop-item-in-lava"))
             manager.registerEvents(new DropInLavaTriggerListener(), this);
+        if (testTrigger("new-moon"))
+            new NewMoonTriggerListener(this).init();
     }
 
     private boolean testTrigger(String trigger) {

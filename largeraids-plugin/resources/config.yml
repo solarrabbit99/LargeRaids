@@ -28,7 +28,9 @@ raid:
     illusioner: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 2, 2, 2, 3, 3, 3]
 
 hero-of-the-village:
-  # Level 12 is enough to grant a player a cost of 1 emerald for any default trades.
+  # Level 12 is enough to grant a player a cost of 1 emerald for any default trades. Players
+  # will always receive the hero of the village effect with level of maximum of the value
+  # stated or 5, whichever is higher.
   level: 12
   # In minutes.
   duration: 40
@@ -62,3 +64,6 @@ trigger:
       # Avoid using armor/tools for material if this is enabled. It applies mending to
       # the item for the glint.
       enchantment-glint: true
+  # Raids will trigger for players staying up in villages till midnight on a new moon.
+  new-moon:
+    enabled: true

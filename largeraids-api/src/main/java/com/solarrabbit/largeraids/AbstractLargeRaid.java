@@ -60,7 +60,7 @@ public abstract class AbstractLargeRaid {
         int duration = conf.getInt("duration") * 60 * 20;
         this.pendingHeroes.forEach(
                 uuid -> Optional.ofNullable(Bukkit.getPlayer(uuid)).filter(Player::isOnline).ifPresent(player -> {
-                    player.addPotionEffect(new PotionEffect(PotionEffectType.HERO_OF_THE_VILLAGE, duration, level));
+                    player.addPotionEffect(new PotionEffect(PotionEffectType.HERO_OF_THE_VILLAGE, duration, level - 1));
                 }));
     }
 
