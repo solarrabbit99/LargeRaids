@@ -2,21 +2,21 @@
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>com.solarrabbit</groupId>
-		<artifactId>LargeRaids</artifactId>
+		<artifactId>largeraids</artifactId>
 		<version>${revision}</version>
 	</parent>
-	<artifactId>1_15</artifactId>
+	<artifactId>largeraids-1_16</artifactId>
 
 	<dependencies>
 		<dependency>
 			<groupId>org.spigotmc</groupId>
 			<artifactId>spigot</artifactId>
-			<version>1.15.2-R0.1-SNAPSHOT</version>
+			<version>1.16.5-R0.1-SNAPSHOT</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>com.solarrabbit</groupId>
-			<artifactId>API</artifactId>
+			<artifactId>largeraids-api</artifactId>
 			<version>${revision}</version>
 		</dependency>
 	</dependencies>

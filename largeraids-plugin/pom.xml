@@ -2,10 +2,10 @@
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>com.solarrabbit</groupId>
-		<artifactId>LargeRaids</artifactId>
+		<artifactId>largeraids</artifactId>
 		<version>${revision}</version>
 	</parent>
-	<artifactId>LargeRaidsPlugin</artifactId>
+	<artifactId>largeraids-plugin</artifactId>
 
 	<dependencies>
 		<dependency>
@@ -17,27 +17,27 @@
 		</dependency>
 		<dependency>
 			<groupId>com.solarrabbit</groupId>
-			<artifactId>API</artifactId>
+			<artifactId>largeraids-api</artifactId>
 			<version>${revision}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.solarrabbit</groupId>
-			<artifactId>1_17</artifactId>
+			<artifactId>largeraids-1_17</artifactId>
 			<version>${revision}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.solarrabbit</groupId>
-			<artifactId>1_16</artifactId>
+			<artifactId>largeraids-1_16</artifactId>
 			<version>${revision}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.solarrabbit</groupId>
-			<artifactId>1_15</artifactId>
+			<artifactId>largeraids-1_15</artifactId>
 			<version>${revision}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.solarrabbit</groupId>
-			<artifactId>1_14</artifactId>
+			<artifactId>largeraids-1_14</artifactId>
 			<version>${revision}</version>
 		</dependency>
 	</dependencies>

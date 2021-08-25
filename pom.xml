@@ -1,16 +1,16 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.solarrabbit</groupId>
-	<artifactId>LargeRaids</artifactId>
+	<artifactId>largeraids</artifactId>
 	<version>${revision}</version>
 	<packaging>pom</packaging>
 	<modules>
-		<module>LargeRaidsPlugin</module>
-		<module>API</module>
-		<module>1_17</module>
-		<module>1_16</module>
-		<module>1_15</module>
-		<module>1_14</module>
+		<module>largeraids-plugin</module>
+		<module>largeraids-api</module>
+		<module>largeraids-1_17</module>
+		<module>largeraids-1_16</module>
+		<module>largeraids-1_15</module>
+		<module>largeraids-1_14</module>
 	</modules>
 
 	<properties>
