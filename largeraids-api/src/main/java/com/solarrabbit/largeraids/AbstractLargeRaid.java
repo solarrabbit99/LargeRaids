@@ -78,7 +78,6 @@ public abstract class AbstractLargeRaid {
     protected void setRaid(Raid raid) {
         this.currentRaid = raid;
         this.centre = raid.getLocation();
-        this.loading = true;
     }
 
     protected void playSoundToPlayers(Sound sound) {

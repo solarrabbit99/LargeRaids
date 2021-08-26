@@ -44,6 +44,7 @@ public class LargeRaid extends AbstractLargeRaid {
             return;
 
         triggerRaid(this.centre);
+        this.loading = true;
 
         Bukkit.getScheduler().runTaskLater(this.plugin, () -> {
             if (this.currentRaid.getStatus() == RaidStatus.ONGOING) {
@@ -74,22 +75,37 @@ public class LargeRaid extends AbstractLargeRaid {
         if (this.isLastWave())
             return;
 
-        this.currentWave++;
-        this.broadcastWave();
         this.loading = true;
 
-        if (!needTrigger())
+        if (!needTrigger()) {
+            this.currentWave++;
+            this.broadcastWave();
             return;
+        }
 
         currentRaid.getHeroes().forEach(uuid -> pendingHeroes.add(uuid));
         getNMSRaid().stop();
 
+        this.currentWave++;
+        this.broadcastWave();
         triggerRaid(this.centre);
     }
 
     @Override
     public void spawnNextWave() {
         List<Raider> raiders = this.currentRaid.getRaiders();
+
+        if (!this.loading) {
+            if (this.needTrigger()) {
+                for (Raider raider : raiders)
+                    raider.remove();
+                triggerNextWave();
+                return;
+            } else {
+                triggerNextWave();
+            }
+        }
+
         Location loc = this.getWaveSpawnLocation();
         net.minecraft.world.entity.raid.Raid nmsRaid = getNMSRaid();
 
