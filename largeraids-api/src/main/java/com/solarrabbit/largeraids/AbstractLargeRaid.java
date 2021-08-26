@@ -1,6 +1,5 @@
 package com.solarrabbit.largeraids;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
@@ -70,10 +69,6 @@ public abstract class AbstractLargeRaid {
         Sound sound = getSound(this.plugin.getConfig().getString("raid.sounds.defeat", null));
         if (sound != null)
             playSoundToPlayers(sound);
-    }
-
-    public List<Raider> getRemainingRaiders() {
-        return this.currentRaid == null ? new ArrayList<>() : this.currentRaid.getRaiders();
     }
 
     public boolean isLastWave() {
@@ -153,5 +148,7 @@ public abstract class AbstractLargeRaid {
     public abstract void triggerNextWave();
 
     public abstract void spawnNextWave();
+
+    public abstract int getTotalRaidersAlive();
 
 }

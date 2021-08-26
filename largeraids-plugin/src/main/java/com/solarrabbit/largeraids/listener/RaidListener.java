@@ -4,19 +4,25 @@ import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 import com.solarrabbit.largeraids.AbstractLargeRaid;
+
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Raid;
 import org.bukkit.Raid.RaidStatus;
-import org.bukkit.entity.Raider;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.raid.RaidFinishEvent;
 import org.bukkit.event.raid.RaidSpawnWaveEvent;
 import org.bukkit.event.raid.RaidStopEvent;
+import org.bukkit.plugin.java.JavaPlugin;
 
 public class RaidListener implements Listener {
     private static final Set<AbstractLargeRaid> currentRaids = new HashSet<>();
+    private final JavaPlugin plugin;
+
+    public RaidListener(JavaPlugin plugin) {
+        this.plugin = plugin;
+    }
 
     public static void addLargeRaid(AbstractLargeRaid raid) {
         currentRaids.add(raid);
@@ -52,14 +58,14 @@ public class RaidListener implements Listener {
         });
     }
 
-    @EventHandler
-    public void onRaiderDeath(EntityDeathEvent evt) {
-        if (!(evt.getEntity() instanceof Raider))
-            return;
+    public void init() {
+        Bukkit.getScheduler().scheduleSyncRepeatingTask(this.plugin, () -> tick(), 0, 1);
+    }
+
+    private void tick() {
         for (AbstractLargeRaid largeRaid : currentRaids) {
-            if (!largeRaid.isLoading() && largeRaid.getRemainingRaiders().isEmpty() && !largeRaid.isLastWave()) {
+            if (!largeRaid.isLoading() && largeRaid.getTotalRaidersAlive() == 0 && !largeRaid.isLastWave()) {
                 largeRaid.triggerNextWave();
-                break;
             }
         }
     }

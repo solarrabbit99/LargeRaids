@@ -74,18 +74,17 @@ public class LargeRaid extends AbstractLargeRaid {
         if (this.isLastWave())
             return;
 
-        if (!needTrigger()) {
-            this.currentWave++;
-            this.broadcastWave();
+        this.currentWave++;
+        this.broadcastWave();
+        this.loading = true;
+
+        if (!needTrigger())
             return;
-        }
 
         currentRaid.getHeroes().forEach(uuid -> pendingHeroes.add(uuid));
         getNMSRaid().stop();
 
         triggerRaid(this.centre);
-        this.currentWave++;
-        this.broadcastWave();
     }
 
     @Override
@@ -109,6 +108,11 @@ public class LargeRaid extends AbstractLargeRaid {
         });
 
         this.loading = false;
+    }
+
+    @Override
+    public int getTotalRaidersAlive() {
+        return this.getNMSRaid().r();
     }
 
     private net.minecraft.server.v1_15_R1.Raid getNMSRaid() {

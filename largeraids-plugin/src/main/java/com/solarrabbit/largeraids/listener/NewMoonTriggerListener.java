@@ -11,8 +11,8 @@ public class NewMoonTriggerListener extends TriggerListener {
         this.plugin = plugin;
     }
 
-    public void init() {
-        Bukkit.getScheduler().scheduleSyncRepeatingTask(this.plugin, () -> tick(), 0, 100);
+    public int init() {
+        return Bukkit.getScheduler().scheduleSyncRepeatingTask(this.plugin, () -> tick(), 0, 100);
     }
 
     public void tick() {

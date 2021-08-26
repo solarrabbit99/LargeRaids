@@ -20,6 +20,8 @@ package com.solarrabbit.largeraids;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.HashSet;
+import java.util.Set;
 import com.solarrabbit.largeraids.PluginLogger.Level;
 import com.solarrabbit.largeraids.command.GiveSummonItemCommand;
 import com.solarrabbit.largeraids.command.ReloadPlugin;
@@ -42,13 +44,17 @@ import org.bukkit.plugin.java.JavaPlugin;
 public final class LargeRaids extends JavaPlugin {
     private YamlConfiguration messages;
     private PluginLogger logger;
+    private Set<Integer> configurableTasks;
 
     @Override
     public void onEnable() {
         this.saveDefaultConfig();
         this.logger = new PluginLogger();
 
-        this.getServer().getPluginManager().registerEvents(new RaidListener(), this);
+        RaidListener mainListener = new RaidListener(this);
+        this.getServer().getPluginManager().registerEvents(mainListener, this);
+        mainListener.init();
+
         this.getCommand("lrstart").setExecutor(new StartRaidCommand());
         this.getCommand("lrstop").setExecutor(new StopRaidCommand());
         this.getCommand("lrgive").setExecutor(new GiveSummonItemCommand());
@@ -119,13 +125,18 @@ public final class LargeRaids extends JavaPlugin {
     private void registerTriggers() {
         PlayerDropItemEvent.getHandlerList().unregister(this);
         EntityDamageEvent.getHandlerList().unregister(this);
-        Bukkit.getScheduler().cancelTasks(this);
+        if (this.configurableTasks != null) {
+            for (Integer id : configurableTasks) {
+                Bukkit.getScheduler().cancelTask(id);
+            }
+        }
+        this.configurableTasks = new HashSet<>();
 
         PluginManager manager = this.getServer().getPluginManager();
         if (testTrigger("drop-item-in-lava"))
             manager.registerEvents(new DropInLavaTriggerListener(), this);
         if (testTrigger("new-moon"))
-            new NewMoonTriggerListener(this).init();
+            this.configurableTasks.add(new NewMoonTriggerListener(this).init());
     }
 
     private boolean testTrigger(String trigger) {
