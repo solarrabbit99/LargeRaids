@@ -24,6 +24,14 @@ public class RaidListener implements Listener {
         this.plugin = plugin;
     }
 
+    public static void addLargeRaid(AbstractLargeRaid raid) {
+        currentRaids.add(raid);
+    }
+
+    public static void removeLargeRaid(AbstractLargeRaid raid) {
+        currentRaids.remove(raid);
+    }
+
     @EventHandler
     public void onSpawn(RaidSpawnWaveEvent evt) {
         matchingLargeRaid(evt.getRaid()).ifPresent(largeRaid -> largeRaid.spawnNextWave());

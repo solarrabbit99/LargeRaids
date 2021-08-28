@@ -107,4 +107,28 @@ public class SQLite extends Database {
         }
     }
 
+    @Override
+    public Location getCentre(String name) {
+        try {
+            connection = getSQLConnection();
+            Location location = null;
+
+            PreparedStatement ps = connection
+                    .prepareStatement("SELECT * FROM " + VILLAGES_TABLE_NAME + " WHERE name = '" + name + "';");
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                World world = this.plugin.getServer().getWorld(rs.getString("world"));
+                double x = rs.getDouble("x");
+                double y = rs.getDouble("y");
+                double z = rs.getDouble("z");
+                location = new Location(world, x, y, z);
+            }
+            close(ps);
+            return location;
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            return null;
+        }
+    }
+
 }

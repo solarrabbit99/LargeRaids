@@ -58,6 +58,8 @@ public abstract class Database {
 
     public abstract void removeCentre(String index);
 
+    public abstract Location getCentre(String name);
+
     /**
      * Releases both the {@link PreparedStatement} and {@link ResultSet} of the
      * database.
