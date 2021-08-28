@@ -27,6 +27,9 @@ import com.solarrabbit.largeraids.command.GiveSummonItemCommand;
 import com.solarrabbit.largeraids.command.ReloadPlugin;
 import com.solarrabbit.largeraids.command.StartRaidCommand;
 import com.solarrabbit.largeraids.command.StopRaidCommand;
+import com.solarrabbit.largeraids.command.VillageCentresCommand;
+import com.solarrabbit.largeraids.database.Database;
+import com.solarrabbit.largeraids.database.SQLite;
 import com.solarrabbit.largeraids.listener.DropInLavaTriggerListener;
 import com.solarrabbit.largeraids.listener.NewMoonTriggerListener;
 import com.solarrabbit.largeraids.listener.RaidListener;
@@ -44,12 +47,16 @@ import org.bukkit.plugin.java.JavaPlugin;
 public final class LargeRaids extends JavaPlugin {
     private YamlConfiguration messages;
     private PluginLogger logger;
+    private Database db;
     private Set<Integer> configurableTasks;
 
     @Override
     public void onEnable() {
         this.saveDefaultConfig();
         this.logger = new PluginLogger();
+
+        this.db = new SQLite(this);
+        this.db.load();
 
         RaidListener mainListener = new RaidListener(this);
         this.getServer().getPluginManager().registerEvents(mainListener, this);
@@ -59,6 +66,7 @@ public final class LargeRaids extends JavaPlugin {
         this.getCommand("lrstop").setExecutor(new StopRaidCommand());
         this.getCommand("lrgive").setExecutor(new GiveSummonItemCommand());
         this.getCommand("lrreload").setExecutor(new ReloadPlugin(this));
+        this.getCommand("lrcenters").setExecutor(new VillageCentresCommand(this));
 
         this.loadMessages();
         this.testConfig();
@@ -85,6 +93,10 @@ public final class LargeRaids extends JavaPlugin {
 
     public String getMessage(String node) {
         return this.messages.getString(node, "");
+    }
+
+    public Database getDatabase() {
+        return this.db;
     }
 
     private void loadMessages() {

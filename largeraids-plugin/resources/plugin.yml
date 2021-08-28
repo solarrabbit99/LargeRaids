@@ -18,6 +18,9 @@ commands:
     description: Give a player the summoning item.
     usage: /<command> <player> [amount]
     permission: largeraids.admin
+  lrcenters:
+    description: Adds an artificial village at player's location.
+    usage: /<command> <add|remove|list> [name]
 
 permissions:
   largeraids.admin:

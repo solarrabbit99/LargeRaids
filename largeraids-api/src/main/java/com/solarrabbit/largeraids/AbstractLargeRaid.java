@@ -77,7 +77,8 @@ public abstract class AbstractLargeRaid {
 
     protected void setRaid(Raid raid) {
         this.currentRaid = raid;
-        this.centre = raid.getLocation();
+        if (!this.plugin.getConfig().getBoolean("raid.trigger-is-centre"))
+            this.centre = raid.getLocation();
     }
 
     protected void playSoundToPlayers(Sound sound) {
