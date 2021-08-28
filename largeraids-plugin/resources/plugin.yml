@@ -20,7 +20,7 @@ commands:
     permission: largeraids.admin
   lrcenters:
     description: Adds an artificial village at player's location.
-    usage: /<command> <add|remove|list> [name]
+    usage: /<command> <add | remove | list> [name]
 
 permissions:
   largeraids.admin:

@@ -34,7 +34,7 @@ public class VillageCentresCommand implements CommandExecutor {
         case "remove":
             if (args.length < 2)
                 return false;
-            this.remove(args[1]);
+            this.remove((Player) sender, args[1]);
             return true;
         case "list":
             this.list((Player) sender);
@@ -52,14 +52,19 @@ public class VillageCentresCommand implements CommandExecutor {
         }
         this.plugin.getDatabase().addCentre(player.getLocation(), name);
         VersionUtil.getVillageManager().addVillage(player.getLocation());
+        player.sendMessage(ChatColor.GREEN + "Successfully added a new artificial village center!");
     }
 
-    private void remove(String name) {
+    private void remove(Player player, String name) {
         Location centre = this.plugin.getDatabase().getCentre(name);
-        if (centre == null)
+        if (centre == null) {
+            player.sendMessage(ChatColor.RED + "There are no existing aritificial village centers with that name!");
             return;
+        }
         this.plugin.getDatabase().removeCentre(name);
         VersionUtil.getVillageManager().removeVillage(centre);
+        player.sendMessage(ChatColor.GREEN + "Successfully removed an artificial village center!");
+
     }
 
     private void list(Player player) {
