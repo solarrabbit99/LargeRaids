@@ -19,8 +19,8 @@ commands:
     usage: /<command> <player> [amount]
     permission: largeraids.admin
   lrcenters:
-    description: Adds an artificial village at player's location.
-    usage: /<command> <add | remove | list> [name]
+    description: Managing artificial villages.
+    usage: /<command> [add | remove] [name]
 
 permissions:
   largeraids.admin:
