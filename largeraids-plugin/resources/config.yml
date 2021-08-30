@@ -35,6 +35,34 @@ hero-of-the-village:
   # In minutes.
   duration: 40
 
+rewards:
+  # Leave this section blank to disable the feature.
+  items:
+    1:
+      material: BOOK
+      # Amount must be more than 0 but no more than the maximum stack size of the item
+      amount: 1
+      display-name: "&6Example Reward"
+      lore:
+        # - "&5Drop the item into lava in a village"
+        # - "&5to summon a large raid!"
+      custom-model-data:
+      # Avoid using armor/tools for material if this is enabled. It applies mending to
+      # the item for the glint.
+      enchantments:
+        1:
+          type: MENDING
+          level: 1
+        2:
+          type: DURABILITY
+          level: 1
+  # Leave this section blank to disable the feature. The plugin provides `<player>` as a
+  # placeholder for the console to execute a command with the target player's name. Note
+  # that every command listed here will be executed once per player.
+  commands:
+    # - lrgive <player> 1
+    # - give <player> stick
+
 ############################################################
 # +------------------------------------------------------+ #
 # |                   Trigger Mechanism                  | #
@@ -74,11 +102,12 @@ trigger:
 # +------------------------------------------------------+ #
 ############################################################
 
-attempt-peaceful: Attempted to spawn large raid but failed due to world's peaceful difficulty...
+attempt-peaceful: "&eAttempted to spawn large raid but failed due to world's peaceful difficulty..."
+receive-rewards: "&aReceiving rewards..."
 wave-broadcast:
   title:
-    default: Wave %s
-    final: Final Wave
+    default: "&6Wave %s"
+    final: "&6Final Wave"
   message:
-    default: Spawning wave %s...
-    final: Spawning final wave...
+    default: "&6Spawning wave %s..."
+    final: "&6Spawning final wave..."

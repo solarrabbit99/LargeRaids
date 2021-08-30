@@ -7,7 +7,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Stream;
-
+import com.solarrabbit.largeraids.item.ItemCreator;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Difficulty;
@@ -19,6 +19,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Raider;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
@@ -56,13 +57,8 @@ public abstract class AbstractLargeRaid {
             playSoundToPlayers(sound);
 
         currentRaid.getHeroes().forEach(uuid -> pendingHeroes.add(uuid));
-        ConfigurationSection conf = this.plugin.getConfig().getConfigurationSection("hero-of-the-village");
-        int level = conf.getInt("level");
-        int duration = conf.getInt("duration") * 60 * 20;
-        this.pendingHeroes.forEach(
-                uuid -> Optional.ofNullable(Bukkit.getPlayer(uuid)).filter(Player::isOnline).ifPresent(player -> {
-                    player.addPotionEffect(new PotionEffect(PotionEffectType.HERO_OF_THE_VILLAGE, duration, level - 1));
-                }));
+        this.pendingHeroes.forEach(uuid -> Optional.ofNullable(Bukkit.getPlayer(uuid)).filter(Player::isOnline)
+                .ifPresent(player -> awardPlayer(player)));
     }
 
     public void announceDefeat() {
@@ -104,14 +100,18 @@ public abstract class AbstractLargeRaid {
         boolean message = this.plugin.getConfig().getBoolean("raid.announce-waves.message");
         this.getPlayersInRadius().forEach(player -> {
             if (title) {
-                String defaultStr = this.plugin.getConfig().getString("wave-broadcast.title.default");
-                String finalStr = this.plugin.getConfig().getString("wave-broadcast.title.final");
+                String defaultStr = ChatColorUtil
+                        .translate(this.plugin.getConfig().getString("wave-broadcast.title.default"));
+                String finalStr = ChatColorUtil
+                        .translate(this.plugin.getConfig().getString("wave-broadcast.title.final"));
                 player.sendTitle(ChatColor.GOLD + (isLastWave() ? finalStr : String.format(defaultStr, currentWave)),
                         null, 10, 70, 20);
             }
             if (message) {
-                String defaultStr = this.plugin.getConfig().getString("wave-broadcast.message.default");
-                String finalStr = this.plugin.getConfig().getString("wave-broadcast.message.final");
+                String defaultStr = ChatColorUtil
+                        .translate(this.plugin.getConfig().getString("wave-broadcast.message.default"));
+                String finalStr = ChatColorUtil
+                        .translate(this.plugin.getConfig().getString("wave-broadcast.message.final"));
                 player.sendMessage(ChatColor.GOLD + (isLastWave() ? finalStr : String.format(defaultStr, currentWave)));
             }
         });
@@ -137,6 +137,25 @@ public abstract class AbstractLargeRaid {
         default:
             return 0;
         }
+    }
+
+    private void awardPlayer(Player player) {
+        player.sendMessage(ChatColorUtil.translate(this.plugin.getConfig().getString("receive-rewards")));
+
+        ConfigurationSection conf = this.plugin.getConfig().getConfigurationSection("hero-of-the-village");
+        int level = conf.getInt("level");
+        int duration = conf.getInt("duration") * 60 * 20;
+        player.addPotionEffect(new PotionEffect(PotionEffectType.HERO_OF_THE_VILLAGE, duration, level - 1));
+
+        ConfigurationSection itemAwards = this.plugin.getConfig().getConfigurationSection("rewards.items");
+        ItemStack[] items = itemAwards.getKeys(false).stream()
+                .map(itemConfig -> ItemCreator.getItemFromConfig(itemAwards.getConfigurationSection(itemConfig)))
+                .toArray(ItemStack[]::new);
+        player.getInventory().addItem(items)
+                .forEach((i, item) -> player.getWorld().dropItem(player.getLocation(), item));
+
+        this.plugin.getConfig().getStringList("rewards.commands").forEach(
+                str -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), str.replace("<player>", player.getName())));
     }
 
     public abstract void startRaid();
