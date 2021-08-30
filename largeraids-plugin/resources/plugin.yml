@@ -10,9 +10,11 @@ commands:
     permission: largeraids.admin
   lrstart:
     description: Start a large raid.
+    usage: /<command> [player]
     permission: largeraids.admin
   lrstop:
     description: Stop a large raid.
+    usage: /<command> [player]
     permission: largeraids.admin
   lrgive:
     description: Give a player the summoning item.
