@@ -23,6 +23,7 @@ commands:
   lrcenters:
     description: Managing artificial villages.
     usage: /<command> [add | remove] [name]
+    permission: largeraids.admin
 
 permissions:
   largeraids.admin:
