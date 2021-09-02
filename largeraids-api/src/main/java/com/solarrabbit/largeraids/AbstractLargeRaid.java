@@ -71,6 +71,14 @@ public abstract class AbstractLargeRaid {
         return this.currentWave == this.totalWaves;
     }
 
+    public int getCurrentWave() {
+        return this.currentWave;
+    }
+
+    public int getTotalWaves() {
+        return this.totalWaves;
+    }
+
     public int getTotalRaidersAlive() {
         return this.currentRaid.getRaiders().size();
     }

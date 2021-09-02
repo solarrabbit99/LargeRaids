@@ -33,6 +33,7 @@ import com.solarrabbit.largeraids.database.SQLite;
 import com.solarrabbit.largeraids.listener.DropInLavaTriggerListener;
 import com.solarrabbit.largeraids.listener.NewMoonTriggerListener;
 import com.solarrabbit.largeraids.listener.RaidListener;
+import com.solarrabbit.largeraids.support.Placeholder;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
 import org.bukkit.World;
@@ -71,6 +72,10 @@ public final class LargeRaids extends JavaPlugin {
         this.loadMessages();
         this.testConfig();
         this.registerTriggers();
+
+        if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {
+            new Placeholder().register();
+        }
     }
 
     public void log(String message, Level level) {
