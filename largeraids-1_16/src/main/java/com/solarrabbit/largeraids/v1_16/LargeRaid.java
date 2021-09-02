@@ -127,11 +127,6 @@ public class LargeRaid extends AbstractLargeRaid {
         this.loading = false;
     }
 
-    @Override
-    public int getTotalRaidersAlive() {
-        return this.getNMSRaid().r();
-    }
-
     private net.minecraft.server.v1_16_R3.Raid getNMSRaid() {
         BlockPosition blkPos = new BlockPosition(centre.getX(), centre.getY(), centre.getZ());
         WorldServer level = ((CraftWorld) centre.getWorld()).getHandle();

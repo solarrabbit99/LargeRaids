@@ -71,6 +71,10 @@ public abstract class AbstractLargeRaid {
         return this.currentWave == this.totalWaves;
     }
 
+    public int getTotalRaidersAlive() {
+        return this.currentRaid.getRaiders().size();
+    }
+
     protected void setRaid(Raid raid) {
         this.currentRaid = raid;
         if (!this.plugin.getConfig().getBoolean("raid.trigger-is-centre"))
@@ -167,7 +171,5 @@ public abstract class AbstractLargeRaid {
     public abstract void triggerNextWave();
 
     public abstract void spawnNextWave();
-
-    public abstract int getTotalRaidersAlive();
 
 }
