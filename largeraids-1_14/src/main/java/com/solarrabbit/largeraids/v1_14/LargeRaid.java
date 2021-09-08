@@ -14,6 +14,7 @@ import org.bukkit.Difficulty;
 import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.Raid.RaidStatus;
+import org.bukkit.craftbukkit.libs.org.apache.commons.lang3.reflect.FieldUtils;
 import org.bukkit.craftbukkit.v1_14_R1.CraftRaid;
 import org.bukkit.craftbukkit.v1_14_R1.CraftServer;
 import org.bukkit.craftbukkit.v1_14_R1.CraftWorld;
@@ -81,6 +82,7 @@ public class LargeRaid extends AbstractLargeRaid {
         if (!needTrigger()) {
             this.currentWave++;
             this.broadcastWave();
+            this.setLastWave();
             return;
         }
 
@@ -125,6 +127,15 @@ public class LargeRaid extends AbstractLargeRaid {
         });
 
         this.loading = false;
+    }
+
+    private void setLastWave() {
+        int secondLast = getDefaultWaveNumber(this.centre.getWorld());
+        try {
+            FieldUtils.writeField(getNMSRaid(), "q", secondLast, true);
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
     }
 
     private net.minecraft.server.v1_14_R1.Raid getNMSRaid() {

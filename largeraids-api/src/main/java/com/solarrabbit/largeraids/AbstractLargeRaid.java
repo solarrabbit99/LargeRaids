@@ -134,7 +134,7 @@ public abstract class AbstractLargeRaid {
     }
 
     protected boolean needTrigger() {
-        return this.totalWaves - this.currentWave >= (getDefaultWaveNumber(this.centre.getWorld()) + 1);
+        return this.totalWaves - this.currentWave > 1;
     }
 
     public static int getDefaultWaveNumber(World world) {
