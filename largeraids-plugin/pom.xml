@@ -70,7 +70,7 @@
 
 	<profiles>
 		<profile>
-			<id>conf</id>
+			<id>test</id>
 			<build>
 				<plugins>
 					<plugin>
@@ -78,9 +78,31 @@
 						<artifactId>maven-jar-plugin</artifactId>
 						<version>2.4</version>
 						<configuration>
-							<outputDirectory>${project.basedir}/../../../test_servers</outputDirectory>
+							<outputDirectory>${project.basedir}/../../../test_servers/1.17/plugins</outputDirectory>
 						</configuration>
 					</plugin>
+				</plugins>
+			</build>
+		</profile>
+		<profile>
+			<id>production</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-jar-plugin</artifactId>
+						<version>2.4</version>
+						<configuration>
+							<outputDirectory>${project.basedir}/../../Production</outputDirectory>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+		<profile>
+			<id>shade</id>
+			<build>
+				<plugins>
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-shade-plugin</artifactId>
