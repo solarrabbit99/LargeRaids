@@ -5,10 +5,9 @@
 ############################################################
 
 raid:
-  # The number of waves must be at HIGHER than the default number of waves based on the
-  # world's difficulty (which is 3 for EASY, 5 for NORMAL, 7 for HARD). The length of the
-  # arrays under the `mobs` configuration section below must also be at least the number
-  # of waves. Each wave must have at least one raider.
+  # The number of waves must be at least 1. The length of the arrays under the `mobs`
+  # configuration section below must also be at least the number of waves. Each wave
+  # must have at least one raider.
   waves: 20
   # To disable sounds, leave the sound fields blank.
   sounds:

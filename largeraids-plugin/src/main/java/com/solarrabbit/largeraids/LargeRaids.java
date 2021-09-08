@@ -115,12 +115,6 @@ public final class LargeRaids extends JavaPlugin {
 
     private void testConfig() {
         int totalWaves = this.getConfig().getInt("raid.waves");
-        for (World world : getServer().getWorlds()) {
-            if (totalWaves < AbstractLargeRaid.getDefaultWaveNumber(world) + 1) {
-                this.log(this.messages.getString("config.invalid-wave-number"), Level.FAIL);
-                return;
-            }
-        }
         ConfigurationSection section = this.getConfig().getConfigurationSection("raid.mobs");
         for (String mob : section.getKeys(false)) {
             if (section.getIntegerList(mob).size() < totalWaves) {
