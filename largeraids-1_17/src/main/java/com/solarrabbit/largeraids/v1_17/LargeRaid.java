@@ -77,21 +77,16 @@ public class LargeRaid extends AbstractLargeRaid {
         if (this.isLastWave())
             return;
 
-        this.loading = true;
-
-        if (!needTrigger()) {
-            this.currentWave++;
-            this.broadcastWave();
-            this.setLastWave();
-            return;
-        }
-
         currentRaid.getHeroes().forEach(uuid -> pendingHeroes.add(uuid));
         getNMSRaid().stop();
 
+        this.loading = true;
         this.currentWave++;
         this.broadcastWave();
         triggerRaid(this.centre);
+
+        if (!needTrigger())
+            this.setLastWave();
     }
 
     @Override
