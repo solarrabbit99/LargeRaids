@@ -71,6 +71,10 @@ public abstract class AbstractLargeRaid {
         return this.currentWave == this.totalWaves;
     }
 
+    protected boolean isSecondLastWave() {
+        return this.totalWaves - this.currentWave == 1;
+    }
+
     public int getCurrentWave() {
         return this.currentWave;
     }
@@ -131,10 +135,6 @@ public abstract class AbstractLargeRaid {
 
     protected Sound getSound(String name) {
         return Stream.of(Sound.values()).filter(value -> value.name().equals(name)).findFirst().orElse(null);
-    }
-
-    protected boolean needTrigger() {
-        return this.totalWaves - this.currentWave > 1;
     }
 
     public static int getDefaultWaveNumber(World world) {

@@ -85,7 +85,7 @@ public class LargeRaid extends AbstractLargeRaid {
         this.broadcastWave();
         triggerRaid(this.centre);
 
-        if (!needTrigger())
+        if (isSecondLastWave())
             this.setLastWave();
     }
 
@@ -94,14 +94,10 @@ public class LargeRaid extends AbstractLargeRaid {
         List<Raider> raiders = this.currentRaid.getRaiders();
 
         if (!this.loading) {
-            if (this.needTrigger()) {
-                for (Raider raider : raiders)
-                    raider.remove();
-                triggerNextWave();
-                return;
-            } else {
-                triggerNextWave();
-            }
+            for (Raider raider : raiders)
+                raider.remove();
+            triggerNextWave();
+            return;
         }
 
         Location loc = this.getWaveSpawnLocation();
