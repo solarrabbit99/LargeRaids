@@ -1,3 +1,15 @@
 config:
   invalid-mob-array-length: The length of the arrays under the `mobs` configuration section below must be at least the number of waves!
   zero-raider-wave: Each wave must have at least one raider!
+
+village-centers:
+  add:
+    already-exist: There is already an artificial village center of the same name!
+    add-unsafe: Stand on a safe platform when creating an artificial village center!
+    add-success: Successfully added a new artificial village center!
+    add-fail: Failed to add a new artificial village center, please run the command again!
+  remove:
+    no-exist: There are no existing artificial village centers with that name!
+    remove-success: Successfully removed an artificial village center!
+  list:
+    no-exist: There are no existing artificial village centers!

@@ -44,40 +44,44 @@ public class VillageCentresCommand implements CommandExecutor {
 
     private void add(Player player, String name) {
         // TODO async it
-        Location centre = this.plugin.getDatabase().getCentre(name);
-        if (centre != null) {
-            player.sendMessage(ChatColor.RED + "There is already an artificial village center of the same name!");
+        Location existingCenter = this.plugin.getDatabase().getCentre(name);
+        if (existingCenter != null) {
+            player.sendMessage(ChatColor.RED + this.plugin.getMessage("village-centers.add.already-exist"));
             return;
         }
 
         if (player.isFlying() || player.isInWater()) {
-            player.sendMessage(ChatColor.RED + "Stand on a safe platform when creating an artificial village center!");
+            player.sendMessage(ChatColor.RED + this.plugin.getMessage("village-centers.add.add-unsafe"));
             return;
         }
 
-        this.plugin.getDatabase().addCentre(player.getLocation(), name);
-        VersionUtil.getVillageManager().addVillage(player.getLocation());
-        player.sendMessage(ChatColor.GREEN + "Successfully added a new artificial village center!");
+        Location newCenter = player.getLocation();
+        Runnable ifSuccess = () -> {
+            this.plugin.getDatabase().addCentre(newCenter, name);
+            player.sendMessage(ChatColor.GREEN + this.plugin.getMessage("village-centers.add.add-success"));
+        };
+        Runnable ifFail = () -> player
+                .sendMessage(ChatColor.RED + this.plugin.getMessage("village-centers.add.add-fail"));
+        VersionUtil.getVillageManager().addVillage(newCenter, ifSuccess, ifFail);
     }
 
     private void remove(Player player, String name) {
         // TODO async it
         Location centre = this.plugin.getDatabase().getCentre(name);
         if (centre == null) {
-            player.sendMessage(ChatColor.RED + "There are no existing artificial village centers with that name!");
+            player.sendMessage(ChatColor.RED + this.plugin.getMessage("village-centers.remove.no-exist"));
             return;
         }
-        this.plugin.getDatabase().removeCentre(name);
         VersionUtil.getVillageManager().removeVillage(centre);
-        player.sendMessage(ChatColor.GREEN + "Successfully removed an artificial village center!");
-
+        this.plugin.getDatabase().removeCentre(name);
+        player.sendMessage(ChatColor.GREEN + this.plugin.getMessage("village-centers.remove.remove-success"));
     }
 
     private void list(Player player) {
         // TODO async it
         Map<String, Location> map = this.plugin.getDatabase().getCentres();
         if (map.isEmpty()) {
-            player.sendMessage(ChatColor.YELLOW + "There are no existing artificial village centers!");
+            player.sendMessage(ChatColor.YELLOW + this.plugin.getMessage("village-centers.list.no-exist"));
             return;
         }
         map.forEach((str, loc) -> {

@@ -1,26 +1,27 @@
 package com.solarrabbit.largeraids.v1_15;
 
+import java.util.function.Predicate;
 import com.solarrabbit.largeraids.AbstractVillages;
-import com.solarrabbit.largeraids.LargeRaids;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.craftbukkit.v1_15_R1.CraftWorld;
 import org.bukkit.craftbukkit.v1_15_R1.entity.CraftVillager;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Villager;
-import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitRunnable;
 import net.minecraft.server.v1_15_R1.BlockPosition;
 import net.minecraft.server.v1_15_R1.GlobalPos;
 import net.minecraft.server.v1_15_R1.MemoryModuleType;
 import net.minecraft.server.v1_15_R1.VillagePlace;
 import net.minecraft.server.v1_15_R1.VillagePlaceType;
 import net.minecraft.server.v1_15_R1.WorldServer;
+import net.minecraft.server.v1_15_R1.VillagePlace.Occupancy;
 
 public class CustomVillages implements AbstractVillages {
     private static final VillagePlaceType JOB_TYPE = VillagePlaceType.g;
+    private static final Predicate<VillagePlaceType> PRED_JOB = (type) -> type == JOB_TYPE;
 
     @Override
-    public void addVillage(Location location) {
+    public void addVillage(Location location, Runnable ifSuccess, Runnable ifFail) {
         WorldServer nmsWorld = ((CraftWorld) location.getWorld()).getHandle();
         BlockPosition blockPos = getBlockPosFromLocation(location);
         VillagePlace villageRecordManager = nmsWorld.B();
@@ -33,23 +34,28 @@ public class CustomVillages implements AbstractVillages {
 
         Villager villager2 = (Villager) location.getWorld().spawnEntity(location, EntityType.VILLAGER);
 
-        Bukkit.getScheduler().runTaskLater(JavaPlugin.getPlugin(LargeRaids.class), () -> {
-            villager.remove();
-            villager2.remove();
-        }, 100);
+        BukkitRunnable runnable = new BukkitRunnable() {
+            @Override
+            public void run() {
+                villager.remove();
+                villager2.remove();
+
+                if (villageRecordManager.a(PRED_JOB, blockPos, 1, Occupancy.IS_OCCUPIED) >= 1) {
+                    ifSuccess.run();
+                } else {
+                    ifFail.run();
+                }
+            }
+        };
+        runnable.runTaskLater(getPlugin(), 100);
     }
 
     @Override
-    public boolean removeVillage(Location location) {
+    public void removeVillage(Location location) {
         WorldServer nmsWorld = ((CraftWorld) location.getWorld()).getHandle();
         BlockPosition blockPos = getBlockPosFromLocation(location);
         VillagePlace villageRecordManager = nmsWorld.B();
-        if (!villageRecordManager.a(blockPos, VillagePlaceType.a)) {
-            return false;
-        } else {
-            villageRecordManager.a(blockPos);
-            return true;
-        }
+        villageRecordManager.a(blockPos);
     }
 
     private BlockPosition getBlockPosFromLocation(Location loc) {

@@ -36,7 +36,6 @@ import com.solarrabbit.largeraids.listener.RaidListener;
 import com.solarrabbit.largeraids.support.Placeholder;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
-import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
