@@ -26,7 +26,7 @@ public class CustomVillages implements AbstractVillages {
     public void addVillage(Location location, Runnable ifSuccess, Runnable ifFail) {
         ServerLevel nmsWorld = ((CraftWorld) location.getWorld()).getHandle();
         BlockPos blockPos = getBlockPosFromLocation(location);
-        PoiManager villageRecordManager = nmsWorld.getPoiManager();
+        PoiManager villageRecordManager = getManager(location);
         villageRecordManager.add(blockPos, JOB_TYPE);
 
         Villager villager = (Villager) location.getWorld().spawnEntity(location, EntityType.VILLAGER);
@@ -54,14 +54,18 @@ public class CustomVillages implements AbstractVillages {
 
     @Override
     public void removeVillage(Location location) {
-        ServerLevel nmsWorld = ((CraftWorld) location.getWorld()).getHandle();
         BlockPos blockPos = getBlockPosFromLocation(location);
-        PoiManager villageRecordManager = nmsWorld.getPoiManager();
+        PoiManager villageRecordManager = getManager(location);
         villageRecordManager.remove(blockPos);
     }
 
     private BlockPos getBlockPosFromLocation(Location loc) {
         return new BlockPos(loc.getX(), loc.getY(), loc.getZ());
+    }
+
+    private PoiManager getManager(Location loc) {
+        ServerLevel nmsWorld = ((CraftWorld) loc.getWorld()).getHandle();
+        return nmsWorld.getPoiManager();
     }
 
 }
