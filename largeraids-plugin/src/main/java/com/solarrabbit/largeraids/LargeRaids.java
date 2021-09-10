@@ -33,6 +33,7 @@ import com.solarrabbit.largeraids.database.SQLite;
 import com.solarrabbit.largeraids.listener.DropInLavaTriggerListener;
 import com.solarrabbit.largeraids.listener.NewMoonTriggerListener;
 import com.solarrabbit.largeraids.listener.RaidListener;
+import com.solarrabbit.largeraids.listener.omen.KillCaptainListener;
 import com.solarrabbit.largeraids.support.Placeholder;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
@@ -60,6 +61,8 @@ public final class LargeRaids extends JavaPlugin {
 
         RaidListener mainListener = new RaidListener(this);
         this.getServer().getPluginManager().registerEvents(mainListener, this);
+        // TODO testing
+        this.getServer().getPluginManager().registerEvents(new KillCaptainListener(this), this);
         mainListener.init();
 
         this.getCommand("lrstart").setExecutor(new StartRaidCommand());
