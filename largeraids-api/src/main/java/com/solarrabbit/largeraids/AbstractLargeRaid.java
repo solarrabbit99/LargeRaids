@@ -84,7 +84,11 @@ public abstract class AbstractLargeRaid {
     }
 
     public int getTotalRaidersAlive() {
-        return this.currentRaid.getRaiders().size();
+        return this.currentRaid == null ? 0 : this.currentRaid.getRaiders().size();
+    }
+
+    public Location getCentre() {
+        return this.currentRaid == null ? null : this.centre;
     }
 
     protected void setRaid(Raid raid) {
