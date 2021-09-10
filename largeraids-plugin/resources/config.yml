@@ -95,6 +95,12 @@ trigger:
   new-moon:
     enabled: false
 
+# If enabled, large raids can only be triggered for artificial village centers registered
+# by the plugin. Make sure that your artificial village centers are at least 128 blocks/
+# 8 chunks away from each other and other villager-claimed village blocks (e.g. job block,
+# bed, bell).
+artificial-only: false
+
 ############################################################
 # +------------------------------------------------------+ #
 # |                       Messages                       | #
