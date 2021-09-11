@@ -16,7 +16,11 @@ public abstract class TriggerListener implements Listener {
         AbstractLargeRaid largeRaid = VersionUtil.createLargeRaid(loc, player);
         largeRaid.startRaid();
 
-        isAllowed(largeRaid.getCenter()).whenComplete((bool, exp) -> {
+        Location center = largeRaid.getCenter();
+        if (center == null)
+            return;
+
+        isAllowed(center).whenComplete((bool, exp) -> {
             if (exp != null)
                 throw new RuntimeException(exp);
 
@@ -32,8 +36,9 @@ public abstract class TriggerListener implements Listener {
     }
 
     private CompletableFuture<Boolean> isAllowed(Location loc) {
-        return getPlugin().getConfig().getBoolean("artificial-only") ? isInDatabase(loc)
-                : CompletableFuture.completedFuture(true);
+        if (getPlugin().getConfig().getBoolean("artificial-only"))
+            return isInDatabase(loc);
+        return CompletableFuture.completedFuture(true);
     }
 
     private CompletableFuture<Boolean> isInDatabase(Location loc) {

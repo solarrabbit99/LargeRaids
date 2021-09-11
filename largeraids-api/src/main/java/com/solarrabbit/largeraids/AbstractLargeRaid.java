@@ -94,7 +94,7 @@ public abstract class AbstractLargeRaid {
      * @throws NullPointerException if the large raid has not attempted to start
      */
     public Location getCenter() {
-        return this.currentRaid.getLocation();
+        return this.currentRaid == null ? null : this.centre;
     }
 
     protected void setRaid(Raid raid) {
