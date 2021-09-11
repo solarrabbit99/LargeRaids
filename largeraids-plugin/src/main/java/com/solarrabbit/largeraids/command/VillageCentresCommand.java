@@ -54,7 +54,7 @@ public class VillageCentresCommand implements CommandExecutor {
                     return;
                 }
 
-                if (player.isFlying() || player.isInWater()) {
+                if (player.isFlying() || (VersionUtil.isAtLeast("v1_16_R3") && player.isInWater())) {
                     player.sendMessage(ChatColor.RED + this.plugin.getMessage("village-centers.add.add-unsafe"));
                     return;
                 }
