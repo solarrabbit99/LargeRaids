@@ -87,8 +87,14 @@ public abstract class AbstractLargeRaid {
         return this.currentRaid == null ? 0 : this.currentRaid.getRaiders().size();
     }
 
-    public Location getCentre() {
-        return this.currentRaid == null ? null : this.centre;
+    /**
+     * Returns the actual center of the raid.
+     *
+     * @return {@code null} if the raid has stopped/failed to start
+     * @throws NullPointerException if the large raid has not attempted to start
+     */
+    public Location getCenter() {
+        return this.currentRaid.getLocation();
     }
 
     protected void setRaid(Raid raid) {

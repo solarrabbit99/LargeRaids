@@ -26,6 +26,7 @@ import net.minecraft.server.v1_16_R3.MinecraftServer;
 import net.minecraft.server.v1_16_R3.WorldServer;
 import net.minecraft.server.v1_16_R3.PersistentRaid;
 import net.minecraft.server.v1_16_R3.PlayerInteractManager;
+import net.minecraft.server.v1_16_R3.Raid;
 
 public class LargeRaid extends AbstractLargeRaid {
 
@@ -61,7 +62,9 @@ public class LargeRaid extends AbstractLargeRaid {
 
     @Override
     public void stopRaid() {
-        this.getNMSRaid().stop();
+        Raid raid = this.getNMSRaid();
+        if (raid != null)
+            raid.stop();
         RaidListener.removeLargeRaid(this);
     }
 
@@ -101,7 +104,7 @@ public class LargeRaid extends AbstractLargeRaid {
         }
 
         Location loc = this.getWaveSpawnLocation();
-        net.minecraft.server.v1_16_R3.Raid nmsRaid = getNMSRaid();
+        Raid nmsRaid = getNMSRaid();
 
         for (RaiderConfig raider : RaiderConfig.values()) {
             for (int i = 0; i < raider.getSpawnNumber(this.currentWave); i++) {
@@ -129,7 +132,7 @@ public class LargeRaid extends AbstractLargeRaid {
         }
     }
 
-    private net.minecraft.server.v1_16_R3.Raid getNMSRaid() {
+    private Raid getNMSRaid() {
         BlockPosition blkPos = new BlockPosition(centre.getX(), centre.getY(), centre.getZ());
         WorldServer level = ((CraftWorld) centre.getWorld()).getHandle();
         return level.b_(blkPos);
@@ -151,7 +154,7 @@ public class LargeRaid extends AbstractLargeRaid {
         }
         raids.b();
 
-        net.minecraft.server.v1_16_R3.Raid raid = this.getNMSRaid();
+        Raid raid = this.getNMSRaid();
         raid.badOmenLevel = 5;
         this.setRaid(new CraftRaid(raid));
     }

@@ -15,7 +15,8 @@ public abstract class TriggerListener implements Listener {
     protected void triggerRaid(Location loc, Player player) {
         AbstractLargeRaid largeRaid = VersionUtil.createLargeRaid(loc, player);
         largeRaid.startRaid();
-        isAllowed(largeRaid.getCentre()).whenComplete((bool, exp) -> {
+
+        isAllowed(largeRaid.getCenter()).whenComplete((bool, exp) -> {
             if (exp != null)
                 throw new RuntimeException(exp);
 
