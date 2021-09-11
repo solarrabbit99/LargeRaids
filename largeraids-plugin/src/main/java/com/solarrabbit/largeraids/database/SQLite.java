@@ -1,6 +1,5 @@
 package com.solarrabbit.largeraids.database;
 
-import java.io.File;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -9,6 +8,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -27,108 +27,110 @@ public class SQLite extends Database {
     }
 
     @Override
-    public Connection getSQLConnection() {
-        File dataFile = this.createOrOpenDataFile();
-        try {
-            if (connection != null && !connection.isClosed()) {
-                return connection;
+    public CompletableFuture<Connection> getSQLConnection() {
+        return CompletableFuture.supplyAsync(() -> this.createOrOpenDataFile()).thenApply(dataFile -> {
+            try {
+                Class.forName("org.sqlite.JDBC");
+                return DriverManager.getConnection("jdbc:sqlite:" + dataFile);
+            } catch (SQLException | ClassNotFoundException ex) {
+                ex.printStackTrace();
+                return null;
             }
-            Class.forName("org.sqlite.JDBC");
-            connection = DriverManager.getConnection("jdbc:sqlite:" + dataFile);
-            return connection;
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-        } catch (ClassNotFoundException ex) {
-            ex.printStackTrace();
-        }
-        return null;
+        });
     }
 
     @Override
     public void load() {
-        this.connection = getSQLConnection();
-        try {
-            Statement s = this.connection.createStatement();
-            s.executeUpdate(SQLITE_CREATE_VILLAGES_TABLE_STATEMENT);
-            s.close();
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-        }
-        initialize();
+        getSQLConnection().thenAccept(connection -> {
+            try {
+                Statement s = connection.createStatement();
+                s.executeUpdate(SQLITE_CREATE_VILLAGES_TABLE_STATEMENT);
+                s.close();
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+            testConnection(connection);
+        });
     }
 
     @Override
-    public Map<String, Location> getCentres() {
+    public CompletableFuture<Map<String, Location>> getCentres() {
         Map<String, Location> centres = new HashMap<>();
-        try {
-            this.connection = getSQLConnection();
-            PreparedStatement ps = connection.prepareStatement("SELECT * FROM " + VILLAGES_TABLE_NAME + ";");
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()) {
-                String name = rs.getString("name");
-                World world = this.plugin.getServer().getWorld(rs.getString("world"));
-                double x = rs.getDouble("x");
-                double y = rs.getDouble("y");
-                double z = rs.getDouble("z");
-                Location location = new Location(world, x, y, z);
-                centres.put(name, location);
+        return getSQLConnection().thenApply(connection -> {
+            try {
+                PreparedStatement ps = connection.prepareStatement("SELECT * FROM " + VILLAGES_TABLE_NAME + ";");
+                ResultSet rs = ps.executeQuery();
+                while (rs.next()) {
+                    String name = rs.getString("name");
+                    World world = this.plugin.getServer().getWorld(rs.getString("world"));
+                    double x = rs.getDouble("x");
+                    double y = rs.getDouble("y");
+                    double z = rs.getDouble("z");
+                    Location location = new Location(world, x, y, z);
+                    centres.put(name, location);
+                }
+                close(ps, connection);
+                return centres;
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+                return null;
             }
-            close(ps);
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-        }
-        return centres;
+        });
     }
 
     @Override
-    public void addCentre(Location location, String name) {
-        try {
-            connection = getSQLConnection();
-            PreparedStatement ps = connection.prepareStatement("REPLACE INTO " + VILLAGES_TABLE_NAME
-                    + " (name, world, x, y, z) VALUES('" + name + "', '" + location.getWorld().getName() + "', "
-                    + location.getX() + ", " + location.getY() + ", " + location.getZ() + ");");
-            ps.executeUpdate();
-            close(ps);
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-        }
-    }
-
-    @Override
-    public void removeCentre(String name) {
-        try {
-            connection = getSQLConnection();
-            PreparedStatement ps = connection
-                    .prepareStatement("DELETE FROM " + VILLAGES_TABLE_NAME + " WHERE name = '" + name + "';");
-            ps.executeUpdate();
-            close(ps);
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-        }
-    }
-
-    @Override
-    public Location getCentre(String name) {
-        try {
-            connection = getSQLConnection();
-            Location location = null;
-
-            PreparedStatement ps = connection
-                    .prepareStatement("SELECT * FROM " + VILLAGES_TABLE_NAME + " WHERE name = '" + name + "';");
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()) {
-                World world = this.plugin.getServer().getWorld(rs.getString("world"));
-                double x = rs.getDouble("x");
-                double y = rs.getDouble("y");
-                double z = rs.getDouble("z");
-                location = new Location(world, x, y, z);
+    public CompletableFuture<Void> addCentre(Location location, String name) {
+        return getSQLConnection().thenAccept(connection -> {
+            try {
+                PreparedStatement ps = connection.prepareStatement("REPLACE INTO " + VILLAGES_TABLE_NAME
+                        + " (name, world, x, y, z) VALUES('" + name + "', '" + location.getWorld().getName() + "', "
+                        + location.getX() + ", " + location.getY() + ", " + location.getZ() + ");");
+                ps.executeUpdate();
+                close(ps, connection);
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+                throw new RuntimeException(ex);
             }
-            close(ps);
-            return location;
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-            return null;
-        }
+        });
+    }
+
+    @Override
+    public CompletableFuture<Void> removeCentre(String name) {
+        return getSQLConnection().thenAccept(connection -> {
+            try {
+                PreparedStatement ps = connection
+                        .prepareStatement("DELETE FROM " + VILLAGES_TABLE_NAME + " WHERE name = '" + name + "';");
+                ps.executeUpdate();
+                close(ps, connection);
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+                throw new RuntimeException(ex);
+            }
+        });
+    }
+
+    @Override
+    public CompletableFuture<Location> getCentre(String name) {
+        return getSQLConnection().thenApply(connection -> {
+            try {
+                Location location = null;
+                PreparedStatement ps = connection
+                        .prepareStatement("SELECT * FROM " + VILLAGES_TABLE_NAME + " WHERE name = '" + name + "';");
+                ResultSet rs = ps.executeQuery();
+                if (rs.next()) {
+                    World world = this.plugin.getServer().getWorld(rs.getString("world"));
+                    double x = rs.getDouble("x");
+                    double y = rs.getDouble("y");
+                    double z = rs.getDouble("z");
+                    location = new Location(world, x, y, z);
+                }
+                close(ps, connection);
+                return location;
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+                return null;
+            }
+        });
     }
 
 }

@@ -1,8 +1,10 @@
 package com.solarrabbit.largeraids.command;
 
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 import com.solarrabbit.largeraids.LargeRaids;
 import com.solarrabbit.largeraids.VersionUtil;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
@@ -19,12 +21,13 @@ public class VillageCentresCommand implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (!(sender instanceof Player))
-            return true;
         if (args.length == 0) {
-            this.list((Player) sender);
+            this.list(sender);
             return true;
         }
+
+        if (!(sender instanceof Player))
+            return true;
 
         switch (args[0]) {
         case "add":
@@ -43,49 +46,67 @@ public class VillageCentresCommand implements CommandExecutor {
     }
 
     private void add(Player player, String name) {
-        // TODO async it
-        Location existingCenter = this.plugin.getDatabase().getCentre(name);
-        if (existingCenter != null) {
-            player.sendMessage(ChatColor.RED + this.plugin.getMessage("village-centers.add.already-exist"));
-            return;
-        }
+        CompletableFuture<Location> existingCenter = this.plugin.getDatabase().getCentre(name);
+        existingCenter.thenAccept(center -> {
+            Bukkit.getScheduler().runTask(this.plugin, () -> {
+                if (center != null) {
+                    player.sendMessage(ChatColor.RED + this.plugin.getMessage("village-centers.add.already-exist"));
+                    return;
+                }
 
-        if (player.isFlying() || player.isInWater()) {
-            player.sendMessage(ChatColor.RED + this.plugin.getMessage("village-centers.add.add-unsafe"));
-            return;
-        }
+                if (player.isFlying() || player.isInWater()) {
+                    player.sendMessage(ChatColor.RED + this.plugin.getMessage("village-centers.add.add-unsafe"));
+                    return;
+                }
 
-        Location newCenter = player.getLocation();
-        Runnable ifSuccess = () -> {
-            this.plugin.getDatabase().addCentre(newCenter, name);
-            player.sendMessage(ChatColor.GREEN + this.plugin.getMessage("village-centers.add.add-success"));
-        };
-        Runnable ifFail = () -> player
-                .sendMessage(ChatColor.RED + this.plugin.getMessage("village-centers.add.add-fail"));
-        VersionUtil.getVillageManager().addVillage(newCenter, ifSuccess, ifFail);
+                Location newCenter = player.getLocation();
+                Runnable ifSuccess = () -> {
+                    CompletableFuture<Void> addCenter = this.plugin.getDatabase().addCentre(newCenter, name);
+                    addCenter.whenComplete((v, e) -> {
+                        if (e != null)
+                            throw new RuntimeException(e);
+                        player.sendMessage(ChatColor.GREEN + this.plugin.getMessage("village-centers.add.add-success"));
+                    });
+                };
+                Runnable ifFail = () -> player
+                        .sendMessage(ChatColor.RED + this.plugin.getMessage("village-centers.add.add-fail"));
+                VersionUtil.getVillageManager().addVillage(newCenter, ifSuccess, ifFail);
+            });
+        });
     }
 
     private void remove(Player player, String name) {
-        // TODO async it
-        Location centre = this.plugin.getDatabase().getCentre(name);
-        if (centre == null) {
-            player.sendMessage(ChatColor.RED + this.plugin.getMessage("village-centers.remove.no-exist"));
-            return;
-        }
-        VersionUtil.getVillageManager().removeVillage(centre);
-        this.plugin.getDatabase().removeCentre(name);
-        player.sendMessage(ChatColor.GREEN + this.plugin.getMessage("village-centers.remove.remove-success"));
+        CompletableFuture<Location> existingCenter = this.plugin.getDatabase().getCentre(name);
+        existingCenter.thenAccept(center -> {
+            Bukkit.getScheduler().runTask(this.plugin, () -> {
+                if (center == null) {
+                    player.sendMessage(ChatColor.RED + this.plugin.getMessage("village-centers.remove.no-exist"));
+                    return;
+                }
+                VersionUtil.getVillageManager().removeVillage(center);
+                CompletableFuture<Void> removeCenter = this.plugin.getDatabase().removeCentre(name);
+                removeCenter.whenComplete((v, e) -> {
+                    if (e != null)
+                        throw new RuntimeException(e);
+                    player.sendMessage(
+                            ChatColor.GREEN + this.plugin.getMessage("village-centers.remove.remove-success"));
+                });
+            });
+        });
     }
 
-    private void list(Player player) {
-        // TODO async it
-        Map<String, Location> map = this.plugin.getDatabase().getCentres();
-        if (map.isEmpty()) {
-            player.sendMessage(ChatColor.YELLOW + this.plugin.getMessage("village-centers.list.no-exist"));
-            return;
-        }
-        map.forEach((str, loc) -> {
-            player.sendMessage(ChatColor.GREEN + str + " " + getLocString(loc));
+    private void list(CommandSender sender) {
+        CompletableFuture<Map<String, Location>> centerMap = this.plugin.getDatabase().getCentres();
+        centerMap.thenAccept(map -> {
+            if (map.isEmpty()) {
+                sender.sendMessage(ChatColor.YELLOW + this.plugin.getMessage("village-centers.list.no-exist"));
+                return;
+            }
+            map.forEach((str, loc) -> {
+                sender.sendMessage(ChatColor.GREEN + str + " " + getLocString(loc));
+            });
+        }).exceptionally(e -> {
+            throw new RuntimeException(e);
         });
     }
 

@@ -4,10 +4,10 @@ import java.io.File;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.Map;
-
+import java.util.concurrent.CompletableFuture;
 import org.bukkit.Location;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -18,7 +18,6 @@ public abstract class Database {
     /** Name of database table. */
     protected static final String DATABASE_NAME = "plugin_data";
     protected static final String VILLAGES_TABLE_NAME = "custom_villages";
-    protected Connection connection;
     protected final JavaPlugin plugin;
 
     protected Database(JavaPlugin plugin) {
@@ -30,7 +29,7 @@ public abstract class Database {
      *
      * @return SQL connection
      */
-    public abstract Connection getSQLConnection();
+    public abstract CompletableFuture<Connection> getSQLConnection();
 
     /**
      * Executes create table statement.
@@ -38,63 +37,42 @@ public abstract class Database {
     public abstract void load();
 
     /**
-     * Initializes and tests SQL connection by attempting to execute select
-     * statements from respective tables in the database.
+     * Tests SQL connection by attempting to execute select statements from
+     * respective tables in the database. The provided connection will be closed
+     * after.
+     * 
+     * @param connection used by {@link #load()}
      */
-    protected void initialize() {
-        connection = this.getSQLConnection();
+    protected void testConnection(Connection connection) {
         try {
             PreparedStatement ps = connection.prepareStatement("SELECT * FROM " + VILLAGES_TABLE_NAME + ";");
-            ResultSet rs = ps.executeQuery();
-            close(ps, rs);
-        } catch (SQLException ex) {
-            ex.printStackTrace();
+            ps.executeQuery();
+            close(ps, connection);
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
     }
 
-    public abstract Map<String, Location> getCentres();
+    public abstract CompletableFuture<Map<String, Location>> getCentres();
 
-    public abstract void addCentre(Location location, String name);
+    public abstract CompletableFuture<Void> addCentre(Location location, String name);
 
-    public abstract void removeCentre(String index);
+    public abstract CompletableFuture<Void> removeCentre(String index);
 
-    public abstract Location getCentre(String name);
-
-    /**
-     * Releases both the {@link PreparedStatement} and {@link ResultSet} of the
-     * database.
-     *
-     * @param ps PreparedStatement of the database
-     * @param rs ResultSet of the database
-     */
-    protected void close(PreparedStatement ps, ResultSet rs) {
-        try {
-            if (ps != null) {
-                ps.close();
-            }
-            if (rs != null) {
-                rs.close();
-            }
-            if (this.connection != null) {
-                connection.close();
-            }
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-        }
-    }
+    public abstract CompletableFuture<Location> getCentre(String name);
 
     /**
-     * Closes {@link PreparedStatement} and {@link Connection} to the database.
+     * Releases both the {@link Statement} and {@link Connection} of the database.
      *
-     * @param ps   PreparedStatement of the database
-     * @param conn Connection to the database
+     * @param statement  opened by the database
+     * @param connection with the database
      */
-    protected void close(PreparedStatement ps) {
+    protected void close(Statement statement, Connection connection) {
         try {
-            if (ps != null) {
-                ps.close();
+            if (statement != null) {
+                statement.close();
             }
-            if (this.connection != null) {
+            if (connection != null) {
                 connection.close();
             }
         } catch (SQLException ex) {
@@ -103,15 +81,15 @@ public abstract class Database {
     }
 
     protected File createOrOpenDataFile() {
-        File dataFolder = new File(this.plugin.getDataFolder(), DATABASE_NAME + ".db");
-        if (!dataFolder.exists()) {
+        File dataFile = new File(this.plugin.getDataFolder(), DATABASE_NAME + ".db");
+        if (!dataFile.exists()) {
             try {
-                dataFolder.createNewFile();
+                dataFile.createNewFile();
             } catch (IOException ex) {
                 ex.printStackTrace();
             }
         }
-        return dataFolder;
+        return dataFile;
     }
 
 }
