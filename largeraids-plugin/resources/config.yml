@@ -28,8 +28,8 @@ raid:
 
 hero-of-the-village:
   # Level 12 is enough to grant a player a cost of 1 emerald for any default trades. Players
-  # will always receive the hero of the village effect with level of maximum of the value
-  # stated or 5, whichever is higher.
+  # will always receive the hero of the village effect with level of the value stated or 5,
+  # whichever is higher.
   level: 12
   # In minutes.
   duration: 40
