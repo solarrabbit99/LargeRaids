@@ -33,6 +33,7 @@ import com.solarrabbit.largeraids.database.SQLite;
 import com.solarrabbit.largeraids.listener.DropInLavaTriggerListener;
 import com.solarrabbit.largeraids.listener.NewMoonTriggerListener;
 import com.solarrabbit.largeraids.listener.RaidListener;
+import com.solarrabbit.largeraids.listener.TriggerListener;
 import com.solarrabbit.largeraids.listener.omen.KillCaptainListener;
 import com.solarrabbit.largeraids.support.Placeholder;
 import org.bukkit.Bukkit;
@@ -40,16 +41,13 @@ import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.player.PlayerDropItemEvent;
-import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public final class LargeRaids extends JavaPlugin {
     private YamlConfiguration messages;
     private PluginLogger logger;
     private Database db;
-    private Set<Integer> configurableTasks;
+    private Set<TriggerListener> registeredTriggerListeners;
 
     @Override
     public void onEnable() {
@@ -61,8 +59,6 @@ public final class LargeRaids extends JavaPlugin {
 
         RaidListener mainListener = new RaidListener(this);
         this.getServer().getPluginManager().registerEvents(mainListener, this);
-        // TODO testing
-        this.getServer().getPluginManager().registerEvents(new KillCaptainListener(this), this);
         mainListener.init();
 
         this.getCommand("lrstart").setExecutor(new StartRaidCommand());
@@ -136,20 +132,29 @@ public final class LargeRaids extends JavaPlugin {
     }
 
     private void registerTriggers() {
-        PlayerDropItemEvent.getHandlerList().unregister(this);
-        EntityDamageEvent.getHandlerList().unregister(this);
-        if (this.configurableTasks != null) {
-            for (Integer id : configurableTasks) {
-                Bukkit.getScheduler().cancelTask(id);
+        unregisterTriggers();
+
+        if (testTrigger("omen"))
+            registerTrigger(new KillCaptainListener(this), true);
+        if (testTrigger("drop-item-in-lava"))
+            registerTrigger(new DropInLavaTriggerListener(), true);
+        if (testTrigger("new-moon"))
+            registerTrigger(new NewMoonTriggerListener(this), false);
+    }
+
+    private void unregisterTriggers() {
+        if (this.registeredTriggerListeners != null) {
+            for (TriggerListener listener : registeredTriggerListeners) {
+                listener.unregisterListener();
             }
         }
-        this.configurableTasks = new HashSet<>();
+        this.registeredTriggerListeners = new HashSet<>();
+    }
 
-        PluginManager manager = this.getServer().getPluginManager();
-        if (testTrigger("drop-item-in-lava"))
-            manager.registerEvents(new DropInLavaTriggerListener(), this);
-        if (testTrigger("new-moon"))
-            this.configurableTasks.add(new NewMoonTriggerListener(this).init());
+    private void registerTrigger(TriggerListener listener, boolean registerEvents) {
+        if (registerEvents)
+            this.getServer().getPluginManager().registerEvents(listener, this);
+        this.registeredTriggerListeners.add(listener);
     }
 
     private boolean testTrigger(String trigger) {

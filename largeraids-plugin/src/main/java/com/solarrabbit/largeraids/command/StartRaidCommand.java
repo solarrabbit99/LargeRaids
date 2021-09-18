@@ -27,4 +27,9 @@ public class StartRaidCommand extends TriggerListener implements CommandExecutor
         }
     }
 
+    @Override
+    public void unregisterListener() {
+        // Nothing to do here since this trigger isn't a configurable option.
+    }
+
 }

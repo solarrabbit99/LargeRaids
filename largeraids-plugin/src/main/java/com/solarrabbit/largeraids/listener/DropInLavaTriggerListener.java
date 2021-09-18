@@ -1,9 +1,7 @@
 package com.solarrabbit.largeraids.listener;
 
 import java.util.UUID;
-
 import com.solarrabbit.largeraids.item.SummonItem;
-
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.EntityType;
@@ -40,6 +38,12 @@ public class DropInLavaTriggerListener extends TriggerListener {
             entity.remove();
             this.triggerRaid(entity.getLocation(), Bukkit.getPlayer(uuid));
         }
+    }
+
+    @Override
+    public void unregisterListener() {
+        EntityDamageEvent.getHandlerList().unregister(this);
+        PlayerDropItemEvent.getHandlerList().unregister(this);
     }
 
     private NamespacedKey getNamespacedKey() {

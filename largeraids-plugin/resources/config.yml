@@ -73,6 +73,13 @@ rewards:
 ############################################################
 
 trigger:
+  # Players get bad omen of level higher than 5 if enabled. Raids will all be large
+  # raids, with 5 or the accumulative omen level of all players entering the village,
+  # whichever is higher. Maximum number of waves will be the number of waves mentioned
+  # above in `raid.waves`.
+  omen:
+    enabled: true
+    max-level: 10
   # Dropping summoning items in lava will trigger a large raid if in vicinity of a
   # village.
   drop-item-in-lava:

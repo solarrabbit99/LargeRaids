@@ -35,6 +35,8 @@ public abstract class TriggerListener implements Listener {
         return JavaPlugin.getPlugin(LargeRaids.class);
     }
 
+    public abstract void unregisterListener();
+
     private CompletableFuture<Boolean> isAllowed(Location loc) {
         if (getPlugin().getConfig().getBoolean("artificial-only"))
             return isInDatabase(loc);
