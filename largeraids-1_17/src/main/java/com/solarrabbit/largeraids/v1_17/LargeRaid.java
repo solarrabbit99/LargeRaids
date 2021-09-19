@@ -34,6 +34,10 @@ public class LargeRaid extends AbstractLargeRaid {
         super(plugin, player);
     }
 
+    public LargeRaid(LargeRaids plugin, Player player, int omenLevel) {
+        super(plugin, player, omenLevel);
+    }
+
     @Override
     public void startRaid() {
         if (this.centre.getWorld().getDifficulty() == Difficulty.PEACEFUL) {
@@ -46,16 +50,18 @@ public class LargeRaid extends AbstractLargeRaid {
         if (getNMSRaid() != null)
             return;
 
+        RaidListener.addLargeRaid(this); // Register itself as large raid before RaidTriggerEvent
         triggerRaid(this.centre);
-        this.loading = true;
+        this.loading = true; // IMPORTANT, else next wave will be triggered.
 
         Bukkit.getScheduler().runTaskLater(this.plugin, () -> {
             if (this.currentRaid.getStatus() == RaidStatus.ONGOING) {
-                RaidListener.addLargeRaid(this);
                 this.broadcastWave();
                 Sound sound = getSound(this.plugin.getConfig().getString("raid.sounds.summon", null));
                 if (sound != null)
                     playSoundToPlayers(sound);
+            } else {
+                RaidListener.removeLargeRaid(this);
             }
         }, 2);
     }

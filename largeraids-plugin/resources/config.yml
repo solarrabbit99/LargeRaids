@@ -83,7 +83,7 @@ trigger:
   # Dropping summoning items in lava will trigger a large raid if in vicinity of a
   # village.
   drop-item-in-lava:
-    enabled: true
+    enabled: false
     # Note: The summoning item stated here will not lose its primary functionality. For
     # example, totems will still be consumed and revive the player holding it.
     item:

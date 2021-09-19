@@ -92,6 +92,7 @@
 												<include>com/solarrabbit/largeraids/AbstractLargeRaid.class</include>
 												<include>com/solarrabbit/largeraids/AbstractLargeRaid$1.class</include>
 												<include>com/solarrabbit/largeraids/AbstractVillages.class</include>
+												<include>com/solarrabbit/largeraids/AbstractRaider.class</include>
 											</includes>
 										</filter>
 										<filter>

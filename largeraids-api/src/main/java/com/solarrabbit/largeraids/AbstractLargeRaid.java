@@ -25,9 +25,11 @@ import org.bukkit.potion.PotionEffectType;
 
 public abstract class AbstractLargeRaid {
     private static final int RADIUS = 96;
+    private static final int INNER_RADIUS = 64;
     protected final LargeRaids plugin;
     private final int maxTotalWaves;
     private int totalWaves;
+    private int omenLevel;
     protected Location centre;
     protected Raid currentRaid;
     protected int currentWave;
@@ -40,9 +42,17 @@ public abstract class AbstractLargeRaid {
         this.centre = player.getLocation(); // Not yet a real centre...
         this.player = player;
         this.maxTotalWaves = plugin.getConfig().getInt("raid.waves");
-        this.totalWaves = this.maxTotalWaves;
         this.currentWave = 1;
         this.pendingHeroes = new HashSet<>();
+
+        this.totalWaves = this.maxTotalWaves;
+        this.omenLevel = this.maxTotalWaves;
+    }
+
+    public AbstractLargeRaid(LargeRaids plugin, Player player, int omenLevel) {
+        this(plugin, player);
+        this.totalWaves = Math.max(5, omenLevel);
+        this.omenLevel = omenLevel;
     }
 
     public boolean isSimilar(Raid raid) {
@@ -89,6 +99,11 @@ public abstract class AbstractLargeRaid {
         return this.currentRaid == null ? 0 : this.currentRaid.getRaiders().size();
     }
 
+    public void absorbOmenLevel(int level) {
+        this.omenLevel = Math.min(this.maxTotalWaves, this.omenLevel + level);
+        this.totalWaves = Math.max(5, omenLevel);
+    }
+
     /**
      * Returns the actual center of the raid.
      *
@@ -114,9 +129,18 @@ public abstract class AbstractLargeRaid {
         return list.isEmpty() ? null : list.get(0).getLocation();
     }
 
-    protected Set<Player> getPlayersInRadius() {
+    public Set<Player> getPlayersInRadius() {
         Collection<Entity> collection = this.centre.getWorld().getNearbyEntities(this.centre, RADIUS, RADIUS, RADIUS,
                 entity -> entity instanceof Player
+                        && centre.distanceSquared(entity.getLocation()) <= Math.pow(RADIUS, 2));
+        Set<Player> set = new HashSet<>();
+        collection.forEach(player -> set.add((Player) player));
+        return set;
+    }
+
+    public Set<Player> getPlayersInInnerRadius() {
+        Collection<Entity> collection = this.centre.getWorld().getNearbyEntities(this.centre, INNER_RADIUS,
+                INNER_RADIUS, INNER_RADIUS, entity -> entity instanceof Player
                         && centre.distanceSquared(entity.getLocation()) <= Math.pow(RADIUS, 2));
         Set<Player> set = new HashSet<>();
         collection.forEach(player -> set.add((Player) player));

@@ -14,6 +14,15 @@ public abstract class TriggerListener implements Listener {
 
     protected void triggerRaid(Player player) {
         AbstractLargeRaid largeRaid = VersionUtil.createLargeRaid(player);
+        startRaid(largeRaid);
+    }
+
+    protected void triggerRaid(Player player, int omenLevel) {
+        AbstractLargeRaid largeRaid = VersionUtil.createLargeRaid(player, omenLevel);
+        startRaid(largeRaid);
+    }
+
+    private void startRaid(AbstractLargeRaid largeRaid) {
         largeRaid.startRaid();
 
         Location center = largeRaid.getCenter();

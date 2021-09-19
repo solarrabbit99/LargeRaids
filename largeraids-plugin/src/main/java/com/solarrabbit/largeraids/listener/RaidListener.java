@@ -3,8 +3,8 @@ package com.solarrabbit.largeraids.listener;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.Consumer;
 import com.solarrabbit.largeraids.AbstractLargeRaid;
-
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Raid;
@@ -18,6 +18,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public class RaidListener implements Listener {
     private static final Set<AbstractLargeRaid> currentRaids = new HashSet<>();
+    private static final Set<Runnable> tickTasks = new HashSet<>();
+    private static final Set<Consumer<AbstractLargeRaid>> tickIteratingTasks = new HashSet<>();
     private final JavaPlugin plugin;
 
     public RaidListener(JavaPlugin plugin) {
@@ -71,6 +73,13 @@ public class RaidListener implements Listener {
             if (!largeRaid.isLoading() && largeRaid.getTotalRaidersAlive() == 0 && !largeRaid.isLastWave()) {
                 largeRaid.triggerNextWave();
             }
+            for (Consumer<AbstractLargeRaid> task : tickIteratingTasks) {
+                task.accept(largeRaid);
+            }
+        }
+
+        for (Runnable task : tickTasks) {
+            task.run();
         }
     }
 
@@ -81,4 +90,21 @@ public class RaidListener implements Listener {
     public static Optional<AbstractLargeRaid> matchingLargeRaid(Raid raid) {
         return currentRaids.stream().filter(largeRaid -> largeRaid.isSimilar(raid)).findFirst();
     }
+
+    public static void registerTickTask(Runnable task) {
+        tickTasks.add(task);
+    }
+
+    public static void registerTickTask(Consumer<AbstractLargeRaid> task) {
+        tickIteratingTasks.add(task);
+    }
+
+    public static void unregisterTickTask(Runnable task) {
+        tickTasks.remove(task);
+    }
+
+    public static void unregisterTickTask(Consumer<AbstractLargeRaid> task) {
+        tickIteratingTasks.remove(task);
+    }
+
 }
