@@ -12,8 +12,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public abstract class TriggerListener implements Listener {
 
-    protected void triggerRaid(Location loc, Player player) {
-        AbstractLargeRaid largeRaid = VersionUtil.createLargeRaid(loc, player);
+    protected void triggerRaid(Player player) {
+        AbstractLargeRaid largeRaid = VersionUtil.createLargeRaid(player);
         largeRaid.startRaid();
 
         Location center = largeRaid.getCenter();

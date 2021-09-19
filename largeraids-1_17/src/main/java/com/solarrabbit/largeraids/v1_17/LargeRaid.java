@@ -30,8 +30,8 @@ import net.minecraft.world.level.saveddata.SavedData;
 
 public class LargeRaid extends AbstractLargeRaid {
 
-    public LargeRaid(LargeRaids plugin, Location location, Player player) {
-        super(plugin, location, player);
+    public LargeRaid(LargeRaids plugin, Player player) {
+        super(plugin, player);
     }
 
     @Override

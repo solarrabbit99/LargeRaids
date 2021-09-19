@@ -14,13 +14,13 @@ public class StartRaidCommand extends TriggerListener implements CommandExecutor
         if (args.length >= 1) {
             Player player = Bukkit.getPlayer(args[0]);
             if (player != null) {
-                triggerRaid(player.getLocation(), player);
+                triggerRaid(player);
                 return true;
             }
             return false;
         } else if (sender instanceof Player) {
             Player player = (Player) sender;
-            triggerRaid(player.getLocation(), player);
+            triggerRaid(player);
             return true;
         } else {
             return false;

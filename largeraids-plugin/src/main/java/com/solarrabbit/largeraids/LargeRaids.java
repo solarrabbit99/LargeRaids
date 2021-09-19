@@ -34,7 +34,7 @@ import com.solarrabbit.largeraids.listener.DropInLavaTriggerListener;
 import com.solarrabbit.largeraids.listener.NewMoonTriggerListener;
 import com.solarrabbit.largeraids.listener.RaidListener;
 import com.solarrabbit.largeraids.listener.TriggerListener;
-import com.solarrabbit.largeraids.listener.omen.KillCaptainListener;
+import com.solarrabbit.largeraids.listener.omen.VillageAbsorbOmenListener;
 import com.solarrabbit.largeraids.support.Placeholder;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
@@ -135,7 +135,7 @@ public final class LargeRaids extends JavaPlugin {
         unregisterTriggers();
 
         if (testTrigger("omen"))
-            registerTrigger(new KillCaptainListener(this), true);
+            registerTrigger(new VillageAbsorbOmenListener(this), true);
         if (testTrigger("drop-item-in-lava"))
             registerTrigger(new DropInLavaTriggerListener(), true);
         if (testTrigger("new-moon"))

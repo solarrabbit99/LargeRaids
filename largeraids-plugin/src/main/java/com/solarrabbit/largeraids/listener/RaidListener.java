@@ -32,6 +32,10 @@ public class RaidListener implements Listener {
         currentRaids.remove(raid);
     }
 
+    public static int getNumOfRegisteredRaids() {
+        return currentRaids.size();
+    }
+
     @EventHandler
     public void onSpawn(RaidSpawnWaveEvent evt) {
         matchingLargeRaid(evt.getRaid()).ifPresent(largeRaid -> largeRaid.spawnNextWave());
@@ -74,7 +78,7 @@ public class RaidListener implements Listener {
         return currentRaids.stream().filter(largeRaid -> largeRaid.isSimilar(location)).findFirst();
     }
 
-    private Optional<AbstractLargeRaid> matchingLargeRaid(Raid raid) {
+    public static Optional<AbstractLargeRaid> matchingLargeRaid(Raid raid) {
         return currentRaids.stream().filter(largeRaid -> largeRaid.isSimilar(raid)).findFirst();
     }
 }

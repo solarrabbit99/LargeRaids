@@ -26,7 +26,8 @@ import org.bukkit.potion.PotionEffectType;
 public abstract class AbstractLargeRaid {
     private static final int RADIUS = 96;
     protected final LargeRaids plugin;
-    private final int totalWaves;
+    private final int maxTotalWaves;
+    private int totalWaves;
     protected Location centre;
     protected Raid currentRaid;
     protected int currentWave;
@@ -34,11 +35,12 @@ public abstract class AbstractLargeRaid {
     protected boolean loading;
     protected Player player;
 
-    public AbstractLargeRaid(LargeRaids plugin, Location location, Player player) {
+    public AbstractLargeRaid(LargeRaids plugin, Player player) {
         this.plugin = plugin;
-        this.centre = location; // Not yet a real centre...
+        this.centre = player.getLocation(); // Not yet a real centre...
         this.player = player;
-        this.totalWaves = plugin.getConfig().getInt("raid.waves");
+        this.maxTotalWaves = plugin.getConfig().getInt("raid.waves");
+        this.totalWaves = this.maxTotalWaves;
         this.currentWave = 1;
         this.pendingHeroes = new HashSet<>();
     }
@@ -150,14 +152,14 @@ public abstract class AbstractLargeRaid {
     public static int getDefaultWaveNumber(World world) {
         Difficulty difficulty = world.getDifficulty();
         switch (difficulty) {
-        case EASY:
-            return 3;
-        case NORMAL:
-            return 5;
-        case HARD:
-            return 7;
-        default:
-            return 0;
+            case EASY:
+                return 3;
+            case NORMAL:
+                return 5;
+            case HARD:
+                return 7;
+            default:
+                return 0;
         }
     }
 
