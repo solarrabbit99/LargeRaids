@@ -9,6 +9,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.raid.RaidTriggerEvent;
+import org.bukkit.potion.PotionEffectType;
 
 public class VillageAbsorbOmenListener extends TriggerListener {
     private final KillCaptainListener killCaptainListener;
@@ -47,6 +48,7 @@ public class VillageAbsorbOmenListener extends TriggerListener {
                 int omenLevel = killCaptainListener.getRecordedOmenLevel(player);
                 if (omenLevel != 0) {
                     raid.absorbOmenLevel(omenLevel);
+                    player.removePotionEffect(PotionEffectType.BAD_OMEN);
                     killCaptainListener.resetOmenLevel(player);
                 }
             }
