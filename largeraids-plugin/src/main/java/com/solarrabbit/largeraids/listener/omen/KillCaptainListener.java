@@ -93,7 +93,9 @@ public class KillCaptainListener extends TriggerListener {
     }
 
     private void applyOmenLevel(Player player, int level) {
-        new PotionEffect(PotionEffectType.BAD_OMEN, getEffectDuration(player), level - 1).apply(player);
+        // Patch for v1_14_R1
+        player.removePotionEffect(PotionEffectType.BAD_OMEN);
+        player.addPotionEffect(new PotionEffect(PotionEffectType.BAD_OMEN, getEffectDuration(player), level - 1));
     }
 
     /**

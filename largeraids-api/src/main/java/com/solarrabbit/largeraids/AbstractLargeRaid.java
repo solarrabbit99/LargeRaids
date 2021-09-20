@@ -191,7 +191,7 @@ public abstract class AbstractLargeRaid {
         player.sendMessage(ChatColorUtil.translate(this.plugin.getConfig().getString("receive-rewards")));
 
         ConfigurationSection conf = this.plugin.getConfig().getConfigurationSection("hero-of-the-village");
-        int level = conf.getInt("level");
+        int level = Math.min(conf.getInt("level"), this.omenLevel);
         int duration = conf.getInt("duration") * 60 * 20;
         player.addPotionEffect(new PotionEffect(PotionEffectType.HERO_OF_THE_VILLAGE, duration, level - 1));
 

@@ -27,9 +27,9 @@ raid:
     illusioner: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 2, 2, 2, 3, 3, 3]
 
 hero-of-the-village:
-  # Level 12 is enough to grant a player a cost of 1 emerald for any default trades. Players
-  # will always receive the hero of the village effect with level of the value stated or 5,
-  # whichever is higher.
+  # Level 12 is enough to grant a player a cost of 1 emerald for any default trades.
+  # Players will always receive the hero of the village effect of level
+  # max(min(value, total waves), 5).
   level: 12
   # In minutes.
   duration: 40
@@ -74,9 +74,9 @@ rewards:
 
 trigger:
   # Players get bad omen of level higher than 5 if enabled. Raids will all be large
-  # raids, with 5 or the accumulative omen level of all players entering the village,
-  # whichever is higher. Maximum number of waves will be the number of waves mentioned
-  # above in `raid.waves`.
+  # raids, number of waves will be 5 or the accumulative omen level of all players
+  # entering the village, whichever is higher. Maximum number of waves will be the
+  # number of waves mentioned above in `raid.waves`.
   omen:
     enabled: true
     max-level: 10

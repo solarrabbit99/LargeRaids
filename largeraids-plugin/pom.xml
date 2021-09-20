@@ -129,6 +129,9 @@
 										<resource>
 											<directory>${project.build.directory}</directory>
 											<filtering>false</filtering>
+											<includes>
+												<include>LargeRaids.jar</include>
+											</includes>
 										</resource>
 									</resources>
 								</configuration>
@@ -145,6 +148,9 @@
 										<resource>
 											<directory>${project.build.directory}</directory>
 											<filtering>false</filtering>
+											<includes>
+												<include>LargeRaids.jar</include>
+											</includes>
 										</resource>
 									</resources>
 								</configuration>
@@ -161,6 +167,9 @@
 										<resource>
 											<directory>${project.build.directory}</directory>
 											<filtering>false</filtering>
+											<includes>
+												<include>LargeRaids.jar</include>
+											</includes>
 										</resource>
 									</resources>
 								</configuration>
@@ -177,6 +186,9 @@
 										<resource>
 											<directory>${project.build.directory}</directory>
 											<filtering>false</filtering>
+											<includes>
+												<include>LargeRaids.jar</include>
+											</includes>
 										</resource>
 									</resources>
 								</configuration>
