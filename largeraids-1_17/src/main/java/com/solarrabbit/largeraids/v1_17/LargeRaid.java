@@ -29,6 +29,7 @@ import net.minecraft.world.entity.raid.Raids;
 import net.minecraft.world.level.saveddata.SavedData;
 
 public class LargeRaid extends AbstractLargeRaid {
+
     public LargeRaid(LargeRaids plugin, Player player) {
         super(plugin, player);
     }
