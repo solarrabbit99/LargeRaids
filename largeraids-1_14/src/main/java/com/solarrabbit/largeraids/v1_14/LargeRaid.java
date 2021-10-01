@@ -84,10 +84,12 @@ public class LargeRaid extends AbstractLargeRaid {
 
     @Override
     public void triggerNextWave() {
-        if (this.isLastWave())
-            return;
-
         currentRaid.getHeroes().forEach(uuid -> pendingHeroes.add(uuid));
+        if (this.isLastWave()) {
+            clearHeroRecords();
+            return;
+        }
+
         getNMSRaid().n();
 
         this.loading = true;
@@ -97,6 +99,11 @@ public class LargeRaid extends AbstractLargeRaid {
 
         if (isSecondLastWave())
             this.setLastWave();
+    }
+
+    @Override
+    public void clearHeroRecords() {
+        getNMSRaid().h.clear();
     }
 
     @Override

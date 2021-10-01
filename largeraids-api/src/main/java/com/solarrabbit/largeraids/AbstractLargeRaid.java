@@ -1,6 +1,7 @@
 package com.solarrabbit.largeraids;
 
 import java.util.Collection;
+import java.util.ConcurrentModificationException;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -96,7 +97,11 @@ public abstract class AbstractLargeRaid {
     }
 
     public int getTotalRaidersAlive() {
-        return this.currentRaid == null ? 0 : this.currentRaid.getRaiders().size();
+        try {
+            return this.currentRaid == null ? 0 : this.currentRaid.getRaiders().size();
+        } catch (ConcurrentModificationException evt) {
+            return 0;
+        }
     }
 
     public void absorbOmenLevel(int level) {
@@ -213,6 +218,8 @@ public abstract class AbstractLargeRaid {
     public abstract boolean isSimilar(Location location);
 
     public abstract void triggerNextWave();
+
+    public abstract void clearHeroRecords();
 
     public abstract void spawnNextWave();
 

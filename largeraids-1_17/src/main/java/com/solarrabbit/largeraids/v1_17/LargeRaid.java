@@ -29,7 +29,6 @@ import net.minecraft.world.entity.raid.Raids;
 import net.minecraft.world.level.saveddata.SavedData;
 
 public class LargeRaid extends AbstractLargeRaid {
-
     public LargeRaid(LargeRaids plugin, Player player) {
         super(plugin, player);
     }
@@ -83,10 +82,12 @@ public class LargeRaid extends AbstractLargeRaid {
 
     @Override
     public void triggerNextWave() {
-        if (this.isLastWave())
-            return;
-
         currentRaid.getHeroes().forEach(uuid -> pendingHeroes.add(uuid));
+        if (this.isLastWave()) {
+            clearHeroRecords();
+            return;
+        }
+
         getNMSRaid().stop();
 
         this.loading = true;
@@ -96,6 +97,11 @@ public class LargeRaid extends AbstractLargeRaid {
 
         if (isSecondLastWave())
             this.setLastWave();
+    }
+
+    @Override
+    public void clearHeroRecords() {
+        getNMSRaid().heroesOfTheVillage.clear();
     }
 
     @Override
