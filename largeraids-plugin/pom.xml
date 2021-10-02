@@ -202,7 +202,7 @@
 						<artifactId>maven-jar-plugin</artifactId>
 						<version>2.4</version>
 						<configuration>
-							<outputDirectory>${project.basedir}/../../Production</outputDirectory>
+							<outputDirectory>${project.basedir}/../../Production/LargeRaids</outputDirectory>
 						</configuration>
 					</plugin>
 				</plugins>

@@ -78,9 +78,7 @@ LargeRaids leverages on the existing raid system, but there are unavoidable inst
 - `Raider` implementing `AbstractRaider` - Encapsulates a raider to extend on the bad omen mechanisms in vanilla settings
 - `RaiderConfig` - An enum class for mapping raider's configurations in wave spawning
 
-<div markdown="block" class="alert alert-info">
 > Note: Since version 1.17, Mojang has yet again reverted the NMS packages back into its obfuscated form. To better aid the project's development, we will use the dependency under `remapped-mojang` classifier for modules dealing with 1.17+ NMS packages, and allow SpecialSource to obfuscate our code during the build cycle. Refer [here](https://www.spigotmc.org/threads/spigot-bungeecord-1-17-1-17-1.510208/#post-4184317) for instructions to install the additional files into your local maven repository to use the classifier.
-</div>
 
 ### Creating/removing artificial village centers
 

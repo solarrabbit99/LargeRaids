@@ -1,5 +1,6 @@
 # LargeRaids
 
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/e2b8ef0d41e3404b91a62a35196c7e9e)](https://www.codacy.com/gh/zhenghanlee/LargeRaids/dashboard?utm_source=github.com&utm_medium=referral&utm_content=zhenghanlee/LargeRaids&utm_campaign=Badge_Grade)
 [![License](https://img.shields.io/github/license/zhenghanlee/LargeRaids)](https://img.shields.io/github/license/zhenghanlee/LargeRaids)
 [![Spigot Downloads](http://badge.henrya.org/spigotbukkit/downloads?spigot=95422&name=spigot_downloads)](https://www.spigotmc.org/resources/largeraids-1-14-x-1-17-x.95422/)
 [![Commit Activity](https://img.shields.io/github/commit-activity/m/zhenghanlee/LargeRaids)](https://img.shields.io/github/commit-activity/m/zhenghanlee/LargeRaids)
@@ -14,5 +15,5 @@
 ## Download Links
 
 - Spigot
-  - Premium: https://www.spigotmc.org/resources/largeraids-1-14-x-1-17-x-premium.96356/
-  - Free: https://www.spigotmc.org/resources/largeraids-1-14-x-1-17-x.95422/
+  - [Premium](https://www.spigotmc.org/resources/largeraids-1-14-x-1-17-x-premium.96356/)
+  - [Free](https://www.spigotmc.org/resources/largeraids-1-14-x-1-17-x.95422/)
