@@ -2,8 +2,8 @@ title: LargeRaids
 email: h1210057@nushigh.edu.sg
 description: >-
   Multiplayer raid experience with higher omen levels, more raiders, more waves and higher rewards!
-baseurl: ""
-url: "https://zhenghanlee.github.io/LargeRaids"
+baseurl: "/LargeRaids"
+url: "https://zhenghanlee.github.io"
 github_username: zhenghanlee
 
 # Build settings
