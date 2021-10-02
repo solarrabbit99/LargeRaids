@@ -66,49 +66,44 @@
 				</includes>
 			</resource>
 		</resources>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-shade-plugin</artifactId>
+				<version>3.1.0</version>
+				<executions>
+					<execution>
+						<phase>package</phase>
+						<goals>
+							<goal>shade</goal>
+						</goals>
+						<configuration>
+							<createDependencyReducedPom>false</createDependencyReducedPom>
+							<filters>
+								<filter>
+									<artifact>com.solarrabbit:largeraids-api</artifact>
+									<includes>
+										<include>com/solarrabbit/largeraids/AbstractLargeRaid.class</include>
+										<include>com/solarrabbit/largeraids/AbstractLargeRaid$1.class</include>
+										<include>com/solarrabbit/largeraids/AbstractVillages.class</include>
+										<include>com/solarrabbit/largeraids/AbstractRaider.class</include>
+									</includes>
+								</filter>
+								<filter>
+									<artifact>*:*</artifact>
+									<excludes>
+										<exclude>META-INF/maven/**/*</exclude>
+									</excludes>
+								</filter>
+							</filters>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
 	</build>
 
 	<profiles>
-		<profile>
-			<id>shade</id>
-			<build>
-				<plugins>
-					<plugin>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-shade-plugin</artifactId>
-						<version>3.1.0</version>
-						<executions>
-							<execution>
-								<phase>package</phase>
-								<goals>
-									<goal>shade</goal>
-								</goals>
-								<configuration>
-									<createDependencyReducedPom>false</createDependencyReducedPom>
-									<filters>
-										<filter>
-											<artifact>com.solarrabbit:largeraids-api</artifact>
-											<includes>
-												<include>com/solarrabbit/largeraids/AbstractLargeRaid.class</include>
-												<include>com/solarrabbit/largeraids/AbstractLargeRaid$1.class</include>
-												<include>com/solarrabbit/largeraids/AbstractVillages.class</include>
-												<include>com/solarrabbit/largeraids/AbstractRaider.class</include>
-											</includes>
-										</filter>
-										<filter>
-											<artifact>*:*</artifact>
-											<excludes>
-												<exclude>META-INF/maven/**/*</exclude>
-											</excludes>
-										</filter>
-									</filters>
-								</configuration>
-							</execution>
-						</executions>
-					</plugin>
-				</plugins>
-			</build>
-		</profile>
 		<profile>
 			<id>test</id>
 			<build>
