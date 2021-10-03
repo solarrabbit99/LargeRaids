@@ -169,7 +169,7 @@ public class LargeRaid extends AbstractLargeRaid {
         raids.b();
 
         Raid raid = this.getNMSRaid();
-        raid.badOmenLevel = 5;
+        raid.badOmenLevel = 2;
         this.setRaid(new CraftRaid(raid));
     }
 

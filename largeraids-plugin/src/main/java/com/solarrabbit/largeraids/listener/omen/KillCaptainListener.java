@@ -112,7 +112,7 @@ public class KillCaptainListener extends TriggerListener {
         return effect == null ? DEFAULT_EFFECT_DURATION : Math.max(effect.getDuration(), DEFAULT_EFFECT_DURATION);
     }
 
-    private int getCurrentOmenLevel(Player player) {
+    public int getCurrentOmenLevel(Player player) {
         return Optional.ofNullable(player.getPotionEffect(PotionEffectType.BAD_OMEN))
                 .map(effect -> effect.getAmplifier() + 1).orElse(0);
     }

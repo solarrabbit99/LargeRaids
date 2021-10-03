@@ -44,12 +44,15 @@ public class VillageAbsorbOmenListener extends TriggerListener {
 
         @Override
         public void accept(AbstractLargeRaid raid) {
+            boolean hasReleasedOmen = raid.releaseOmen();
             for (Player player : raid.getPlayersInInnerRadius()) {
                 int omenLevel = killCaptainListener.getRecordedOmenLevel(player);
-                if (omenLevel != 0) {
-                    raid.absorbOmenLevel(omenLevel);
+                int actualOmenLevel = killCaptainListener.getCurrentOmenLevel(player);
+                if (omenLevel != 0 || actualOmenLevel != 0) {
                     player.removePotionEffect(PotionEffectType.BAD_OMEN);
                     killCaptainListener.resetOmenLevel(player);
+                    if (hasReleasedOmen || actualOmenLevel != 0)
+                        raid.absorbOmenLevel(omenLevel);
                 }
             }
         }

@@ -168,7 +168,7 @@ public class LargeRaid extends AbstractLargeRaid {
         ((SavedData) raids).setDirty();
 
         Raid raid = this.getNMSRaid();
-        raid.setBadOmenLevel(5);
+        raid.setBadOmenLevel(2);
         this.setRaid(new CraftRaid(raid));
     }
 

@@ -178,20 +178,6 @@ public abstract class AbstractLargeRaid {
         return Stream.of(Sound.values()).filter(value -> value.name().equals(name)).findFirst().orElse(null);
     }
 
-    public static int getDefaultWaveNumber(World world) {
-        Difficulty difficulty = world.getDifficulty();
-        switch (difficulty) {
-            case EASY:
-                return 3;
-            case NORMAL:
-                return 5;
-            case HARD:
-                return 7;
-            default:
-                return 0;
-        }
-    }
-
     private void awardPlayer(Player player) {
         player.sendMessage(ChatColorUtil.translate(this.plugin.getConfig().getString("receive-rewards")));
 
@@ -211,6 +197,21 @@ public abstract class AbstractLargeRaid {
                 str -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), str.replace("<player>", player.getName())));
     }
 
+    /**
+     * Set the bad omen level of the current raid back to {@code 2} if it has been
+     * increased by the absroption of player's omen. Used for detecting whether a
+     * player with Bad Omen effect entered the raid.
+     *
+     * @return {@code true} if the omen level of the actual raid has been increased
+     *         above 2
+     */
+    public boolean releaseOmen() {
+        if (this.currentRaid.getBadOmenLevel() == 2)
+            return false;
+        this.currentRaid.setBadOmenLevel(2);
+        return true;
+    }
+
     public abstract void startRaid();
 
     public abstract void stopRaid();
@@ -222,5 +223,19 @@ public abstract class AbstractLargeRaid {
     public abstract void clearHeroRecords();
 
     public abstract void spawnNextWave();
+
+    public static int getDefaultWaveNumber(World world) {
+        Difficulty difficulty = world.getDifficulty();
+        switch (difficulty) {
+            case EASY:
+                return 3;
+            case NORMAL:
+                return 5;
+            case HARD:
+                return 7;
+            default:
+                return 0;
+        }
+    }
 
 }
