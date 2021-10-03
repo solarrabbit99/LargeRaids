@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "User Guide"
+title: User Guide
 ---
 
 ## Configurations

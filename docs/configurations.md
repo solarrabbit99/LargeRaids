@@ -1,5 +1,6 @@
 ---
 layout: page
+title: Configurations
 ---
 
 ## Example Configuration

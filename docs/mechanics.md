@@ -1,6 +1,6 @@
 ---
 layout: page
-title: "Mechanics"
+title: Mechanics
 ---
 
 Coming Soon...
