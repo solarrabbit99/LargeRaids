@@ -34,16 +34,18 @@ public class Placeholder extends PlaceholderExpansion {
         Optional<AbstractLargeRaid> raid = Optional.ofNullable(player.getPlayer()).map(Player::getLocation)
                 .flatMap(loc -> RaidListener.matchingLargeRaid(loc));
         switch (params) {
-        case "in_range":
-            return String.valueOf(raid.isPresent());
-        case "wave":
-            return raid.map(r -> r.getCurrentWave()).map(Object::toString).orElse(null);
-        case "total_waves":
-            return raid.map(r -> r.getTotalWaves()).map(Object::toString).orElse(null);
-        case "remaining_raiders":
-            return raid.map(r -> r.getTotalRaidersAlive()).map(Object::toString).orElse(null);
-        default:
-            return null;
+            case "in_range":
+                return String.valueOf(raid.isPresent());
+            case "wave":
+                return raid.map(r -> r.getCurrentWave()).map(Object::toString).orElse(null);
+            case "total_waves":
+                return raid.map(r -> r.getTotalWaves()).map(Object::toString).orElse(null);
+            case "remaining_raiders":
+                return raid.map(r -> r.getTotalRaidersAlive()).map(Object::toString).orElse(null);
+            case "omen_level":
+                return raid.map(r -> r.getBadOmenLevel()).map(Object::toString).orElse(null);
+            default:
+                return null;
         }
     }
 }

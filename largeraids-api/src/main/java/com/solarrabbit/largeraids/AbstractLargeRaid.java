@@ -212,6 +212,10 @@ public abstract class AbstractLargeRaid {
         return true;
     }
 
+    public int getBadOmenLevel() {
+        return this.omenLevel;
+    }
+
     public abstract void startRaid();
 
     public abstract void stopRaid();
