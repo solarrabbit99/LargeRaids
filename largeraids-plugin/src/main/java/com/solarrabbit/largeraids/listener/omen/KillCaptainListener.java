@@ -60,7 +60,8 @@ public class KillCaptainListener extends TriggerListener {
     private void incrementBadOmenLevel(Player player) {
         int recordedLevel = this.getRecordedOmenLevel(player);
         int maxAllowed = this.plugin.getConfig().getInt("trigger.omen.max-level");
-        applyOmenLevel(player, Math.min(recordedLevel + 1, maxAllowed));
+        if (getCurrentOmenLevel(player) == 5)
+            applyOmenLevel(player, Math.min(recordedLevel + 1, maxAllowed));
         syncOmenLevel(player);
     }
 
