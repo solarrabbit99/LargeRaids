@@ -4,15 +4,17 @@ title: About
 permalink: /about/
 ---
 
-This is the base Jekyll theme. You can find out more info about customizing your Jekyll theme, as well as basic Jekyll usage documentation at [jekyllrb.com](https://jekyllrb.com/)
+![Image](../assets/images/about-image.png){: .image-left } **LargeRaids** was first released in 18th of August, 2021. The user story came about me playing on a Towny server, grinding raids for emeralds and totems. The default raids seem really trivial to beat, hardly posing any challenges for a group of players. I was in search of plugins that modify the raid mechanics, but to no avail. Undoubtedly, raid plugins seemed less than an essential to most servers.
 
-You can find the source code for Minima at GitHub:
-[jekyll][jekyll-organization] /
-[minima](https://github.com/jekyll/minima)
+It wasn't long before I came to also realise the challenges of developing such a plugin. Spigot's API is rather limited in terms of how much you can manipulate raids. The best that you can do is changing an ongoing raid's bad omen level, which is by itself limited. (Ab)using NMS packages isn't straight forward either. Number of waves are hard coded according to the world's difficulty; number of mobs in a wave are pre-determined; heroes of a raid are automatically rewarded with a status effect; mystery on how to create artificial village centers was unsolved, and so on. Not to mention that NMS isn't an API with proper documentation, and the implementations of certain classes are missing.
 
-You can find the source code for Jekyll at GitHub:
-[jekyll][jekyll-organization] /
-[jekyll](https://github.com/jekyll/jekyll)
+Although I have listed my plugin as premium, it is a dream of mine for plugin developers to pay more attention to raids. I think it can really enhance vanilla survival's game experience. I have therefore decided to open-source this plugin. Regardless, many thanks for those who supported to the premium resource on Spigot.
 
-
-[jekyll-organization]: https://github.com/jekyll
+<style type="text/css">
+    .image-left {
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+        float: right;
+    }
+</style>
