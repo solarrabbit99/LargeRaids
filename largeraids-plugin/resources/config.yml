@@ -17,7 +17,7 @@ raid:
   announce-waves:
     title: true
     message: false
-  # Do not add any other mobs, they will not spawn...
+  # Do not add any other mobs that are not of any type listed below, they will not spawn.
   mobs:
     pillager: [5, 7, 7, 8, 8, 8, 8, 9, 9, 9, 9, 9, 9, 9, 9, 10, 10, 10, 10, 10]
     vindicator: [0, 3, 5, 5, 5, 5, 5, 6, 7, 7, 7, 8, 8, 8, 9, 9, 9, 10, 10, 10]
