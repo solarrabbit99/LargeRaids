@@ -1,4 +1,4 @@
-package com.solarrabbit.largeraids.raid;
+package com.solarrabbit.largeraids.raid.mob;
 
 public interface AbstractRaider {
 

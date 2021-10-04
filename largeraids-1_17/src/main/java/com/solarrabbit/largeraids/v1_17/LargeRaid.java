@@ -7,6 +7,7 @@ import com.solarrabbit.largeraids.LargeRaids;
 import com.solarrabbit.largeraids.PluginLogger.Level;
 import com.solarrabbit.largeraids.listener.RaidListener;
 import com.solarrabbit.largeraids.raid.AbstractLargeRaid;
+import com.solarrabbit.largeraids.raid.mob.EventRaider;
 import com.solarrabbit.largeraids.util.ChatColorUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -119,13 +120,9 @@ public class LargeRaid extends AbstractLargeRaid {
         Location loc = this.getWaveSpawnLocation();
         Raid nmsRaid = getNMSRaid();
 
-        for (RaiderConfig raider : RaiderConfig.values()) {
-            for (int i = 0; i < raider.getSpawnNumber(this.currentWave); i++) {
-                net.minecraft.world.entity.raid.Raider mob = raider.getNMSType()
-                        .create(((CraftWorld) centre.getWorld()).getHandle());
-                nmsRaid.joinRaid(getDefaultWaveNumber(this.centre.getWorld()), mob,
-                        new BlockPos(loc.getX(), loc.getY(), loc.getZ()), false);
-            }
+        for (EventRaider raider : plugin.getRaiderConfig().getWaveMobs(this.currentWave)) {
+            Raider entity = raider.spawn(loc);
+            nmsRaid.addWaveMob(nmsRaid.getGroupsSpawned(), ((CraftRaider) entity).getHandle(), false);
         }
 
         raiders.forEach(raider -> {

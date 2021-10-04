@@ -1,8 +1,8 @@
 package com.solarrabbit.largeraids.util;
 
 import com.solarrabbit.largeraids.raid.AbstractLargeRaid;
-import com.solarrabbit.largeraids.raid.AbstractRaider;
 import com.solarrabbit.largeraids.raid.AbstractVillages;
+import com.solarrabbit.largeraids.raid.mob.AbstractRaider;
 import com.solarrabbit.largeraids.LargeRaids;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;

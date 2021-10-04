@@ -10,6 +10,7 @@ import com.solarrabbit.largeraids.command.ReloadPlugin;
 import com.solarrabbit.largeraids.command.StartRaidCommand;
 import com.solarrabbit.largeraids.command.StopRaidCommand;
 import com.solarrabbit.largeraids.command.VillageCentresCommand;
+import com.solarrabbit.largeraids.config.RaiderConfig;
 import com.solarrabbit.largeraids.database.Database;
 import com.solarrabbit.largeraids.database.SQLite;
 import com.solarrabbit.largeraids.listener.DropInLavaTriggerListener;
@@ -30,6 +31,7 @@ public final class LargeRaids extends JavaPlugin {
     private PluginLogger logger;
     private Database db;
     private Set<TriggerListener> registeredTriggerListeners;
+    private RaiderConfig raiderConfig;
 
     @Override
     public void onEnable() {
@@ -51,6 +53,7 @@ public final class LargeRaids extends JavaPlugin {
 
         this.loadMessages();
         this.testConfig();
+        this.raiderConfig = new RaiderConfig(this);
         this.registerTriggers();
 
         if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {
@@ -73,6 +76,7 @@ public final class LargeRaids extends JavaPlugin {
     public void reload() {
         this.reloadConfig();
         this.testConfig();
+        this.raiderConfig = new RaiderConfig(this);
         this.registerTriggers();
     }
 
@@ -82,6 +86,10 @@ public final class LargeRaids extends JavaPlugin {
 
     public Database getDatabase() {
         return this.db;
+    }
+
+    public RaiderConfig getRaiderConfig() {
+        return this.raiderConfig;
     }
 
     private void loadMessages() {

@@ -1,6 +1,6 @@
 package com.solarrabbit.largeraids.v1_14;
 
-import com.solarrabbit.largeraids.raid.AbstractRaider;
+import com.solarrabbit.largeraids.raid.mob.AbstractRaider;
 import org.bukkit.craftbukkit.v1_14_R1.entity.CraftRaider;
 import net.minecraft.server.v1_14_R1.EntityRaider;
 import net.minecraft.server.v1_14_R1.WorldServer;
