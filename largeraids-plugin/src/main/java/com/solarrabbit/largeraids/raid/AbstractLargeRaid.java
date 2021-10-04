@@ -59,7 +59,9 @@ public abstract class AbstractLargeRaid {
     }
 
     public boolean isSimilar(Raid raid) {
-        return isSimilar(raid.getLocation());
+        if (this.currentRaid == null)
+            return isSimilar(raid.getLocation());
+        return this.currentRaid.getLocation().equals(raid.getLocation());
     }
 
     public boolean isLoading() {
