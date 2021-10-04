@@ -14,7 +14,7 @@
 
 ## Installation
 
-To get started, simply
+To get started, simply:
 
 1. Open up Terminal
 2. Change to any desired directories for cloning the repository
