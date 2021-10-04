@@ -1,10 +1,10 @@
 package com.solarrabbit.largeraids.listener.omen;
 
 import java.util.function.Consumer;
-import com.solarrabbit.largeraids.AbstractLargeRaid;
 import com.solarrabbit.largeraids.LargeRaids;
 import com.solarrabbit.largeraids.listener.RaidListener;
 import com.solarrabbit.largeraids.listener.TriggerListener;
+import com.solarrabbit.largeraids.raid.AbstractLargeRaid;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;

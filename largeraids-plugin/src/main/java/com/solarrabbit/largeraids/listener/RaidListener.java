@@ -4,7 +4,7 @@ import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Consumer;
-import com.solarrabbit.largeraids.AbstractLargeRaid;
+import com.solarrabbit.largeraids.raid.AbstractLargeRaid;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Raid;

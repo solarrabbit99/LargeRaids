@@ -1,7 +1,7 @@
 package com.solarrabbit.largeraids.listener;
 
 import java.util.Optional;
-import com.solarrabbit.largeraids.AbstractLargeRaid;
+import com.solarrabbit.largeraids.raid.AbstractLargeRaid;
 import org.bukkit.Location;
 import org.bukkit.event.Listener;
 

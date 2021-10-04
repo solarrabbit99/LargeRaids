@@ -3,7 +3,7 @@ package com.solarrabbit.largeraids.command;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import com.solarrabbit.largeraids.LargeRaids;
-import com.solarrabbit.largeraids.VersionUtil;
+import com.solarrabbit.largeraids.util.VersionUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -30,18 +30,18 @@ public class VillageCentresCommand implements CommandExecutor {
             return true;
 
         switch (args[0]) {
-        case "add":
-            if (args.length < 2)
+            case "add":
+                if (args.length < 2)
+                    return false;
+                this.add((Player) sender, args[1]);
+                return true;
+            case "remove":
+                if (args.length < 2)
+                    return false;
+                this.remove((Player) sender, args[1]);
+                return true;
+            default:
                 return false;
-            this.add((Player) sender, args[1]);
-            return true;
-        case "remove":
-            if (args.length < 2)
-                return false;
-            this.remove((Player) sender, args[1]);
-            return true;
-        default:
-            return false;
         }
     }
 

@@ -2,8 +2,8 @@ package com.solarrabbit.largeraids.listener.omen;
 
 import java.util.Optional;
 import com.solarrabbit.largeraids.LargeRaids;
-import com.solarrabbit.largeraids.VersionUtil;
 import com.solarrabbit.largeraids.listener.TriggerListener;
+import com.solarrabbit.largeraids.util.VersionUtil;
 import org.bukkit.Material;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;

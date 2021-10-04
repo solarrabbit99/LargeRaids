@@ -30,11 +30,6 @@
 		</dependency>
 		<dependency>
 			<groupId>com.solarrabbit</groupId>
-			<artifactId>largeraids-api</artifactId>
-			<version>${revision}</version>
-		</dependency>
-		<dependency>
-			<groupId>com.solarrabbit</groupId>
 			<artifactId>largeraids-1_17</artifactId>
 			<version>${revision}</version>
 		</dependency>
@@ -79,16 +74,12 @@
 						</goals>
 						<configuration>
 							<createDependencyReducedPom>false</createDependencyReducedPom>
+							<artifactSet>
+								<excludes>
+									<exclude>com.solarrabbit:largeraids-api</exclude>
+								</excludes>
+							</artifactSet>
 							<filters>
-								<filter>
-									<artifact>com.solarrabbit:largeraids-api</artifact>
-									<includes>
-										<include>com/solarrabbit/largeraids/AbstractLargeRaid.class</include>
-										<include>com/solarrabbit/largeraids/AbstractLargeRaid$1.class</include>
-										<include>com/solarrabbit/largeraids/AbstractVillages.class</include>
-										<include>com/solarrabbit/largeraids/AbstractRaider.class</include>
-									</includes>
-								</filter>
 								<filter>
 									<artifact>*:*</artifact>
 									<excludes>

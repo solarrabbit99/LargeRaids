@@ -1,7 +1,7 @@
 package com.solarrabbit.largeraids.v1_15;
 
 import java.util.function.Predicate;
-import com.solarrabbit.largeraids.AbstractVillages;
+import com.solarrabbit.largeraids.raid.AbstractVillages;
 import org.bukkit.Location;
 import org.bukkit.craftbukkit.v1_15_R1.CraftWorld;
 import org.bukkit.craftbukkit.v1_15_R1.entity.CraftVillager;

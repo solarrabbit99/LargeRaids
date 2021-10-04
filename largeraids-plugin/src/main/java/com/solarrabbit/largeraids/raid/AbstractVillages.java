@@ -1,5 +1,6 @@
-package com.solarrabbit.largeraids;
+package com.solarrabbit.largeraids.raid;
 
+import com.solarrabbit.largeraids.LargeRaids;
 import org.bukkit.Location;
 import org.bukkit.plugin.java.JavaPlugin;
 

@@ -1,4 +1,4 @@
-package com.solarrabbit.largeraids;
+package com.solarrabbit.largeraids.raid;
 
 import java.util.Collection;
 import java.util.ConcurrentModificationException;
@@ -8,7 +8,9 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Stream;
+import com.solarrabbit.largeraids.LargeRaids;
 import com.solarrabbit.largeraids.item.ItemCreator;
+import com.solarrabbit.largeraids.util.ChatColorUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Difficulty;
