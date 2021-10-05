@@ -15,7 +15,7 @@ A large raid have at least 5 waves. With bad omen level of 6 or higher, the raid
 
 > ❓ **TRIVIA**: If a player leaves a village during a raid, obtains another level of Bad Omen, and returns to the village in the next wave, then the effect will be absorbed by the progressing raid, increasing its bad omen level.
 
-The maximum number of waves is also set by the `raid.waves` configuration option in `config.yml`, instead of depending on individual worlds' difficulties.
+The maximum number of waves is set by the `raid.waves` configuration option in `config.yml`, instead of depending on individual worlds' difficulties.
 
 ### Dropping Item into Lava
 
