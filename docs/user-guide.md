@@ -1,11 +1,11 @@
 ---
-layout: post
+layout: page
 title: User Guide
 ---
 
 ## Configurations
 
-Refer to the [Example Configuration](configurations.html).
+Refer to the [Configuration Guide](configurations.html).
 
 ## Commands
 
@@ -13,7 +13,7 @@ Refer to the [Example Configuration](configurations.html).
 - `/lrstop [player]` - stop a large raid in the vicinity (or the player's vicinity)
 - `/lrcenters [add | remove] [name]` - manage artificial villages\*
 - `/lrgive <player> [amount]` - give player summoning items
-- `/lrreload` - reload plugin config
+- `/lrreload` - reload plugin configurations
 
 \* _The command requires villagers spawning to be enabled, villagers will despawn within 5 seconds. The command also has a chance of failing, re-run the command if the center isn't registered._
 
@@ -33,5 +33,5 @@ Refer to the [Example Configuration](configurations.html).
 
 ## Limitations
 
-- Mobs - raiders are limited to vanilla raiders, MythicMobs or other mobs plugins are not yet supported
-- Weapons - whatever weapons used by raiders are not configurable
+- **Mobs** - raiders are limited to entity type raiders
+- **Bad Omen** - bad omen effect statuses given by commands may not work as expected

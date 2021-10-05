@@ -3,15 +3,21 @@ layout: page
 title: Configurations
 ---
 
-## Example Configuration
+- [**Main Configurations**](#main-configurations)
+  - [Raid (Mobs/Waves/Sounds)](#raid-mobswavessounds)
+  - [MythicMobs](#mythicmobs)
+  - [Hero of the Village](#hero-of-the-village)
+  - [Rewards](#rewards)
+- [**Trigger Mechanism**](#trigger-mechanism)
+- [**Messages**](#messages)
+
+The only configuration file available is the default `config.yml` generated the first time the plugin is loaded on the server. In the future versions to come, new configurable options may be added. The already generated `config.yml` does not get automatically updated. You can either backup the old configuration file in a different directory for the plugin to regenerate a new one, or update it manually according to the changes reflected below.
+
+## Main Configurations
+
+### Raid (Mobs/Waves/Sounds)
 
 ```yml
-############################################################
-# +------------------------------------------------------+ #
-# |                  Main Configurations                 | #
-# +------------------------------------------------------+ #
-############################################################
-
 raid:
   # The number of waves must be at least 1. The length of the arrays under the `mobs`
   # configuration section below must also be at least the number of waves. Each wave
@@ -25,7 +31,7 @@ raid:
   announce-waves:
     title: true
     message: false
-  # Do not add any other mobs, they will not spawn...
+  # Do not add any other mobs that are not of any type listed below, they will not spawn.
   mobs:
     pillager: [5, 7, 7, 8, 8, 8, 8, 9, 9, 9, 9, 9, 9, 9, 9, 10, 10, 10, 10, 10]
     vindicator: [0, 3, 5, 5, 5, 5, 5, 6, 7, 7, 7, 8, 8, 8, 9, 9, 9, 10, 10, 10]
@@ -33,7 +39,38 @@ raid:
     witch: [0, 0, 0, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3]
     evoker: [0, 0, 0, 0, 1, 2, 2, 3, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 4, 4]
     illusioner: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 2, 2, 2, 3, 3, 3]
+```
 
+### MythicMobs
+
+You can also add [**MythicMobs**](https://www.spigotmc.org/resources/%E2%9A%94-mythicmobs-free-version-%E2%96%BAthe-1-custom-mob-creator%E2%97%84.5702/) into your raids! Suppose you have the following mob configuration in the MythicMobs plugin.
+
+```yml
+SpeedRaider:
+  Type: PILLAGER
+  Display: "&a Speed Raider"
+  Health: 50
+  Damage: 2
+  Options:
+    MovementSpeed: 2
+```
+
+Then it can be added into the raids like so.
+
+> 🚨 **IMPORTANT**: MythicMobs are case-sensitive. Make sure that the mobs listed are primarily of entity type Raider (any of the six original types listed).
+
+```yml
+mobs:
+  pillager: [...]
+  ...
+  SpeedRaider: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 2, 2, 2, 3]
+```
+
+### Hero of the Village
+
+This is an essential feature of large raids. The status effect is given to players, who kill at least one of the participating raiders, at the end of the raid assuming that the players emerge victorious.
+
+```yml
 hero-of-the-village:
   # Level 12 is enough to grant a player a cost of 1 emerald for any default trades.
   # Players will always receive the hero of the village effect with level of this value,
@@ -41,7 +78,13 @@ hero-of-the-village:
   level: 12
   # In minutes.
   duration: 40
+```
 
+### Rewards
+
+Similar to the Hero of the Village status effect, rewards are given to players, who kill at least one of the participating raiders, at the end of the raid assuming that the players emerge victorious. Rewards are optional. Players who do not have enough inventory space upon receiving rewards will have their share spawn on the floor instead.
+
+```yml
 rewards:
   # Leave this section blank to disable the feature.
   items:
@@ -54,8 +97,6 @@ rewards:
         # - "&5Drop the item into lava in a village"
         # - "&5to summon a large raid!"
       custom-model-data:
-      # Avoid using armor/tools for material if this is enabled. It applies mending to
-      # the item for the glint.
       enchantments:
         1:
           type: MENDING
@@ -69,17 +110,13 @@ rewards:
   commands:
     # - lrgive <player> 1
     # - give <player> stick
+```
 
-############################################################
-# +------------------------------------------------------+ #
-# |                   Trigger Mechanism                  | #
-# +------------------------------------------------------+ #
-#  We present the following triggering mechanisms. It's    #
-#  advised that you only enable one of them at any point   #
-#  in time although they should technically work with      #
-#  each other.                                             #
-############################################################
+## Trigger Mechanism
 
+We present the following triggering mechanisms. It's advised that you only enable **one** of them at any point in time although they should technically work with each other.
+
+```yml
 trigger:
   # Players get bad omen of level higher than 5 if enabled. Raids will all be large
   # raids, number of waves will be 5 or the accumulative omen level of all players
@@ -115,13 +152,13 @@ trigger:
 # 8 chunks away from each other and other villager-claimed village blocks (e.g. job block,
 # bed, bell).
 artificial-only: false
+```
 
-############################################################
-# +------------------------------------------------------+ #
-# |                       Messages                       | #
-# +------------------------------------------------------+ #
-############################################################
+## Messages
 
+These are messages sent to players, with the exception of `attempt-peaceful`, which will be sent to **both** the attempting player and the server console.
+
+```yml
 attempt-peaceful: "&eAttempted to spawn large raid but failed due to world's peaceful difficulty..."
 receive-rewards: "&aReceiving rewards..."
 wave-broadcast:
