@@ -57,8 +57,12 @@ public abstract class Database {
 
     public abstract CompletableFuture<Void> addCentre(Location location, String name);
 
-    public abstract CompletableFuture<Void> removeCentre(String index);
+    public abstract CompletableFuture<Void> removeCentre(String name);
 
+    /**
+     * @deprecated {@link DatabaseAdapter} should already have the mapping.
+     */
+    @Deprecated
     public abstract CompletableFuture<Location> getCentre(String name);
 
     /**

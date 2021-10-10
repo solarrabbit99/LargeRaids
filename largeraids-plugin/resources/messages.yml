@@ -13,3 +13,6 @@ village-centers:
     remove-success: Successfully removed an artificial village center!
   list:
     no-exist: There are no existing artificial village centers!
+  database:
+    add-fail: The artificial village center might not have been added properly to the database and might cause further problems! You are advised to restart the server and report this issue immediately.
+    remove-fail: The artificial village center might not have been removed properly to the database and might cause further problems! You are advised to restart the server and report this issue immediately.

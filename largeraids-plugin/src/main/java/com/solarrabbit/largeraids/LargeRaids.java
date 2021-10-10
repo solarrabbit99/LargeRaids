@@ -11,8 +11,7 @@ import com.solarrabbit.largeraids.command.StartRaidCommand;
 import com.solarrabbit.largeraids.command.StopRaidCommand;
 import com.solarrabbit.largeraids.command.VillageCentresCommand;
 import com.solarrabbit.largeraids.config.RaiderConfig;
-import com.solarrabbit.largeraids.database.Database;
-import com.solarrabbit.largeraids.database.SQLite;
+import com.solarrabbit.largeraids.database.DatabaseAdapter;
 import com.solarrabbit.largeraids.listener.DropInLavaTriggerListener;
 import com.solarrabbit.largeraids.listener.NewMoonTriggerListener;
 import com.solarrabbit.largeraids.listener.RaidListener;
@@ -29,7 +28,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 public final class LargeRaids extends JavaPlugin {
     private YamlConfiguration messages;
     private PluginLogger logger;
-    private Database db;
+    private DatabaseAdapter db;
     private Set<TriggerListener> registeredTriggerListeners;
     private RaiderConfig raiderConfig;
 
@@ -38,7 +37,7 @@ public final class LargeRaids extends JavaPlugin {
         this.saveDefaultConfig();
         this.logger = new PluginLogger();
 
-        this.db = new SQLite(this);
+        this.db = new DatabaseAdapter(this);
         this.db.load();
 
         RaidListener mainListener = new RaidListener(this);
@@ -84,7 +83,7 @@ public final class LargeRaids extends JavaPlugin {
         return this.messages.getString(node, "");
     }
 
-    public Database getDatabase() {
+    public DatabaseAdapter getDatabaseAdapter() {
         return this.db;
     }
 

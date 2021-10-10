@@ -1,10 +1,8 @@
 package com.solarrabbit.largeraids.listener;
 
-import java.util.concurrent.CompletableFuture;
 import com.solarrabbit.largeraids.LargeRaids;
 import com.solarrabbit.largeraids.raid.AbstractLargeRaid;
 import com.solarrabbit.largeraids.util.VersionUtil;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
@@ -29,15 +27,8 @@ public abstract class TriggerListener implements Listener {
         if (center == null)
             return;
 
-        isAllowed(center).whenComplete((bool, exp) -> {
-            if (exp != null)
-                throw new RuntimeException(exp);
-
-            if (!bool)
-                Bukkit.getScheduler().runTask(getPlugin(), () -> {
-                    largeRaid.stopRaid();
-                });
-        });
+        if (!isAllowed(center))
+            largeRaid.stopRaid();
     }
 
     protected LargeRaids getPlugin() {
@@ -46,15 +37,15 @@ public abstract class TriggerListener implements Listener {
 
     public abstract void unregisterListener();
 
-    private CompletableFuture<Boolean> isAllowed(Location loc) {
+    private boolean isAllowed(Location loc) {
         if (getPlugin().getConfig().getBoolean("artificial-only"))
             return isInDatabase(loc);
-        return CompletableFuture.completedFuture(true);
+        return true;
     }
 
-    private CompletableFuture<Boolean> isInDatabase(Location loc) {
-        return this.getPlugin().getDatabase().getCentres()
-                .thenApply(map -> map.values().stream().anyMatch(location -> location.distanceSquared(loc) < 3));
+    private boolean isInDatabase(Location loc) {
+        return this.getPlugin().getDatabaseAdapter().getCentres().values().stream()
+                .anyMatch(location -> location.distanceSquared(loc) < 3);
     }
 
 }

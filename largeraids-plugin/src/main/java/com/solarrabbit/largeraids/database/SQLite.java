@@ -103,7 +103,6 @@ public class SQLite extends Database {
                 ps.executeUpdate();
                 close(ps, connection);
             } catch (SQLException ex) {
-                ex.printStackTrace();
                 throw new RuntimeException(ex);
             }
         });
@@ -127,7 +126,6 @@ public class SQLite extends Database {
                 close(ps, connection);
                 return location;
             } catch (SQLException ex) {
-                ex.printStackTrace();
                 return null;
             }
         });
