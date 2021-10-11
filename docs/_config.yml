@@ -6,6 +6,12 @@ baseurl: "/LargeRaids"
 url: "https://zhenghanlee.github.io"
 github_username: zhenghanlee
 
+header_pages:
+  - about.md
+  - downloads.md
+  - mechanics.md
+  - user-guide.md
+
 # Build settings
 theme: minima
 plugins:
