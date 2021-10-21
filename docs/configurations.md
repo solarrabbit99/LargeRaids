@@ -5,7 +5,7 @@ title: Configurations
 
 - [**Main Configurations**](#main-configurations)
   - [Raid (Mobs/Waves/Sounds)](#raid-mobswavessounds)
-  - [MythicMobs](#mythicmobs)
+  - [MythicMobs (Premium)](#mythicmobs-premium)
   - [Hero of the Village](#hero-of-the-village)
   - [Rewards](#rewards)
 - [**Trigger Mechanism**](#trigger-mechanism)
