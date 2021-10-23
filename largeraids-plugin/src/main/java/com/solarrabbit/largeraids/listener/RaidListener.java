@@ -14,6 +14,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.raid.RaidFinishEvent;
 import org.bukkit.event.raid.RaidSpawnWaveEvent;
 import org.bukkit.event.raid.RaidStopEvent;
+import org.bukkit.event.raid.RaidTriggerEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class RaidListener implements Listener {
@@ -41,6 +42,14 @@ public class RaidListener implements Listener {
     @EventHandler
     public void onSpawn(RaidSpawnWaveEvent evt) {
         matchingLargeRaid(evt.getRaid()).ifPresent(largeRaid -> largeRaid.spawnNextWave());
+    }
+
+    @EventHandler
+    public void onTrigger(RaidTriggerEvent evt) {
+        if (RaidListener.matchingLargeRaid(evt.getRaid()).isPresent())
+            return;
+        if (plugin.getConfig().getBoolean("disable-normal-raids"))
+            evt.setCancelled(true);
     }
 
     @EventHandler

@@ -147,6 +147,8 @@ trigger:
   new-moon:
     enabled: false
 
+# If enabled, no normal raids will be triggered upon the absorption of player's bad omen.
+disable-normal-raids: false
 # If enabled, large raids can only be triggered for artificial village centers registered
 # by the plugin. Make sure that your artificial village centers are at least 128 blocks/
 # 8 chunks away from each other and other villager-claimed village blocks (e.g. job block,
