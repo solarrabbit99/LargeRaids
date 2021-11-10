@@ -5,7 +5,7 @@ title: Configurations
 
 - [**Main Configurations**](#main-configurations)
   - [Raid (Mobs/Waves/Sounds)](#raid-mobswavessounds)
-  - [MythicMobs (Premium)](#mythicmobs-premium)
+  - [MythicMobs](#mythicmobs)
   - [Hero of the Village](#hero-of-the-village)
   - [Rewards](#rewards)
 - [**Trigger Mechanism**](#trigger-mechanism)
@@ -41,7 +41,7 @@ raid:
     illusioner: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 2, 2, 2, 3, 3, 3]
 ```
 
-### MythicMobs (Premium)
+### MythicMobs
 
 You can also add [**MythicMobs**](https://www.spigotmc.org/resources/%E2%9A%94-mythicmobs-free-version-%E2%96%BAthe-1-custom-mob-creator%E2%97%84.5702/) into your raids! Suppose you have the following mob configuration in the MythicMobs plugin.
 
