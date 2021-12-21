@@ -1,44 +1,30 @@
 package com.solarrabbit.largeraids.util;
 
-import com.solarrabbit.largeraids.raid.AbstractLargeRaid;
 import com.solarrabbit.largeraids.raid.AbstractVillages;
 import com.solarrabbit.largeraids.raid.mob.AbstractRaider;
-import com.solarrabbit.largeraids.LargeRaids;
+import com.mojang.authlib.GameProfile;
+import com.solarrabbit.largeraids.nms.AbstractBlockPositionWrapper;
+import com.solarrabbit.largeraids.nms.AbstractCraftRaidWrapper;
+import com.solarrabbit.largeraids.nms.AbstractCraftRaiderWrapper;
+import com.solarrabbit.largeraids.nms.AbstractCraftServerWrapper;
+import com.solarrabbit.largeraids.nms.AbstractCraftWorldWrapper;
+import com.solarrabbit.largeraids.nms.AbstractMinecraftServerWrapper;
+import com.solarrabbit.largeraids.nms.AbstractPlayerEntityWrapper;
+import com.solarrabbit.largeraids.nms.AbstractRaidWrapper;
+import com.solarrabbit.largeraids.nms.AbstractWorldServerWrapper;
+
 import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
+import org.bukkit.Server;
+import org.bukkit.World;
 import org.bukkit.entity.Raider;
-import org.bukkit.plugin.java.JavaPlugin;
 
 public class VersionUtil {
-    private static final String[] VERSIONS = new String[] { "v1_14_R1", "v1_15_R1", "v1_16_R3", "v1_17_R1" };
-
-    public static AbstractLargeRaid createLargeRaid(Player player) {
-        LargeRaids plugin = JavaPlugin.getPlugin(LargeRaids.class);
-        if (getVersion().equals("v1_17_R1"))
-            return new com.solarrabbit.largeraids.v1_17.LargeRaid(plugin, player);
-        if (getVersion().equals("v1_16_R3"))
-            return new com.solarrabbit.largeraids.v1_16.LargeRaid(plugin, player);
-        if (getVersion().equals("v1_15_R1"))
-            return new com.solarrabbit.largeraids.v1_15.LargeRaid(plugin, player);
-        if (getVersion().equals("v1_14_R1"))
-            return new com.solarrabbit.largeraids.v1_14.LargeRaid(plugin, player);
-        return null;
-    }
-
-    public static AbstractLargeRaid createLargeRaid(Player player, int level) {
-        LargeRaids plugin = JavaPlugin.getPlugin(LargeRaids.class);
-        if (getVersion().equals("v1_17_R1"))
-            return new com.solarrabbit.largeraids.v1_17.LargeRaid(plugin, player, level);
-        if (getVersion().equals("v1_16_R3"))
-            return new com.solarrabbit.largeraids.v1_16.LargeRaid(plugin, player, level);
-        if (getVersion().equals("v1_15_R1"))
-            return new com.solarrabbit.largeraids.v1_15.LargeRaid(plugin, player, level);
-        if (getVersion().equals("v1_14_R1"))
-            return new com.solarrabbit.largeraids.v1_14.LargeRaid(plugin, player, level);
-        return null;
-    }
+    private static final String[] VERSIONS = new String[] { "v1_14_R1", "v1_15_R1", "v1_16_R3", "v1_17_R1",
+            "v1_18_R1" };
 
     public static AbstractRaider fromRaider(Raider raider) {
+        if (getVersion().equals("v1_18_R1"))
+            return new com.solarrabbit.largeraids.v1_18.Raider(raider);
         if (getVersion().equals("v1_17_R1"))
             return new com.solarrabbit.largeraids.v1_17.Raider(raider);
         if (getVersion().equals("v1_16_R3"))
@@ -51,6 +37,8 @@ public class VersionUtil {
     }
 
     public static AbstractVillages getVillageManager() {
+        if (getVersion().equals("v1_18_R1"))
+            return new com.solarrabbit.largeraids.v1_18.CustomVillages();
         if (getVersion().equals("v1_17_R1"))
             return new com.solarrabbit.largeraids.v1_17.CustomVillages();
         if (getVersion().equals("v1_16_R3"))
@@ -60,6 +48,110 @@ public class VersionUtil {
         if (getVersion().equals("v1_14_R1"))
             return new com.solarrabbit.largeraids.v1_14.CustomVillages();
         return null;
+    }
+
+    public static AbstractBlockPositionWrapper getBlockPositionWrapper(double x, double y, double z) {
+        switch (getVersion()) {
+            case "v1_14_R1":
+                return new com.solarrabbit.largeraids.v1_14.nms.BlockPositionWrapper(x, y, z);
+            case "v1_15_R1":
+                return new com.solarrabbit.largeraids.v1_15.nms.BlockPositionWrapper(x, y, z);
+            case "v1_16_R3":
+                return new com.solarrabbit.largeraids.v1_16.nms.BlockPositionWrapper(x, y, z);
+            case "v1_17_R1":
+                return new com.solarrabbit.largeraids.v1_17.nms.BlockPositionWrapper(x, y, z);
+            case "v1_18_R1":
+                return new com.solarrabbit.largeraids.v1_18.nms.BlockPositionWrapper(x, y, z);
+            default:
+                return null;
+        }
+    }
+
+    public static AbstractCraftRaidWrapper getCraftRaidWrapper(AbstractRaidWrapper wrapper) {
+        switch (getVersion()) {
+            case "v1_14_R1":
+                return new com.solarrabbit.largeraids.v1_14.nms.CraftRaidWrapper(wrapper);
+            case "v1_15_R1":
+                return new com.solarrabbit.largeraids.v1_15.nms.CraftRaidWrapper(wrapper);
+            case "v1_16_R3":
+                return new com.solarrabbit.largeraids.v1_16.nms.CraftRaidWrapper(wrapper);
+            case "v1_17_R1":
+                return new com.solarrabbit.largeraids.v1_17.nms.CraftRaidWrapper(wrapper);
+            case "v1_18_R1":
+                return new com.solarrabbit.largeraids.v1_18.nms.CraftRaidWrapper(wrapper);
+            default:
+                return null;
+        }
+    }
+
+    public static AbstractCraftRaiderWrapper getCraftRaiderWrapper(Raider raider) {
+        switch (getVersion()) {
+            case "v1_14_R1":
+                return new com.solarrabbit.largeraids.v1_14.nms.CraftRaiderWrapper(raider);
+            case "v1_15_R1":
+                return new com.solarrabbit.largeraids.v1_15.nms.CraftRaiderWrapper(raider);
+            case "v1_16_R3":
+                return new com.solarrabbit.largeraids.v1_16.nms.CraftRaiderWrapper(raider);
+            case "v1_17_R1":
+                return new com.solarrabbit.largeraids.v1_17.nms.CraftRaiderWrapper(raider);
+            case "v1_18_R1":
+                return new com.solarrabbit.largeraids.v1_18.nms.CraftRaiderWrapper(raider);
+            default:
+                return null;
+        }
+    }
+
+    public static AbstractCraftServerWrapper getCraftServerWrapper(Server server) {
+        switch (getVersion()) {
+            case "v1_14_R1":
+                return new com.solarrabbit.largeraids.v1_14.nms.CraftServerWrapper(server);
+            case "v1_15_R1":
+                return new com.solarrabbit.largeraids.v1_15.nms.CraftServerWrapper(server);
+            case "v1_16_R3":
+                return new com.solarrabbit.largeraids.v1_16.nms.CraftServerWrapper(server);
+            case "v1_17_R1":
+                return new com.solarrabbit.largeraids.v1_17.nms.CraftServerWrapper(server);
+            case "v1_18_R1":
+                return new com.solarrabbit.largeraids.v1_18.nms.CraftServerWrapper(server);
+            default:
+                return null;
+        }
+    }
+
+    public static AbstractCraftWorldWrapper getCraftWorldWrapper(World world) {
+        switch (getVersion()) {
+            case "v1_14_R1":
+                return new com.solarrabbit.largeraids.v1_14.nms.CraftWorldWrapper(world);
+            case "v1_15_R1":
+                return new com.solarrabbit.largeraids.v1_15.nms.CraftWorldWrapper(world);
+            case "v1_16_R3":
+                return new com.solarrabbit.largeraids.v1_16.nms.CraftWorldWrapper(world);
+            case "v1_17_R1":
+                return new com.solarrabbit.largeraids.v1_17.nms.CraftWorldWrapper(world);
+            case "v1_18_R1":
+                return new com.solarrabbit.largeraids.v1_18.nms.CraftWorldWrapper(world);
+            default:
+                return null;
+        }
+    }
+
+    public static AbstractPlayerEntityWrapper getPlayerEntityWrapper(AbstractMinecraftServerWrapper server,
+            AbstractWorldServerWrapper world,
+            GameProfile profile) {
+        switch (getVersion()) {
+            case "v1_14_R1":
+                return new com.solarrabbit.largeraids.v1_14.nms.PlayerEntityWrapper(server, world, profile);
+            case "v1_15_R1":
+                return new com.solarrabbit.largeraids.v1_15.nms.PlayerEntityWrapper(server, world, profile);
+            case "v1_16_R3":
+                return new com.solarrabbit.largeraids.v1_16.nms.PlayerEntityWrapper(server, world, profile);
+            case "v1_17_R1":
+                return new com.solarrabbit.largeraids.v1_17.nms.PlayerEntityWrapper(server, world, profile);
+            case "v1_18_R1":
+                return new com.solarrabbit.largeraids.v1_18.nms.PlayerEntityWrapper(server, world, profile);
+            default:
+                return null;
+        }
     }
 
     public static boolean isAtLeast(String version) {

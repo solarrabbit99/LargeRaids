@@ -2,7 +2,7 @@ package com.solarrabbit.largeraids.listener;
 
 import com.solarrabbit.largeraids.LargeRaids;
 import com.solarrabbit.largeraids.raid.AbstractLargeRaid;
-import com.solarrabbit.largeraids.util.VersionUtil;
+import com.solarrabbit.largeraids.raid.LargeRaid;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
@@ -11,12 +11,12 @@ import org.bukkit.plugin.java.JavaPlugin;
 public abstract class TriggerListener implements Listener {
 
     protected void triggerRaid(Player player) {
-        AbstractLargeRaid largeRaid = VersionUtil.createLargeRaid(player);
+        AbstractLargeRaid largeRaid = new LargeRaid(getPlugin(), player);
         startRaid(largeRaid);
     }
 
     protected void triggerRaid(Player player, int omenLevel) {
-        AbstractLargeRaid largeRaid = VersionUtil.createLargeRaid(player, omenLevel);
+        AbstractLargeRaid largeRaid = new LargeRaid(getPlugin(), player, omenLevel);
         startRaid(largeRaid);
     }
 

@@ -23,8 +23,7 @@
 		<dependency>
 			<groupId>org.spigotmc</groupId>
 			<artifactId>spigot</artifactId>
-			<version>1.17.1-R0.1-SNAPSHOT</version>
-			<classifier>remapped-mojang</classifier>
+			<version>1.18-R0.1-SNAPSHOT</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
@@ -38,6 +37,11 @@
 			<artifactId>MythicMobs</artifactId>
 			<version>4.9.1</version>
 			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.solarrabbit</groupId>
+			<artifactId>largeraids-1_18</artifactId>
+			<version>${revision}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.solarrabbit</groupId>
@@ -85,11 +89,6 @@
 						</goals>
 						<configuration>
 							<createDependencyReducedPom>false</createDependencyReducedPom>
-							<artifactSet>
-								<excludes>
-									<exclude>com.solarrabbit:largeraids-api</exclude>
-								</excludes>
-							</artifactSet>
 							<filters>
 								<filter>
 									<artifact>*:*</artifact>
@@ -114,6 +113,25 @@
 						<artifactId>maven-resources-plugin</artifactId>
 						<version>3.0.2</version>
 						<executions>
+							<execution>
+								<id>copy-to-1_18</id>
+								<phase>package</phase>
+								<goals>
+									<goal>copy-resources</goal>
+								</goals>
+								<configuration>
+									<outputDirectory>${project.basedir}/../../../test_servers/1.18/plugins</outputDirectory>
+									<resources>
+										<resource>
+											<directory>${project.build.directory}</directory>
+											<filtering>false</filtering>
+											<includes>
+												<include>LargeRaids.jar</include>
+											</includes>
+										</resource>
+									</resources>
+								</configuration>
+							</execution>
 							<execution>
 								<id>copy-to-1_17</id>
 								<phase>package</phase>
