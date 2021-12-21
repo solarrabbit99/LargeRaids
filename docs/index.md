@@ -8,9 +8,9 @@ layout: home
 
 ## Server Requirements
 
-- Version: 1.14.4, 1.15.2, 1.16.5, 1.17.1
+- Version: 1.14.4, 1.15.2, 1.16.5, 1.17.1, 1.18.1
 
-The plugin may work for other versions under 1.14.x - 1.17.x, but no support will be given.
+The plugin may work for other versions under 1.14.x - 1.18.x, but no support will be given.
 
 ## Support
 
