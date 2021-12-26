@@ -82,14 +82,12 @@ public class RaidListener implements Listener {
         for (LargeRaid largeRaid : currentRaids) {
             if (!largeRaid.isLoading() && largeRaid.getTotalRaidersAlive() == 0 && !largeRaid.isLastWave())
                 largeRaid.triggerNextWave();
-            for (Consumer<LargeRaid> task : tickIteratingTasks) {
+            for (Consumer<LargeRaid> task : tickIteratingTasks)
                 task.accept(largeRaid);
-            }
         }
 
-        for (Runnable task : tickTasks) {
+        for (Runnable task : tickTasks)
             task.run();
-        }
     }
 
     public static Optional<LargeRaid> matchingLargeRaid(Location location) {

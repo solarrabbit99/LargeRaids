@@ -101,17 +101,18 @@ public class LargeRaid {
      * {@link #triggerNextWave()}, and called to replace vanilla mobs spawns.
      */
     public void spawnWave() {
-        List<Raider> raiders = this.currentRaid.getRaiders();
+        List<Raider> raiders = currentRaid.getRaiders();
+        Location loc = getWaveSpawnLocation();
 
         // happens when spawned mobs are too far from the village
-        if (!isLoading()) {
+        if (center.distanceSquared(loc) >= Math.pow(RADIUS, 2)) {
             for (Raider raider : raiders)
                 raider.remove();
-            triggerNextWave();
+            if (!isLastWave())
+                triggerNextWave();
             return;
         }
 
-        Location loc = getWaveSpawnLocation();
         AbstractRaidWrapper nmsRaid = getNMSRaid();
 
         for (EventRaider raider : config.getRaiders().getWaveMobs(this.currentWave)) {
@@ -186,24 +187,29 @@ public class LargeRaid {
      * Returns whether the raid is in the midst of loading a wave - a period of time
      * in between waves or when the raid just started.
      * 
-     * @return
+     * @return {@code true} if wave is loading
      */
     public boolean isLoading() {
         AbstractRaidWrapper nmsRaid = getNMSRaid();
         return !nmsRaid.hasFirstWaveSpawned() || nmsRaid.isBetweenWaves();
     }
 
+    /**
+     * Returns the number of raiders in the raid who are alive.
+     *
+     * @return number of alive raiders
+     */
     public int getTotalRaidersAlive() {
         try {
-            return this.currentRaid == null ? 0 : this.currentRaid.getRaiders().size();
+            return currentRaid == null ? 0 : currentRaid.getRaiders().size();
         } catch (ConcurrentModificationException evt) {
             return 0;
         }
     }
 
     public void absorbOmenLevel(int level) {
-        this.omenLevel = Math.min(this.maxTotalWaves, this.omenLevel + level);
-        this.totalWaves = Math.max(5, omenLevel);
+        omenLevel = Math.min(this.maxTotalWaves, this.omenLevel + level);
+        totalWaves = Math.max(5, omenLevel);
     }
 
     public Set<Player> getPlayersInRadius() {
@@ -218,7 +224,7 @@ public class LargeRaid {
     public Set<Player> getPlayersInInnerRadius() {
         Collection<Entity> collection = center.getWorld().getNearbyEntities(center, INNER_RADIUS,
                 INNER_RADIUS, INNER_RADIUS, entity -> entity instanceof Player
-                        && center.distanceSquared(entity.getLocation()) <= Math.pow(RADIUS, 2));
+                        && center.distanceSquared(entity.getLocation()) <= Math.pow(INNER_RADIUS, 2));
         Set<Player> set = new HashSet<>();
         collection.forEach(player -> set.add((Player) player));
         return set;
