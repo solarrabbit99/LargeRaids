@@ -19,7 +19,7 @@ public class RewardsConfig {
         items = itemsConfig.getKeys(false).stream()
                 .map(key -> ItemCreator.getItemFromConfig(itemsConfig.getConfigurationSection(key)))
                 .toArray(ItemStack[]::new);
-        commands = config.getStringList("commands").toArray(String[]::new);
+        commands = config.getStringList("commands").toArray(new String[0]);
     }
 
     @Nullable

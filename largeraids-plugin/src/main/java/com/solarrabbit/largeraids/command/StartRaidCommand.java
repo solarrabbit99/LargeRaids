@@ -46,7 +46,8 @@ public class StartRaidCommand extends TriggerListener implements CommandExecutor
             }
             triggerRaid(sender, location);
             return true;
-        } else if (sender instanceof Player player) {
+        } else if (sender instanceof Player) {
+            Player player = (Player) sender;
             triggerRaid(sender, player.getLocation());
             return true;
         } else

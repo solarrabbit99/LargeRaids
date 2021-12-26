@@ -83,8 +83,8 @@ public class RaidWrapper implements AbstractRaidWrapper {
 
     @Override
     public boolean equals(Object obj) {
-        if (obj instanceof RaidWrapper wrapper) {
-            return this.raid == wrapper.raid;
+        if (obj instanceof RaidWrapper) {
+            return this.raid == ((RaidWrapper) obj).raid;
         } else {
             return false;
         }
