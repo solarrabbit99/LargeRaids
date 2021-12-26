@@ -3,6 +3,9 @@ package com.solarrabbit.largeraids.v1_18.nms;
 import java.util.Set;
 import java.util.UUID;
 
+import javax.annotation.Nullable;
+
+import com.solarrabbit.largeraids.nms.AbstractBlockPositionWrapper;
 import com.solarrabbit.largeraids.nms.AbstractRaidWrapper;
 import com.solarrabbit.largeraids.nms.AbstractRaiderWrapper;
 
@@ -19,12 +22,12 @@ public class RaidWrapper implements AbstractRaidWrapper {
 
     @Override
     public boolean isEmpty() {
-        return this.raid == null;
+        return raid == null;
     }
 
     @Override
     public void stop() {
-        this.raid.stop();
+        raid.stop();
     }
 
     @Override
@@ -44,6 +47,13 @@ public class RaidWrapper implements AbstractRaidWrapper {
         } catch (IllegalAccessException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void joinRaid(int i, AbstractRaiderWrapper raider, @Nullable AbstractBlockPositionWrapper blockPosition,
+            boolean flag) {
+        raid.joinRaid(i, ((RaiderWrapper) raider).raider,
+                blockPosition == null ? null : ((BlockPositionWrapper) blockPosition).blockPos, flag);
     }
 
     @Override

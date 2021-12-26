@@ -4,31 +4,20 @@ import com.solarrabbit.largeraids.LargeRaids;
 import com.solarrabbit.largeraids.raid.AbstractLargeRaid;
 import com.solarrabbit.largeraids.raid.LargeRaid;
 import org.bukkit.Location;
-import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public abstract class TriggerListener implements Listener {
 
-    protected void triggerRaid(Player player) {
-        AbstractLargeRaid largeRaid = new LargeRaid(getPlugin(), player);
-        startRaid(largeRaid);
+    protected void triggerRaid(Location location) {
+        triggerRaid(location, getPlugin().getConfig().getInt("raid.waves"));
     }
 
-    protected void triggerRaid(Player player, int omenLevel) {
-        AbstractLargeRaid largeRaid = new LargeRaid(getPlugin(), player, omenLevel);
-        startRaid(largeRaid);
-    }
-
-    private void startRaid(AbstractLargeRaid largeRaid) {
-        largeRaid.startRaid();
-
-        Location center = largeRaid.getCenter();
-        if (center == null)
+    protected void triggerRaid(Location location, int omenLevel) {
+        if (!isAllowed(location))
             return;
-
-        if (!isAllowed(center))
-            largeRaid.stopRaid();
+        AbstractLargeRaid largeRaid = new LargeRaid(getPlugin().getRaidConfig(), location, omenLevel);
+        largeRaid.startRaid();
     }
 
     protected LargeRaids getPlugin() {
@@ -44,8 +33,8 @@ public abstract class TriggerListener implements Listener {
     }
 
     private boolean isInDatabase(Location loc) {
-        return this.getPlugin().getDatabaseAdapter().getCentres().values().stream()
-                .anyMatch(location -> location.distanceSquared(loc) < 3);
+        return getPlugin().getDatabaseAdapter().getCentres().values().stream()
+                .anyMatch(location -> location.distanceSquared(loc) < Math.pow(64, 2));
     }
 
 }

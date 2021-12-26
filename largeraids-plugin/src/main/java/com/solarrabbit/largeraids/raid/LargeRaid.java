@@ -4,8 +4,7 @@ import java.util.List;
 import java.util.UUID;
 
 import com.mojang.authlib.GameProfile;
-import com.solarrabbit.largeraids.LargeRaids;
-import com.solarrabbit.largeraids.PluginLogger.Level;
+import com.solarrabbit.largeraids.config.RaidConfig;
 import com.solarrabbit.largeraids.listener.RaidListener;
 import com.solarrabbit.largeraids.nms.AbstractBlockPositionWrapper;
 import com.solarrabbit.largeraids.nms.AbstractMinecraftServerWrapper;
@@ -14,60 +13,45 @@ import com.solarrabbit.largeraids.nms.AbstractRaidWrapper;
 import com.solarrabbit.largeraids.nms.AbstractRaidsWrapper;
 import com.solarrabbit.largeraids.nms.AbstractWorldServerWrapper;
 import com.solarrabbit.largeraids.raid.mob.EventRaider;
-import com.solarrabbit.largeraids.util.ChatColorUtil;
 import com.solarrabbit.largeraids.util.VersionUtil;
 
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.Difficulty;
 import org.bukkit.Location;
 import org.bukkit.Sound;
-import org.bukkit.Raid.RaidStatus;
-import org.bukkit.entity.Player;
 import org.bukkit.entity.Raider;
 
 public class LargeRaid extends AbstractLargeRaid {
 
-    public LargeRaid(LargeRaids plugin, Player player) {
-        super(plugin, player);
-    }
-
-    public LargeRaid(LargeRaids plugin, Player player, int omenLevel) {
-        super(plugin, player, omenLevel);
+    public LargeRaid(RaidConfig config, Location location, int omenLevel) {
+        super(config, location, omenLevel);
     }
 
     @Override
     public void startRaid() {
-        if (this.centre.getWorld().getDifficulty() == Difficulty.PEACEFUL) {
-            String peacefulMessage = ChatColorUtil.translate(this.plugin.getConfig().getString("attempt-peaceful"));
-            this.plugin.log(peacefulMessage, Level.WARN);
-            if (this.player != null)
-                player.sendMessage(ChatColor.YELLOW + peacefulMessage);
-            return;
-        }
-        if (!getNMSRaid().isEmpty())
+        if (!getNMSRaid().isEmpty()) // There is an ongoing raid.
             return;
 
         RaidListener.addLargeRaid(this); // Register itself as large raid before RaidTriggerEvent
-        triggerRaid(this.centre);
-        this.loading = true; // IMPORTANT, else next wave will be triggered.
+        AbstractRaidWrapper raid = createRaid(center);
+        if (raid.isEmpty()) { // fail to create raid
+            RaidListener.removeLargeRaid(this);
+            return;
+        }
 
-        Bukkit.getScheduler().runTaskLater(this.plugin, () -> {
-            if (this.currentRaid.getStatus() == RaidStatus.ONGOING) {
-                this.broadcastWave();
-                Sound sound = getSound(this.plugin.getConfig().getString("raid.sounds.summon", null));
-                if (sound != null)
-                    playSoundToPlayers(sound);
-            } else {
-                RaidListener.removeLargeRaid(this);
-            }
-        }, 2);
+        setRaid(VersionUtil.getCraftRaidWrapper(raid).getRaid());
+        loading = true; // IMPORTANT, else next wave will be triggered.
+
+        broadcastWave();
+        announceStart();
+        Sound sound = config.getSounds().getSummonSound();
+        if (sound != null)
+            playSoundToPlayersInRadius(sound);
     }
 
     @Override
     public void stopRaid() {
         AbstractRaidWrapper raid = this.getNMSRaid();
-        if (raid != null)
+        if (!raid.isEmpty())
             raid.stop();
         RaidListener.removeLargeRaid(this);
     }
@@ -82,32 +66,33 @@ public class LargeRaid extends AbstractLargeRaid {
 
     @Override
     public void triggerNextWave() {
-        currentRaid.getHeroes().forEach(uuid -> pendingHeroes.add(uuid));
-        if (this.isLastWave()) {
-            clearHeroRecords();
-            return;
-        }
+        transferHeroRecords();
+
+        loading = true;
+        currentWave++;
+        broadcastWave();
 
         getNMSRaid().stop();
+        setRaid(VersionUtil.getCraftRaidWrapper(createRaid(center)).getRaid());
 
-        this.loading = true;
-        this.currentWave++;
-        this.broadcastWave();
-        triggerRaid(this.centre);
-
-        if (isSecondLastWave())
-            this.setLastWave();
+        if (isLastWave())
+            prepareLastWave();
     }
 
-    @Override
-    public void clearHeroRecords() {
+    /**
+     * Serves as a precaution for player to be awarded with vanilla rewards
+     * unintentionally.
+     */
+    private void transferHeroRecords() {
+        currentRaid.getHeroes().forEach(uuid -> pendingHeroes.add(uuid));
         getNMSRaid().getHeroesOfTheVillage().clear();
     }
 
     @Override
-    public void spawnNextWave() {
+    public void spawnWave() {
         List<Raider> raiders = this.currentRaid.getRaiders();
 
+        // happens when spawned mobs are too far from the village
         if (!this.loading) {
             for (Raider raider : raiders)
                 raider.remove();
@@ -115,13 +100,12 @@ public class LargeRaid extends AbstractLargeRaid {
             return;
         }
 
-        Location loc = this.getWaveSpawnLocation();
+        Location loc = getWaveSpawnLocation();
         AbstractRaidWrapper nmsRaid = getNMSRaid();
 
-        for (EventRaider raider : plugin.getRaiderConfig().getWaveMobs(this.currentWave)) {
+        for (EventRaider raider : config.getRaiders().getWaveMobs(this.currentWave)) {
             Raider entity = raider.spawn(loc);
-            nmsRaid.addWaveMob(nmsRaid.getGroupsSpawned(), VersionUtil.getCraftRaiderWrapper(entity).getHandle(),
-                    false);
+            nmsRaid.joinRaid(2, VersionUtil.getCraftRaiderWrapper(entity).getHandle(), null, true);
         }
 
         raiders.forEach(raider -> {
@@ -129,30 +113,31 @@ public class LargeRaid extends AbstractLargeRaid {
             raider.remove();
         });
 
-        this.loading = false;
+        loading = false;
     }
 
-    private void setLastWave() {
-        int secondLast = getDefaultWaveNumber(this.centre.getWorld());
+    private void prepareLastWave() {
+        int secondLast = getDefaultWaveNumber(this.center.getWorld());
         getNMSRaid().setGroupsSpawned(secondLast);
     }
 
     private AbstractRaidWrapper getNMSRaid() {
-        AbstractBlockPositionWrapper blkPos = VersionUtil.getBlockPositionWrapper(centre.getX(), centre.getY(),
-                centre.getZ());
-        AbstractWorldServerWrapper level = VersionUtil.getCraftWorldWrapper(centre.getWorld()).getHandle();
+        AbstractBlockPositionWrapper blkPos = VersionUtil.getBlockPositionWrapper(center);
+        AbstractWorldServerWrapper level = VersionUtil.getCraftWorldWrapper(center.getWorld()).getHandle();
         return level.getRaidAt(blkPos);
     }
 
-    private void triggerRaid(Location location) {
-        AbstractMinecraftServerWrapper nmsServer = VersionUtil.getCraftServerWrapper(Bukkit.getServer()).getServer();
-        AbstractWorldServerWrapper nmsWorld = VersionUtil.getCraftWorldWrapper(location.getWorld()).getHandle();
-        GameProfile profile = new GameProfile(UUID.randomUUID(), "LargeRaids");
-        AbstractPlayerEntityWrapper abstractPlayer = VersionUtil.getPlayerEntityWrapper(nmsServer,
-                nmsWorld, profile);
-        abstractPlayer.setPosition(location.getX(), location.getY(), location.getZ());
-
-        AbstractRaidsWrapper raids = nmsWorld.getRaids();
+    /**
+     * Creates a raid with a fake player entity at the given location. The raid's
+     * bad omen is set to 2 arbitrarily.
+     *
+     * @param location to create the raid
+     * @return wrapped NMS raid created
+     */
+    private AbstractRaidWrapper createRaid(Location location) {
+        AbstractPlayerEntityWrapper abstractPlayer = createEntityPlayer(location);
+        AbstractWorldServerWrapper level = VersionUtil.getCraftWorldWrapper(center.getWorld()).getHandle();
+        AbstractRaidsWrapper raids = level.getRaids();
         try {
             raids.createOrExtendRaid(abstractPlayer);
         } catch (NullPointerException e) {
@@ -160,9 +145,27 @@ public class LargeRaid extends AbstractLargeRaid {
         }
         raids.setDirty();
 
-        AbstractRaidWrapper raid = this.getNMSRaid();
+        AbstractBlockPositionWrapper blkPos = VersionUtil.getBlockPositionWrapper(location.getX(), location.getY(),
+                location.getZ());
+        AbstractRaidWrapper raid = level.getRaidAt(blkPos);
         raid.setBadOmenLevel(2);
-        this.setRaid(VersionUtil.getCraftRaidWrapper(raid).getRaid());
+        return raid;
+    }
+
+    /**
+     * Creates a fake entity player at the given location.
+     *
+     * @param location for the entity to be set at
+     * @return wrapped player entity
+     */
+    private AbstractPlayerEntityWrapper createEntityPlayer(Location location) {
+        AbstractMinecraftServerWrapper nmsServer = VersionUtil.getCraftServerWrapper(Bukkit.getServer()).getServer();
+        AbstractWorldServerWrapper nmsWorld = VersionUtil.getCraftWorldWrapper(location.getWorld()).getHandle();
+        GameProfile profile = new GameProfile(UUID.randomUUID(), "LargeRaids");
+        AbstractPlayerEntityWrapper abstractPlayer = VersionUtil.getPlayerEntityWrapper(nmsServer,
+                nmsWorld, profile);
+        abstractPlayer.setPosition(location.getX(), location.getY(), location.getZ());
+        return abstractPlayer;
     }
 
 }

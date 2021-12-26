@@ -11,8 +11,14 @@ raid:
     victory: ENTITY_ENDER_DRAGON_DEATH
     defeat: ENTITY_ENDER_DRAGON_DEATH
   announce-waves:
-    title: true
-    message: false
+    title:
+      enabled: true
+      default: "&6Wave %s"
+      final: "&6Final Wave"
+    message:
+      enabled: false
+      default: "&6Spawning wave %s..."
+      final: "&6Spawning final wave..."
   mobs:
     pillager: [5, 7, 7, 8, 8, 8, 8, 9, 9, 9, 9, 9, 9, 9, 9, 10, 10, 10, 10, 10]
     vindicator: [0, 3, 5, 5, 5, 5, 5, 6, 7, 7, 7, 8, 8, 8, 9, 9, 9, 10, 10, 10]
@@ -21,30 +27,31 @@ raid:
     evoker: [0, 0, 0, 0, 1, 2, 2, 3, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 4, 4]
     illusioner: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 2, 2, 2, 3, 3, 3]
 
-hero-of-the-village:
-  level: 12
-  duration: 40
+  hero-of-the-village:
+    level: 12
+    duration: 40
 
-rewards:
-  items:
-    1:
-      material: BOOK
-      amount: 1
-      display-name: "&6Example Reward"
-      lore:
-        # - "&5Drop the item into lava in a village"
-        # - "&5to summon a large raid!"
-      custom-model-data:
-      enchantments:
-        1:
-          type: MENDING
-          level: 1
-        2:
-          type: DURABILITY
-          level: 1
-  commands:
-    # - lrgive <player> 1
-    # - give <player> stick
+  rewards:
+    message: "&aReceiving rewards..."
+    items:
+      1:
+        material: BOOK
+        amount: 1
+        display-name: "&6Example Reward"
+        lore:
+          # - "&5Drop the item into lava in a village"
+          # - "&5to summon a large raid!"
+        custom-model-data:
+        enchantments:
+          1:
+            type: MENDING
+            level: 1
+          2:
+            type: DURABILITY
+            level: 1
+    commands:
+      # - lrgive <player> 1
+      # - give <player> stick
 
 ############################################################
 # +------------------------------------------------------+ #
@@ -71,19 +78,3 @@ trigger:
 
 disable-normal-raids: false
 artificial-only: false
-
-############################################################
-# +------------------------------------------------------+ #
-# |                       Messages                       | #
-# +------------------------------------------------------+ #
-############################################################
-
-attempt-peaceful: "&eAttempted to spawn large raid but failed due to world's peaceful difficulty..."
-receive-rewards: "&aReceiving rewards..."
-wave-broadcast:
-  title:
-    default: "&6Wave %s"
-    final: "&6Final Wave"
-  message:
-    default: "&6Spawning wave %s..."
-    final: "&6Spawning final wave..."

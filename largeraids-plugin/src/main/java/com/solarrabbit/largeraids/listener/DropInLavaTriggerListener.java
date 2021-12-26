@@ -36,7 +36,7 @@ public class DropInLavaTriggerListener extends TriggerListener {
             UUID uuid = UUID.fromString(
                     entity.getPersistentDataContainer().get(this.getNamespacedKey(), PersistentDataType.STRING));
             entity.remove();
-            this.triggerRaid(Bukkit.getPlayer(uuid));
+            triggerRaid(Bukkit.getPlayer(uuid).getLocation());
         }
     }
 

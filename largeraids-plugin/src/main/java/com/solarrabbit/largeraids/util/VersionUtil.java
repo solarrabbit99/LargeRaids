@@ -14,6 +14,7 @@ import com.solarrabbit.largeraids.nms.AbstractRaidWrapper;
 import com.solarrabbit.largeraids.nms.AbstractWorldServerWrapper;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.Server;
 import org.bukkit.World;
 import org.bukkit.entity.Raider;
@@ -48,6 +49,10 @@ public class VersionUtil {
         if (getVersion().equals("v1_14_R1"))
             return new com.solarrabbit.largeraids.v1_14.CustomVillages();
         return null;
+    }
+
+    public static AbstractBlockPositionWrapper getBlockPositionWrapper(Location location) {
+        return getBlockPositionWrapper(location.getX(), location.getY(), location.getZ());
     }
 
     public static AbstractBlockPositionWrapper getBlockPositionWrapper(double x, double y, double z) {

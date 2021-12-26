@@ -41,7 +41,7 @@ public class RaidListener implements Listener {
 
     @EventHandler
     public void onSpawn(RaidSpawnWaveEvent evt) {
-        matchingLargeRaid(evt.getRaid()).ifPresent(largeRaid -> largeRaid.spawnNextWave());
+        matchingLargeRaid(evt.getRaid()).ifPresent(largeRaid -> largeRaid.spawnWave());
     }
 
     @EventHandler
@@ -79,9 +79,8 @@ public class RaidListener implements Listener {
 
     private void tick() {
         for (AbstractLargeRaid largeRaid : currentRaids) {
-            if (!largeRaid.isLoading() && largeRaid.getTotalRaidersAlive() == 0 && !largeRaid.isLastWave()) {
+            if (!largeRaid.isLoading() && largeRaid.getTotalRaidersAlive() == 0 && !largeRaid.isLastWave())
                 largeRaid.triggerNextWave();
-            }
             for (Consumer<AbstractLargeRaid> task : tickIteratingTasks) {
                 task.accept(largeRaid);
             }

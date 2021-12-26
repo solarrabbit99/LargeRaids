@@ -29,7 +29,7 @@ public class VillageAbsorbOmenListener extends TriggerListener {
         evt.setCancelled(true);
         Player player = evt.getPlayer();
         int recordedLevel = this.killCaptainListener.getRecordedOmenLevel(player);
-        this.triggerRaid(player, recordedLevel);
+        triggerRaid(player.getLocation(), recordedLevel);
         killCaptainListener.resetOmenLevel(player);
     }
 

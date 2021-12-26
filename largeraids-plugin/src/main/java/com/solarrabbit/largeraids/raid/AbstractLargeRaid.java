@@ -7,53 +7,41 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
-import java.util.stream.Stream;
-import com.solarrabbit.largeraids.LargeRaids;
-import com.solarrabbit.largeraids.item.ItemCreator;
-import com.solarrabbit.largeraids.util.ChatColorUtil;
+
+import com.solarrabbit.largeraids.config.RaidConfig;
+
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Difficulty;
 import org.bukkit.Location;
 import org.bukkit.Raid;
 import org.bukkit.Sound;
 import org.bukkit.World;
-import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Raider;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
 public abstract class AbstractLargeRaid {
     private static final int RADIUS = 96;
     private static final int INNER_RADIUS = 64;
-    protected final LargeRaids plugin;
+    protected final RaidConfig config;
     private final int maxTotalWaves;
     private int totalWaves;
     private int omenLevel;
-    protected Location centre;
+    protected Location center;
     protected Raid currentRaid;
     protected int currentWave;
     protected Set<UUID> pendingHeroes;
     protected boolean loading;
     protected Player player;
 
-    public AbstractLargeRaid(LargeRaids plugin, Player player) {
-        this.plugin = plugin;
-        this.centre = player.getLocation(); // Not yet a real centre...
-        this.player = player;
-        this.maxTotalWaves = plugin.getConfig().getInt("raid.waves");
+    public AbstractLargeRaid(RaidConfig config, Location location, int omenLevel) {
+        this.config = config;
+        this.center = location; // Not yet a real center...
+        this.maxTotalWaves = config.getMaximumWaves();
         this.currentWave = 1;
         this.pendingHeroes = new HashSet<>();
-
-        this.totalWaves = this.maxTotalWaves;
-        this.omenLevel = this.maxTotalWaves;
-    }
-
-    public AbstractLargeRaid(LargeRaids plugin, Player player, int omenLevel) {
-        this(plugin, player);
         this.totalWaves = Math.max(5, omenLevel);
         this.omenLevel = omenLevel;
     }
@@ -65,13 +53,17 @@ public abstract class AbstractLargeRaid {
     }
 
     public boolean isLoading() {
-        return this.loading;
+        return loading;
+    }
+
+    public void announceStart() {
+        // TODO: add configurable announcement
     }
 
     public void announceVictory() {
-        Sound sound = getSound(this.plugin.getConfig().getString("raid.sounds.victory", null));
+        Sound sound = config.getSounds().getVictorySound();
         if (sound != null)
-            playSoundToPlayers(sound);
+            playSoundToPlayersInRadius(sound);
 
         currentRaid.getHeroes().forEach(uuid -> pendingHeroes.add(uuid));
         this.pendingHeroes.forEach(uuid -> Optional.ofNullable(Bukkit.getPlayer(uuid)).filter(Player::isOnline)
@@ -79,25 +71,21 @@ public abstract class AbstractLargeRaid {
     }
 
     public void announceDefeat() {
-        Sound sound = getSound(this.plugin.getConfig().getString("raid.sounds.defeat", null));
+        Sound sound = config.getSounds().getDefeatSound();
         if (sound != null)
-            playSoundToPlayers(sound);
-    }
-
-    public boolean isLastWave() {
-        return this.currentWave == this.totalWaves;
-    }
-
-    protected boolean isSecondLastWave() {
-        return this.totalWaves - this.currentWave == 1;
+            playSoundToPlayersInRadius(sound);
     }
 
     public int getCurrentWave() {
-        return this.currentWave;
+        return currentWave;
     }
 
     public int getTotalWaves() {
-        return this.totalWaves;
+        return totalWaves;
+    }
+
+    public boolean isLastWave() {
+        return currentWave == totalWaves;
     }
 
     public int getTotalRaidersAlive() {
@@ -117,19 +105,17 @@ public abstract class AbstractLargeRaid {
      * Returns the actual center of the raid.
      *
      * @return {@code null} if the raid has stopped/failed to start
-     * @throws NullPointerException if the large raid has not attempted to start
      */
     public Location getCenter() {
-        return this.currentRaid == null ? null : this.centre;
+        return currentRaid == null ? null : center;
     }
 
     protected void setRaid(Raid raid) {
-        this.currentRaid = raid;
-        if (!this.plugin.getConfig().getBoolean("raid.trigger-is-centre"))
-            this.centre = raid.getLocation();
+        currentRaid = raid;
+        center = raid.getLocation();
     }
 
-    protected void playSoundToPlayers(Sound sound) {
+    protected void playSoundToPlayersInRadius(Sound sound) {
         getPlayersInRadius().forEach(player -> player.playSound(player.getLocation(), sound, 50, 1));
     }
 
@@ -139,66 +125,49 @@ public abstract class AbstractLargeRaid {
     }
 
     public Set<Player> getPlayersInRadius() {
-        Collection<Entity> collection = this.centre.getWorld().getNearbyEntities(this.centre, RADIUS, RADIUS, RADIUS,
+        Collection<Entity> collection = center.getWorld().getNearbyEntities(center, RADIUS, RADIUS, RADIUS,
                 entity -> entity instanceof Player
-                        && centre.distanceSquared(entity.getLocation()) <= Math.pow(RADIUS, 2));
+                        && center.distanceSquared(entity.getLocation()) <= Math.pow(RADIUS, 2));
         Set<Player> set = new HashSet<>();
         collection.forEach(player -> set.add((Player) player));
         return set;
     }
 
     public Set<Player> getPlayersInInnerRadius() {
-        Collection<Entity> collection = this.centre.getWorld().getNearbyEntities(this.centre, INNER_RADIUS,
+        Collection<Entity> collection = center.getWorld().getNearbyEntities(center, INNER_RADIUS,
                 INNER_RADIUS, INNER_RADIUS, entity -> entity instanceof Player
-                        && centre.distanceSquared(entity.getLocation()) <= Math.pow(RADIUS, 2));
+                        && center.distanceSquared(entity.getLocation()) <= Math.pow(RADIUS, 2));
         Set<Player> set = new HashSet<>();
         collection.forEach(player -> set.add((Player) player));
         return set;
     }
 
     protected void broadcastWave() {
-        boolean title = this.plugin.getConfig().getBoolean("raid.announce-waves.title");
-        boolean message = this.plugin.getConfig().getBoolean("raid.announce-waves.message");
-        this.getPlayersInRadius().forEach(player -> {
-            if (title) {
-                String defaultStr = ChatColorUtil
-                        .translate(this.plugin.getConfig().getString("wave-broadcast.title.default"));
-                String finalStr = ChatColorUtil
-                        .translate(this.plugin.getConfig().getString("wave-broadcast.title.final"));
-                player.sendTitle(ChatColor.GOLD + (isLastWave() ? finalStr : String.format(defaultStr, currentWave)),
-                        null, 10, 70, 20);
+        for (Player player : getPlayersInRadius()) {
+            if (config.isTitleEnabled()) {
+                String defaultStr = config.getDefaultWaveTitle(currentWave);
+                String finalStr = config.getFinalWaveTitle();
+                player.sendTitle(isLastWave() ? finalStr : defaultStr, null, 10, 70, 20);
             }
-            if (message) {
-                String defaultStr = ChatColorUtil
-                        .translate(this.plugin.getConfig().getString("wave-broadcast.message.default"));
-                String finalStr = ChatColorUtil
-                        .translate(this.plugin.getConfig().getString("wave-broadcast.message.final"));
-                player.sendMessage(ChatColor.GOLD + (isLastWave() ? finalStr : String.format(defaultStr, currentWave)));
+            if (config.isMessageEnabled()) {
+                String defaultStr = config.getDefaultWaveMessage(currentWave);
+                String finalStr = config.getFinalWaveMessage();
+                player.sendMessage(isLastWave() ? finalStr : defaultStr);
             }
-        });
-    }
-
-    protected Sound getSound(String name) {
-        return Stream.of(Sound.values()).filter(value -> value.name().equals(name)).findFirst().orElse(null);
+        }
     }
 
     private void awardPlayer(Player player) {
-        player.sendMessage(ChatColorUtil.translate(this.plugin.getConfig().getString("receive-rewards")));
-
-        ConfigurationSection conf = this.plugin.getConfig().getConfigurationSection("hero-of-the-village");
-        int level = Math.min(conf.getInt("level"), this.omenLevel);
-        int duration = conf.getInt("duration") * 60 * 20;
+        int level = Math.min(config.getHeroLevel(), omenLevel);
+        int duration = config.getHeroDuration() * 60 * 20;
         player.addPotionEffect(new PotionEffect(PotionEffectType.HERO_OF_THE_VILLAGE, duration, level - 1));
 
-        ConfigurationSection itemAwards = this.plugin.getConfig().getConfigurationSection("rewards.items");
-        ItemStack[] items = itemAwards.getKeys(false).stream()
-                .map(itemConfig -> ItemCreator.getItemFromConfig(itemAwards.getConfigurationSection(itemConfig)))
-                .toArray(ItemStack[]::new);
-        player.getInventory().addItem(items)
+        player.sendMessage(config.getRewards().getMessage());
+        player.getInventory().addItem(config.getRewards().getItems())
                 .forEach((i, item) -> player.getWorld().dropItem(player.getLocation(), item));
 
-        this.plugin.getConfig().getStringList("rewards.commands").forEach(
-                str -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), str.replace("<player>", player.getName())));
+        for (String command : config.getRewards().getCommands())
+            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command.replace("<player>", player.getName()));
     }
 
     /**
@@ -210,14 +179,14 @@ public abstract class AbstractLargeRaid {
      *         above 2
      */
     public boolean releaseOmen() {
-        if (this.currentRaid.getBadOmenLevel() == 2)
+        if (currentRaid.getBadOmenLevel() == 2)
             return false;
-        this.currentRaid.setBadOmenLevel(2);
+        currentRaid.setBadOmenLevel(2);
         return true;
     }
 
     public int getBadOmenLevel() {
-        return this.omenLevel;
+        return omenLevel;
     }
 
     public abstract void startRaid();
@@ -228,11 +197,13 @@ public abstract class AbstractLargeRaid {
 
     public abstract void triggerNextWave();
 
-    public abstract void clearHeroRecords();
+    /**
+     * Spawns the raiders for the wave. This is a follow-up method of
+     * {@link #triggerNextWave()}, and called to replace vanilla mobs spawns.
+     */
+    public abstract void spawnWave();
 
-    public abstract void spawnNextWave();
-
-    public static int getDefaultWaveNumber(World world) {
+    protected int getDefaultWaveNumber(World world) {
         Difficulty difficulty = world.getDifficulty();
         switch (difficulty) {
             case EASY:

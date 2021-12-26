@@ -12,7 +12,6 @@ import com.solarrabbit.largeraids.raid.mob.EventVanillaRaider;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.EntityType;
-import org.bukkit.plugin.java.JavaPlugin;
 import io.lumine.xikage.mythicmobs.MythicMobs;
 import io.lumine.xikage.mythicmobs.mobs.MobManager;
 import io.lumine.xikage.mythicmobs.mobs.MythicMob;
@@ -20,11 +19,11 @@ import io.lumine.xikage.mythicmobs.mobs.MythicMob;
 public class RaiderConfig {
     private static final EntityType[] DEFAULT_RAIDER_TYPES = new EntityType[] { EntityType.PILLAGER,
             EntityType.VINDICATOR, EntityType.RAVAGER, EntityType.WITCH, EntityType.EVOKER, EntityType.ILLUSIONER };
-    private final JavaPlugin plugin;
+    private final ConfigurationSection config;
     private final Map<EventRaider, List<Integer>> mobsMap;
 
-    public RaiderConfig(JavaPlugin plugin) {
-        this.plugin = plugin;
+    RaiderConfig(ConfigurationSection config) {
+        this.config = config;
         mobsMap = new HashMap<>();
         init();
     }
@@ -66,11 +65,10 @@ public class RaiderConfig {
     }
 
     private Map<String, List<Integer>> getStringMappings() {
-        ConfigurationSection mobsConfigSection = plugin.getConfig().getConfigurationSection("raid.mobs");
-        Set<String> keys = mobsConfigSection.getKeys(false);
+        Set<String> keys = config.getKeys(false);
         Map<String, List<Integer>> mappings = new HashMap<>();
         for (String key : keys) {
-            mappings.put(key, mobsConfigSection.getIntegerList(key));
+            mappings.put(key, config.getIntegerList(key));
         }
         return mappings;
     }
