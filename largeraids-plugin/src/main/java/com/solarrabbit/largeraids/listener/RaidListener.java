@@ -80,7 +80,8 @@ public class RaidListener implements Listener {
 
     private void tick() {
         for (LargeRaid largeRaid : currentRaids) {
-            if (!largeRaid.isLoading() && largeRaid.getTotalRaidersAlive() == 0 && !largeRaid.isLastWave())
+            if (largeRaid.isActive() && largeRaid.getTotalRaidersAlive() == 0 && !largeRaid.isLoading()
+                    && !largeRaid.isLastWave())
                 largeRaid.triggerNextWave();
             for (Consumer<LargeRaid> task : tickIteratingTasks)
                 task.accept(largeRaid);

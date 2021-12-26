@@ -1,8 +1,13 @@
 package com.solarrabbit.largeraids.listener;
 
+import javax.annotation.Nullable;
+
 import com.solarrabbit.largeraids.LargeRaids;
 import com.solarrabbit.largeraids.raid.LargeRaid;
+
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.command.CommandSender;
 import org.bukkit.event.Listener;
 
 public abstract class TriggerListener implements Listener {
@@ -12,28 +17,31 @@ public abstract class TriggerListener implements Listener {
         this.plugin = plugin;
     }
 
-    protected void triggerRaid(Location location) {
-        triggerRaid(location, plugin.getRaidConfig().getMaximumWaves());
+    protected void triggerRaid(CommandSender triggerer, Location location) {
+        triggerRaid(triggerer, location, plugin.getRaidConfig().getMaximumWaves());
     }
 
-    protected void triggerRaid(Location location, int omenLevel) {
-        if (!isAllowed(location))
-            return;
+    protected void triggerRaid(CommandSender triggerer, Location location, int omenLevel) {
+        if (plugin.getTriggerConfig().isArtificialOnly()) {
+            String centerName = getArtificialVillageCenterName(location);
+            if (centerName == null)
+                return;
+            String message = plugin.getTriggerConfig().getBroadcastMessage(triggerer, centerName);
+            if (message != null)
+                Bukkit.broadcastMessage(message);
+        }
         LargeRaid largeRaid = new LargeRaid(plugin.getRaidConfig(), location, omenLevel);
         largeRaid.startRaid();
     }
 
     public abstract void unregisterListener();
 
-    private boolean isAllowed(Location loc) {
-        if (plugin.getTriggerConfig().isArtificialOnly())
-            return isInDatabase(loc);
-        return true;
-    }
-
-    private boolean isInDatabase(Location loc) {
-        return plugin.getDatabaseAdapter().getCentres().values().stream()
-                .anyMatch(location -> location.distanceSquared(loc) < Math.pow(64, 2));
+    @Nullable
+    private String getArtificialVillageCenterName(Location location) {
+        return plugin.getDatabaseAdapter().getCentres().entrySet().stream()
+                .filter(entry -> entry.getValue().distanceSquared(location) < Math.pow(64, 2))
+                .map(entry -> entry.getKey())
+                .findFirst().orElse(null);
     }
 
 }

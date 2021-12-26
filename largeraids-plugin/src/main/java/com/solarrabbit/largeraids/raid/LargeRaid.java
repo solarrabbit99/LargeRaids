@@ -183,6 +183,10 @@ public class LargeRaid {
         return currentWave == totalWaves;
     }
 
+    public boolean isActive() {
+        return !getNMSRaid().isEmpty();
+    }
+
     /**
      * Returns whether the raid is in the midst of loading a wave - a period of time
      * in between waves or when the raid just started.

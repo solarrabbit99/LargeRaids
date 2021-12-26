@@ -8,6 +8,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Item;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
@@ -42,7 +43,8 @@ public class DropInLavaTriggerListener extends TriggerListener {
             UUID uuid = UUID.fromString(
                     entity.getPersistentDataContainer().get(getNamespacedKey(), PersistentDataType.STRING));
             entity.remove();
-            triggerRaid(Bukkit.getPlayer(uuid).getLocation());
+            Player player = Bukkit.getPlayer(uuid);
+            triggerRaid(player, player.getLocation());
         }
     }
 

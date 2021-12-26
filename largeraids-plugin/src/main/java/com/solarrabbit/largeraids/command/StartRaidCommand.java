@@ -2,7 +2,8 @@ package com.solarrabbit.largeraids.command;
 
 import com.solarrabbit.largeraids.LargeRaids;
 import com.solarrabbit.largeraids.listener.TriggerListener;
-import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -17,15 +18,16 @@ public class StartRaidCommand extends TriggerListener implements CommandExecutor
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (args.length >= 1) {
-            Player player = Bukkit.getPlayer(args[0]);
-            if (player != null) {
-                triggerRaid(player.getLocation());
-                return true;
+            Location location = plugin.getDatabaseAdapter().getCentre(args[0]);
+            if (location == null) {
+                sender.sendMessage(ChatColor.RED + "There are no existing artificial village centers with that name!");
+                return false;
             }
-            return false;
+            triggerRaid(sender, location);
+            return true;
         } else if (sender instanceof Player) {
             Player player = (Player) sender;
-            triggerRaid(player.getLocation());
+            triggerRaid(sender, player.getLocation());
             return true;
         } else {
             return false;

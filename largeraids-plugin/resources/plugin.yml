@@ -11,8 +11,8 @@ commands:
     description: Reloads LargeRaids plugin configurations.
     permission: largeraids.admin
   lrstart:
-    description: Start a large raid.
-    usage: /<command> [player]
+    description: Start a large raid at player location or given center.
+    usage: /<command> [center]
     permission: largeraids.admin
   lrstop:
     description: Stop a large raid.

@@ -21,7 +21,7 @@ public class NewMoonTriggerListener extends TriggerListener {
     private void tick() {
         Bukkit.getWorlds().stream().filter(world -> isMidnight(world) && isNewMoon(world))
                 .flatMap(world -> world.getPlayers().stream())
-                .forEach(player -> triggerRaid(player.getLocation()));
+                .forEach(player -> triggerRaid(player, player.getLocation()));
     }
 
     private boolean isMidnight(World world) {

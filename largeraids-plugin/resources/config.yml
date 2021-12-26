@@ -77,4 +77,6 @@ trigger:
     enabled: false
 
   enable-normal-raids: false
-  artificial-only: false
+  artificial-only:
+    enabled: false
+    broadcast-message: "&7<player> &btriggered a large raid at &l<center>&r&b!"
