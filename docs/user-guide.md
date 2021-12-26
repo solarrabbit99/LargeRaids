@@ -9,7 +9,7 @@ Refer to the [Configuration Guide](configurations.html).
 
 ## Commands
 
-- `/lrstart [player]` - start a large raid for the village you are in (or the player's in)
+- `/lrstart [player | center] [name]` - start a large raid at player location or given center
 - `/lrstop [player]` - stop a large raid in the vicinity (or the player's vicinity)
 - `/lrcenters [add | remove] [name]` - manage artificial villages\*
 - `/lrgive <player> [amount]` - give player summoning items
