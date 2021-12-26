@@ -9,7 +9,6 @@ title: Configurations
   - [Hero of the Village](#hero-of-the-village)
   - [Rewards](#rewards)
 - [**Trigger Mechanism**](#trigger-mechanism)
-- [**Messages**](#messages)
 
 The only configuration file available is the default `config.yml` generated the first time the plugin is loaded on the server. In the future versions to come, new configurable options may be added. The already generated `config.yml` does not get automatically updated. You can either backup the old configuration file in a different directory for the plugin to regenerate a new one, or update it manually according to the changes reflected below.
 
@@ -29,8 +28,14 @@ raid:
     victory: ENTITY_ENDER_DRAGON_DEATH
     defeat: ENTITY_ENDER_DRAGON_DEATH
   announce-waves:
-    title: true
-    message: false
+    title:
+      enabled: true
+      default: "&6Wave %s"
+      final: "&6Final Wave"
+    message:
+      enabled: false
+      default: "&6Spawning wave %s..."
+      final: "&6Spawning final wave..."
   # Do not add any other mobs that are not of any type listed below, they will not spawn.
   mobs:
     pillager: [5, 7, 7, 8, 8, 8, 8, 9, 9, 9, 9, 9, 9, 9, 9, 10, 10, 10, 10, 10]
@@ -86,6 +91,8 @@ Similar to the Hero of the Village status effect, rewards are given to players, 
 
 ```yml
 rewards:
+  # Leave it blank to disable.
+  message: "&aReceiving rewards..."
   # Leave this section blank to disable the feature.
   items:
     1:
@@ -143,31 +150,21 @@ trigger:
       # Avoid using armor/tools for material if this is enabled. It applies mending to
       # the item for the glint.
       enchantment-glint: true
-  # Raids will trigger for players staying up in villages till midnight on a new moon.
-  new-moon:
+  # Raids will trigger for players in villages at the given tick that is <192000. See Minecraft's
+  # daylight cycle for more information.
+  time-bomb:
     enabled: false
+    tick: 114000
 
-# If enabled, no normal raids will be triggered upon the absorption of player's bad omen.
-disable-normal-raids: false
-# If enabled, large raids can only be triggered for artificial village centers registered
-# by the plugin. Make sure that your artificial village centers are at least 128 blocks/
-# 8 chunks away from each other and other villager-claimed village blocks (e.g. job block,
-# bed, bell).
-artificial-only: false
-```
+  # If enabled, normal raids can be triggered upon the absorption of player's bad omen.
+  enable-normal-raids: false
 
-## Messages
-
-These are messages sent to players, with the exception of `attempt-peaceful`, which will be sent to **both** the attempting player and the server console.
-
-```yml
-attempt-peaceful: "&eAttempted to spawn large raid but failed due to world's peaceful difficulty..."
-receive-rewards: "&aReceiving rewards..."
-wave-broadcast:
-  title:
-    default: "&6Wave %s"
-    final: "&6Final Wave"
-  message:
-    default: "&6Spawning wave %s..."
-    final: "&6Spawning final wave..."
+  artificial-only:
+    # If enabled, large raids can only be triggered for artificial village centers registered
+    # by the plugin. Make sure that your artificial village centers are at least 128 blocks/
+    # 8 chunks away from each other and other villager-claimed village blocks (e.g. job block,
+    # bed, bell).
+    enabled: false
+    # Broadcast message to be sent to entire server, leave it blank to disable.
+    broadcast-message: "&7<player> &btriggered a large raid at &l<center>&r&b!"
 ```

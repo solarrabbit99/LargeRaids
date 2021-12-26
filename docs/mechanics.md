@@ -23,9 +23,9 @@ This triggering mechanism is inspired by Terraria, where players summon the Wall
 
 > 💡 **TIP**: You can create maps with a lava well as an artificial village center to make a cool raid arena.
 
-### New Moon
+### Time Bomb
 
-This mechanism aims to surprise unprepared players loitering around villages in a midnight with a new moon. The raid will have the maximum bad omen level, set by the `raid.waves` configuration option in `config.yml`.
+This mechanism aims to surprise unprepared players loitering around villages during a certain tick in the Minecraft's [daylight cycle](https://minecraft.fandom.com/wiki/Daylight_cycle). The raid will have the maximum bad omen level, set by the `raid.waves` configuration option in `config.yml`.
 
 ## Behaviour
 
