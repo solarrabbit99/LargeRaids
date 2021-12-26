@@ -12,7 +12,7 @@ commands:
     permission: largeraids.admin
   lrstart:
     description: Start a large raid at player location or given center.
-    usage: /<command> [center]
+    usage: /<command> [player | center] [name]
     permission: largeraids.admin
   lrstop:
     description: Stop a large raid.

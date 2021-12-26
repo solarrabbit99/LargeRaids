@@ -10,7 +10,7 @@ import org.bukkit.configuration.ConfigurationSection;
 public class TriggersConfig {
     private final OmenTriggerConfig omenConfig;
     private final DropInLavaTriggerConfig dropInLavaConfig;
-    private final NewMoonTriggerConfig newMoonConfig;
+    private final TimeBombTriggerConfig timeBombConfig;
     private final boolean canNormalRaid;
     private final boolean isArtificialOnly;
     private final String broadcastMessage;
@@ -18,7 +18,7 @@ public class TriggersConfig {
     public TriggersConfig(ConfigurationSection config) {
         omenConfig = new OmenTriggerConfig(config.getConfigurationSection("omen"));
         dropInLavaConfig = new DropInLavaTriggerConfig(config.getConfigurationSection("drop-item-in-lava"));
-        newMoonConfig = new NewMoonTriggerConfig(config.getConfigurationSection("new-moon"));
+        timeBombConfig = new TimeBombTriggerConfig(config.getConfigurationSection("time-bomb"));
         canNormalRaid = config.getBoolean("enable-normal-raids");
         isArtificialOnly = config.getBoolean("artificial-only.enabled");
         broadcastMessage = config.getString("artificial-only.broadcast-message", null);
@@ -40,8 +40,8 @@ public class TriggersConfig {
         return dropInLavaConfig;
     }
 
-    public NewMoonTriggerConfig getNewMoonConfig() {
-        return newMoonConfig;
+    public TimeBombTriggerConfig getTimeBombConfig() {
+        return timeBombConfig;
     }
 
     @Nullable

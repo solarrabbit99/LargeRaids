@@ -15,7 +15,7 @@ import com.solarrabbit.largeraids.config.RaidConfig;
 import com.solarrabbit.largeraids.config.trigger.TriggersConfig;
 import com.solarrabbit.largeraids.database.DatabaseAdapter;
 import com.solarrabbit.largeraids.listener.DropInLavaTriggerListener;
-import com.solarrabbit.largeraids.listener.NewMoonTriggerListener;
+import com.solarrabbit.largeraids.listener.TimeBombTriggerListener;
 import com.solarrabbit.largeraids.listener.RaidListener;
 import com.solarrabbit.largeraids.listener.TriggerListener;
 import com.solarrabbit.largeraids.listener.omen.VillageAbsorbOmenListener;
@@ -109,14 +109,10 @@ public final class LargeRaids extends JavaPlugin {
 
         if (triggerConfig.getOmenConfig().isEnabled())
             registerTrigger(new VillageAbsorbOmenListener(this), true);
-        if (isTriggerEnabled("drop-item-in-lava"))
+        if (triggerConfig.getDropInLavaConfig().isEnabled())
             registerTrigger(new DropInLavaTriggerListener(this), true);
-        if (isTriggerEnabled("new-moon"))
-            registerTrigger(new NewMoonTriggerListener(this), false);
-    }
-
-    private boolean isTriggerEnabled(String trigger) {
-        return getConfig().getBoolean("trigger." + trigger + ".enabled");
+        if (triggerConfig.getTimeBombConfig().isEnabled())
+            registerTrigger(new TimeBombTriggerListener(this), false);
     }
 
     private void registerTrigger(TriggerListener listener, boolean registerEvents) {

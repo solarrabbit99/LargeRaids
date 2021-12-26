@@ -73,8 +73,9 @@ trigger:
         # - "&5to summon a large raid!"
       custom-model-data:
       enchantment-glint: true
-  new-moon:
+  time-bomb:
     enabled: false
+    tick: 114000
 
   enable-normal-raids: false
   artificial-only:

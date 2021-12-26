@@ -5,10 +5,10 @@ import com.solarrabbit.largeraids.LargeRaids;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 
-public class NewMoonTriggerListener extends TriggerListener {
+public class TimeBombTriggerListener extends TriggerListener {
     private int tickTaskId;
 
-    public NewMoonTriggerListener(LargeRaids plugin) {
+    public TimeBombTriggerListener(LargeRaids plugin) {
         super(plugin);
         tickTaskId = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, () -> tick(), 0, 100);
     }
@@ -19,23 +19,15 @@ public class NewMoonTriggerListener extends TriggerListener {
     }
 
     private void tick() {
-        Bukkit.getWorlds().stream().filter(world -> isMidnight(world) && isNewMoon(world))
+        Bukkit.getWorlds().stream().filter(world -> isInTime(world))
                 .flatMap(world -> world.getPlayers().stream())
                 .forEach(player -> triggerRaid(player, player.getLocation()));
     }
 
-    private boolean isMidnight(World world) {
-        long time = world.getTime();
-        return time >= 18000 && time < 18100;
-    }
-
-    private boolean isNewMoon(World world) {
-        return this.getMoonPhase(world) == 4;
-    }
-
-    private int getMoonPhase(World world) {
-        int days = (int) world.getFullTime() / 24000;
-        return days % 8;
+    private boolean isInTime(World world) {
+        int time = (int) world.getFullTime();
+        int tick = plugin.getTriggerConfig().getTimeBombConfig().getTick();
+        return time >= tick && time < tick + 100;
     }
 
 }
