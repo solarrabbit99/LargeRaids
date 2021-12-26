@@ -2,7 +2,8 @@ package com.solarrabbit.largeraids.support;
 
 import java.util.Optional;
 import com.solarrabbit.largeraids.listener.RaidListener;
-import com.solarrabbit.largeraids.raid.AbstractLargeRaid;
+import com.solarrabbit.largeraids.raid.LargeRaid;
+
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
@@ -31,7 +32,7 @@ public class Placeholder extends PlaceholderExpansion {
 
     @Override
     public String onRequest(OfflinePlayer player, String params) {
-        Optional<AbstractLargeRaid> raid = Optional.ofNullable(player.getPlayer()).map(Player::getLocation)
+        Optional<LargeRaid> raid = Optional.ofNullable(player.getPlayer()).map(Player::getLocation)
                 .flatMap(loc -> RaidListener.matchingLargeRaid(loc));
         switch (params) {
             case "in_range":

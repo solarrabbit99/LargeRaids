@@ -4,7 +4,7 @@ import java.util.function.Consumer;
 import com.solarrabbit.largeraids.LargeRaids;
 import com.solarrabbit.largeraids.listener.RaidListener;
 import com.solarrabbit.largeraids.listener.TriggerListener;
-import com.solarrabbit.largeraids.raid.AbstractLargeRaid;
+import com.solarrabbit.largeraids.raid.LargeRaid;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -41,10 +41,10 @@ public class VillageAbsorbOmenListener extends TriggerListener {
         this.killCaptainListener.unregisterListener();
     }
 
-    private class IteratePlayersInRaidTask implements Consumer<AbstractLargeRaid> {
+    private class IteratePlayersInRaidTask implements Consumer<LargeRaid> {
 
         @Override
-        public void accept(AbstractLargeRaid raid) {
+        public void accept(LargeRaid raid) {
             boolean hasReleasedOmen = raid.releaseOmen();
             for (Player player : raid.getPlayersInInnerRadius()) {
                 int omenLevel = killCaptainListener.getRecordedOmenLevel(player);

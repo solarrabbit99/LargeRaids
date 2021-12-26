@@ -6,7 +6,7 @@ import java.util.Set;
 import java.util.function.Consumer;
 
 import com.solarrabbit.largeraids.LargeRaids;
-import com.solarrabbit.largeraids.raid.AbstractLargeRaid;
+import com.solarrabbit.largeraids.raid.LargeRaid;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Raid;
@@ -19,20 +19,20 @@ import org.bukkit.event.raid.RaidStopEvent;
 import org.bukkit.event.raid.RaidTriggerEvent;
 
 public class RaidListener implements Listener {
-    private static final Set<AbstractLargeRaid> currentRaids = new HashSet<>();
+    private static final Set<LargeRaid> currentRaids = new HashSet<>();
     private static final Set<Runnable> tickTasks = new HashSet<>();
-    private static final Set<Consumer<AbstractLargeRaid>> tickIteratingTasks = new HashSet<>();
+    private static final Set<Consumer<LargeRaid>> tickIteratingTasks = new HashSet<>();
     private final LargeRaids plugin;
 
     public RaidListener(LargeRaids plugin) {
         this.plugin = plugin;
     }
 
-    public static void addLargeRaid(AbstractLargeRaid raid) {
+    public static void addLargeRaid(LargeRaid raid) {
         currentRaids.add(raid);
     }
 
-    public static void removeLargeRaid(AbstractLargeRaid raid) {
+    public static void removeLargeRaid(LargeRaid raid) {
         currentRaids.remove(raid);
     }
 
@@ -79,10 +79,10 @@ public class RaidListener implements Listener {
     }
 
     private void tick() {
-        for (AbstractLargeRaid largeRaid : currentRaids) {
+        for (LargeRaid largeRaid : currentRaids) {
             if (!largeRaid.isLoading() && largeRaid.getTotalRaidersAlive() == 0 && !largeRaid.isLastWave())
                 largeRaid.triggerNextWave();
-            for (Consumer<AbstractLargeRaid> task : tickIteratingTasks) {
+            for (Consumer<LargeRaid> task : tickIteratingTasks) {
                 task.accept(largeRaid);
             }
         }
@@ -92,11 +92,11 @@ public class RaidListener implements Listener {
         }
     }
 
-    public static Optional<AbstractLargeRaid> matchingLargeRaid(Location location) {
+    public static Optional<LargeRaid> matchingLargeRaid(Location location) {
         return currentRaids.stream().filter(largeRaid -> largeRaid.isSimilar(location)).findFirst();
     }
 
-    public static Optional<AbstractLargeRaid> matchingLargeRaid(Raid raid) {
+    public static Optional<LargeRaid> matchingLargeRaid(Raid raid) {
         return currentRaids.stream().filter(largeRaid -> largeRaid.isSimilar(raid)).findFirst();
     }
 
@@ -104,7 +104,7 @@ public class RaidListener implements Listener {
         tickTasks.add(task);
     }
 
-    public static void registerTickTask(Consumer<AbstractLargeRaid> task) {
+    public static void registerTickTask(Consumer<LargeRaid> task) {
         tickIteratingTasks.add(task);
     }
 
@@ -112,7 +112,7 @@ public class RaidListener implements Listener {
         tickTasks.remove(task);
     }
 
-    public static void unregisterTickTask(Consumer<AbstractLargeRaid> task) {
+    public static void unregisterTickTask(Consumer<LargeRaid> task) {
         tickIteratingTasks.remove(task);
     }
 

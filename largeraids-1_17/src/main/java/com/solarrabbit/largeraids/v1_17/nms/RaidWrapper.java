@@ -31,6 +31,16 @@ public class RaidWrapper implements AbstractRaidWrapper {
     }
 
     @Override
+    public boolean isBetweenWaves() {
+        return raid.isBetweenWaves();
+    }
+
+    @Override
+    public boolean hasFirstWaveSpawned() {
+        return raid.hasFirstWaveSpawned();
+    }
+
+    @Override
     public void setBadOmenLevel(int level) {
         this.raid.setBadOmenLevel(level);
     }

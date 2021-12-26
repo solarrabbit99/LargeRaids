@@ -15,6 +15,10 @@ public interface AbstractRaidWrapper {
 
     void stop();
 
+    boolean isBetweenWaves();
+
+    boolean hasFirstWaveSpawned();
+
     void setBadOmenLevel(int level);
 
     int getGroupsSpawned();
