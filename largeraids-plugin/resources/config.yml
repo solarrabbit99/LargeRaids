@@ -76,5 +76,5 @@ trigger:
   new-moon:
     enabled: false
 
-disable-normal-raids: false
-artificial-only: false
+  enable-normal-raids: false
+  artificial-only: false

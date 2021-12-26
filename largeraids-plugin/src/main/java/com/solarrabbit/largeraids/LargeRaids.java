@@ -12,6 +12,7 @@ import com.solarrabbit.largeraids.command.StartRaidCommand;
 import com.solarrabbit.largeraids.command.StopRaidCommand;
 import com.solarrabbit.largeraids.command.VillageCentresCommand;
 import com.solarrabbit.largeraids.config.RaidConfig;
+import com.solarrabbit.largeraids.config.trigger.TriggersConfig;
 import com.solarrabbit.largeraids.database.DatabaseAdapter;
 import com.solarrabbit.largeraids.listener.DropInLavaTriggerListener;
 import com.solarrabbit.largeraids.listener.NewMoonTriggerListener;
@@ -33,6 +34,7 @@ public final class LargeRaids extends JavaPlugin {
     private DatabaseAdapter db;
     private Set<TriggerListener> registeredTriggerListeners;
     private RaidConfig raidConfig;
+    private TriggersConfig triggerConfig;
 
     @Override
     public void onEnable() {
@@ -46,16 +48,17 @@ public final class LargeRaids extends JavaPlugin {
         this.getServer().getPluginManager().registerEvents(mainListener, this);
         mainListener.init();
 
-        getCommand("lrstart").setExecutor(new StartRaidCommand());
+        getCommand("lrstart").setExecutor(new StartRaidCommand(this));
         getCommand("lrstop").setExecutor(new StopRaidCommand());
-        getCommand("lrgive").setExecutor(new GiveSummonItemCommand());
+        getCommand("lrgive").setExecutor(new GiveSummonItemCommand(this));
         getCommand("lrreload").setExecutor(new ReloadPlugin(this));
         getCommand("lrcenters").setExecutor(new VillageCentresCommand(this));
 
         loadMessages();
         testConfig();
         raidConfig = new RaidConfig(getConfig().getConfigurationSection("raid"));
-        registerTriggers();
+        triggerConfig = new TriggersConfig(getConfig().getConfigurationSection("trigger"));
+        reloadTriggers();
 
         if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {
             new Placeholder().register();
@@ -78,19 +81,48 @@ public final class LargeRaids extends JavaPlugin {
         reloadConfig();
         testConfig();
         raidConfig = new RaidConfig(getConfig().getConfigurationSection("raid"));
-        registerTriggers();
+        triggerConfig = new TriggersConfig(getConfig().getConfigurationSection("trigger"));
+        reloadTriggers();
     }
 
     public String getMessage(String node) {
-        return this.messages.getString(node, "");
+        return messages.getString(node, "");
     }
 
     public DatabaseAdapter getDatabaseAdapter() {
-        return this.db;
+        return db;
     }
 
     public RaidConfig getRaidConfig() {
-        return this.raidConfig;
+        return raidConfig;
+    }
+
+    public TriggersConfig getTriggerConfig() {
+        return triggerConfig;
+    }
+
+    private void reloadTriggers() {
+        if (registeredTriggerListeners != null) // Unregister
+            for (TriggerListener listener : registeredTriggerListeners)
+                listener.unregisterListener();
+        registeredTriggerListeners = new HashSet<>();
+
+        if (triggerConfig.getOmenConfig().isEnabled())
+            registerTrigger(new VillageAbsorbOmenListener(this), true);
+        if (isTriggerEnabled("drop-item-in-lava"))
+            registerTrigger(new DropInLavaTriggerListener(this), true);
+        if (isTriggerEnabled("new-moon"))
+            registerTrigger(new NewMoonTriggerListener(this), false);
+    }
+
+    private boolean isTriggerEnabled(String trigger) {
+        return getConfig().getBoolean("trigger." + trigger + ".enabled");
+    }
+
+    private void registerTrigger(TriggerListener listener, boolean registerEvents) {
+        if (registerEvents)
+            this.getServer().getPluginManager().registerEvents(listener, this);
+        this.registeredTriggerListeners.add(listener);
     }
 
     private void loadMessages() {
@@ -120,36 +152,6 @@ public final class LargeRaids extends JavaPlugin {
                 return;
             }
         }
-    }
-
-    private void registerTriggers() {
-        unregisterTriggers();
-
-        if (testTrigger("omen"))
-            registerTrigger(new VillageAbsorbOmenListener(this), true);
-        if (testTrigger("drop-item-in-lava"))
-            registerTrigger(new DropInLavaTriggerListener(), true);
-        if (testTrigger("new-moon"))
-            registerTrigger(new NewMoonTriggerListener(this), false);
-    }
-
-    private void unregisterTriggers() {
-        if (this.registeredTriggerListeners != null) {
-            for (TriggerListener listener : registeredTriggerListeners) {
-                listener.unregisterListener();
-            }
-        }
-        this.registeredTriggerListeners = new HashSet<>();
-    }
-
-    private void registerTrigger(TriggerListener listener, boolean registerEvents) {
-        if (registerEvents)
-            this.getServer().getPluginManager().registerEvents(listener, this);
-        this.registeredTriggerListeners.add(listener);
-    }
-
-    private boolean testTrigger(String trigger) {
-        return getConfig().getBoolean("trigger." + trigger + ".enabled");
     }
 
 }

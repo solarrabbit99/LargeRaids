@@ -2,8 +2,8 @@ package com.solarrabbit.largeraids.config;
 
 import javax.annotation.Nullable;
 
-import com.solarrabbit.largeraids.item.ItemCreator;
 import com.solarrabbit.largeraids.util.ChatColorUtil;
+import com.solarrabbit.largeraids.util.ItemCreator;
 
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;

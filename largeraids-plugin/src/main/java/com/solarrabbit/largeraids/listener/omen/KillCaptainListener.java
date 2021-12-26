@@ -21,10 +21,9 @@ public class KillCaptainListener extends TriggerListener {
     private static final int DEFAULT_EFFECT_DURATION = 100 * 60 * 20;
     private static final String OMEN_LEVEL_KEY = "bad-omen-level";
     private static final String OMEN_TICK_KEY = "bad-omen-tick";
-    private final LargeRaids plugin;
 
     public KillCaptainListener(LargeRaids plugin) {
-        this.plugin = plugin;
+        super(plugin);
     }
 
     @EventHandler

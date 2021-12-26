@@ -16,8 +16,9 @@ public class VillageAbsorbOmenListener extends TriggerListener {
     private final IteratePlayersInRaidTask task;
 
     public VillageAbsorbOmenListener(LargeRaids plugin) {
+        super(plugin);
         this.killCaptainListener = new KillCaptainListener(plugin);
-        Bukkit.getPluginManager().registerEvents(this.killCaptainListener, plugin);
+        Bukkit.getPluginManager().registerEvents(killCaptainListener, plugin);
         this.task = new IteratePlayersInRaidTask();
         RaidListener.registerTickTask(task);
     }

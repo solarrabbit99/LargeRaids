@@ -1,4 +1,4 @@
-package com.solarrabbit.largeraids.item;
+package com.solarrabbit.largeraids.util;
 
 import java.util.HashMap;
 import java.util.List;

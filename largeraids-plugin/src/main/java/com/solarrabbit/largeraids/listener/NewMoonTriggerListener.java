@@ -1,29 +1,21 @@
 package com.solarrabbit.largeraids.listener;
 
+import com.solarrabbit.largeraids.LargeRaids;
+
 import org.bukkit.Bukkit;
 import org.bukkit.World;
-import org.bukkit.plugin.java.JavaPlugin;
 
 public class NewMoonTriggerListener extends TriggerListener {
-    private final JavaPlugin plugin;
-    private Integer tickTaskId;
+    private int tickTaskId;
 
-    public NewMoonTriggerListener(JavaPlugin plugin) {
-        this.plugin = plugin;
-        this.tickTaskId = null;
-        init();
-    }
-
-    public int init() {
-        this.tickTaskId = Bukkit.getScheduler().scheduleSyncRepeatingTask(this.plugin, () -> tick(), 0, 100);
-        return this.tickTaskId;
+    public NewMoonTriggerListener(LargeRaids plugin) {
+        super(plugin);
+        tickTaskId = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, () -> tick(), 0, 100);
     }
 
     @Override
     public void unregisterListener() {
-        if (this.tickTaskId == null)
-            return;
-        Bukkit.getScheduler().cancelTask(this.tickTaskId);
+        Bukkit.getScheduler().cancelTask(tickTaskId);
     }
 
     private void tick() {

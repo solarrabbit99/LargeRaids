@@ -4,6 +4,8 @@ import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Consumer;
+
+import com.solarrabbit.largeraids.LargeRaids;
 import com.solarrabbit.largeraids.raid.AbstractLargeRaid;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -15,15 +17,14 @@ import org.bukkit.event.raid.RaidFinishEvent;
 import org.bukkit.event.raid.RaidSpawnWaveEvent;
 import org.bukkit.event.raid.RaidStopEvent;
 import org.bukkit.event.raid.RaidTriggerEvent;
-import org.bukkit.plugin.java.JavaPlugin;
 
 public class RaidListener implements Listener {
     private static final Set<AbstractLargeRaid> currentRaids = new HashSet<>();
     private static final Set<Runnable> tickTasks = new HashSet<>();
     private static final Set<Consumer<AbstractLargeRaid>> tickIteratingTasks = new HashSet<>();
-    private final JavaPlugin plugin;
+    private final LargeRaids plugin;
 
-    public RaidListener(JavaPlugin plugin) {
+    public RaidListener(LargeRaids plugin) {
         this.plugin = plugin;
     }
 
@@ -48,7 +49,7 @@ public class RaidListener implements Listener {
     public void onTrigger(RaidTriggerEvent evt) {
         if (RaidListener.matchingLargeRaid(evt.getRaid()).isPresent())
             return;
-        if (plugin.getConfig().getBoolean("disable-normal-raids"))
+        if (!plugin.getTriggerConfig().canNormalRaid())
             evt.setCancelled(true);
     }
 
@@ -74,7 +75,7 @@ public class RaidListener implements Listener {
     }
 
     public void init() {
-        Bukkit.getScheduler().scheduleSyncRepeatingTask(this.plugin, () -> tick(), 0, 1);
+        Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, () -> tick(), 0, 1);
     }
 
     private void tick() {

@@ -1,5 +1,6 @@
 package com.solarrabbit.largeraids.command;
 
+import com.solarrabbit.largeraids.LargeRaids;
 import com.solarrabbit.largeraids.listener.TriggerListener;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -8,6 +9,10 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 public class StartRaidCommand extends TriggerListener implements CommandExecutor {
+
+    public StartRaidCommand(LargeRaids plugin) {
+        super(plugin);
+    }
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {

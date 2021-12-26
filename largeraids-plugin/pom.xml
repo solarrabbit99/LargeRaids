@@ -40,17 +40,7 @@
 		</dependency>
 		<dependency>
 			<groupId>com.solarrabbit</groupId>
-			<artifactId>largeraids-1_18</artifactId>
-			<version>${revision}</version>
-		</dependency>
-		<dependency>
-			<groupId>com.solarrabbit</groupId>
-			<artifactId>largeraids-1_17</artifactId>
-			<version>${revision}</version>
-		</dependency>
-		<dependency>
-			<groupId>com.solarrabbit</groupId>
-			<artifactId>largeraids-1_16</artifactId>
+			<artifactId>largeraids-1_14</artifactId>
 			<version>${revision}</version>
 		</dependency>
 		<dependency>
@@ -60,7 +50,17 @@
 		</dependency>
 		<dependency>
 			<groupId>com.solarrabbit</groupId>
-			<artifactId>largeraids-1_14</artifactId>
+			<artifactId>largeraids-1_16</artifactId>
+			<version>${revision}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.solarrabbit</groupId>
+			<artifactId>largeraids-1_17</artifactId>
+			<version>${revision}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.solarrabbit</groupId>
+			<artifactId>largeraids-1_18</artifactId>
 			<version>${revision}</version>
 		</dependency>
 	</dependencies>
