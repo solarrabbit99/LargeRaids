@@ -75,7 +75,8 @@ trigger:
       enchantment-glint: true
   time-bomb:
     enabled: false
-    tick: 114000
+    ticks:
+      - 114000
 
   enable-normal-raids: false
   artificial-only:

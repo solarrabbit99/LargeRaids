@@ -1,14 +1,16 @@
 package com.solarrabbit.largeraids.config.trigger;
 
+import java.util.List;
+
 import org.bukkit.configuration.ConfigurationSection;
 
 public class TimeBombTriggerConfig implements TriggerConfig {
     private final boolean isEnabled;
-    private final int tick;
+    private final List<Integer> ticks;
 
     TimeBombTriggerConfig(ConfigurationSection config) {
         isEnabled = config.getBoolean("enabled");
-        tick = config.getInt("tick");
+        ticks = config.getIntegerList("ticks");
     }
 
     @Override
@@ -16,7 +18,7 @@ public class TimeBombTriggerConfig implements TriggerConfig {
         return isEnabled;
     }
 
-    public int getTick() {
-        return tick;
+    public List<Integer> getTicks() {
+        return ticks;
     }
 }

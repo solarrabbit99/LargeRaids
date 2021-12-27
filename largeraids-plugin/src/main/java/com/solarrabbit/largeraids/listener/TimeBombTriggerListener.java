@@ -26,8 +26,8 @@ public class TimeBombTriggerListener extends TriggerListener {
 
     private boolean isInTime(World world) {
         int time = (int) world.getFullTime();
-        int tick = plugin.getTriggerConfig().getTimeBombConfig().getTick();
-        return time >= tick && time < tick + 100;
+        return plugin.getTriggerConfig().getTimeBombConfig().getTicks().stream()
+                .anyMatch(tick -> time >= tick && time < tick + 100);
     }
 
 }
