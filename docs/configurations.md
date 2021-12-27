@@ -150,11 +150,12 @@ trigger:
       # Avoid using armor/tools for material if this is enabled. It applies mending to
       # the item for the glint.
       enchantment-glint: true
-  # Raids will trigger for players in villages at the given tick that is <192000. See Minecraft's
+  # Raids will trigger for players in villages at the given ticks that are <192000. See Minecraft's
   # daylight cycle for more information.
   time-bomb:
     enabled: false
-    tick: 114000
+    ticks:
+      - 114000
 
   # If enabled, normal raids can be triggered upon the absorption of player's bad omen.
   enable-normal-raids: false
