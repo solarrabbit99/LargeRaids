@@ -88,7 +88,6 @@ public class BukkitRaidListener implements Listener {
                 largeRaid.announceVictory();
             else if (status == RaidStatus.LOSS)
                 largeRaid.announceDefeat();
-            currentRaids.remove(largeRaid);
         });
     }
 
@@ -117,8 +116,8 @@ public class BukkitRaidListener implements Listener {
             task.run();
     }
 
-    public Optional<LargeRaid> matchingLargeRaid(Location location) {
-        return currentRaids.stream().filter(largeRaid -> largeRaid.isSimilar(location)).findFirst();
+    public Optional<LargeRaid> getLargeRaidInRange(Location location) {
+        return currentRaids.stream().filter(largeRaid -> largeRaid.isInRange(location)).findFirst();
     }
 
     public Optional<LargeRaid> matchingLargeRaid(Raid raid) {

@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.ConcurrentModificationException;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
@@ -36,9 +37,9 @@ public class LargeRaid {
     private static final int INNER_RADIUS = 64;
     protected final RaidConfig config;
     private final int maxTotalWaves;
+    private final Location startLoc;
     private int totalWaves;
     private int omenLevel;
-    protected Location center;
     protected Raid currentRaid;
     protected int currentWave;
     protected Set<UUID> pendingHeroes;
@@ -46,11 +47,11 @@ public class LargeRaid {
 
     public LargeRaid(RaidConfig config, Location location, int omenLevel) {
         this.config = config;
-        this.center = location; // Not yet a real center...
-        this.maxTotalWaves = config.getMaximumWaves();
-        this.currentWave = 1;
-        this.pendingHeroes = new HashSet<>();
-        this.totalWaves = Math.max(5, omenLevel);
+        startLoc = location;
+        maxTotalWaves = config.getMaximumWaves();
+        currentWave = 1;
+        pendingHeroes = new HashSet<>();
+        totalWaves = Math.max(5, omenLevel);
         this.omenLevel = omenLevel;
     }
 
@@ -63,12 +64,10 @@ public class LargeRaid {
      * @return {@code true} if a new raid starts successfully
      */
     public boolean startRaid() {
-        // TODO: Delete after
-        Bukkit.broadcastMessage("startRaid() is called");
-        if (!getNMSRaid().isEmpty()) // There is an ongoing raid.
+        if (!getNMSRaid().isEmpty()) // There is an ongoing raid
             return false;
 
-        AbstractRaidWrapper raid = createRaid(center);
+        AbstractRaidWrapper raid = createRaid(startLoc);
         if (raid.isEmpty()) // fail to create raid
             return false;
 
@@ -89,15 +88,13 @@ public class LargeRaid {
      * set back to active after calling the method.
      */
     public void triggerNextWave() {
-        // TODO: Delete after
-        Bukkit.broadcastMessage("triggerNextWave() is called");
         transferHeroRecords();
 
         currentWave++;
         broadcastWave();
 
         getNMSRaid().stop();
-        setRaid(VersionUtil.getCraftRaidWrapper(createRaid(center)).getRaid());
+        setRaid(VersionUtil.getCraftRaidWrapper(createRaid(getCenter())).getRaid());
 
         if (isLastWave())
             prepareLastWave();
@@ -115,7 +112,7 @@ public class LargeRaid {
         Location loc = getWaveSpawnLocation();
 
         // happens when spawned mobs are too far from the village
-        if (center.distanceSquared(loc) >= Math.pow(RADIUS, 2)) {
+        if (getCenter().distanceSquared(loc) >= Math.pow(RADIUS, 2)) {
             for (Raider raider : raiders)
                 raider.remove();
             if (!isLastWave())
@@ -169,11 +166,9 @@ public class LargeRaid {
 
     /**
      * Returns the center of the raid.
-     *
-     * @return {@code null} if the raid has stopped/failed to start
      */
-    public Location getCenter() {
-        return currentRaid == null ? null : center;
+    private Location getCenter() {
+        return currentRaid == null ? startLoc : currentRaid.getLocation();
     }
 
     public int getBadOmenLevel() {
@@ -226,18 +221,18 @@ public class LargeRaid {
     }
 
     public Set<Player> getPlayersInRadius() {
-        Collection<Entity> collection = center.getWorld().getNearbyEntities(center, RADIUS, RADIUS, RADIUS,
+        Collection<Entity> collection = getCenter().getWorld().getNearbyEntities(getCenter(), RADIUS, RADIUS, RADIUS,
                 entity -> entity instanceof Player
-                        && center.distanceSquared(entity.getLocation()) <= Math.pow(RADIUS, 2));
+                        && getCenter().distanceSquared(entity.getLocation()) <= Math.pow(RADIUS, 2));
         Set<Player> set = new HashSet<>();
         collection.forEach(player -> set.add((Player) player));
         return set;
     }
 
     public Set<Player> getPlayersInInnerRadius() {
-        Collection<Entity> collection = center.getWorld().getNearbyEntities(center, INNER_RADIUS,
+        Collection<Entity> collection = getCenter().getWorld().getNearbyEntities(getCenter(), INNER_RADIUS,
                 INNER_RADIUS, INNER_RADIUS, entity -> entity instanceof Player
-                        && center.distanceSquared(entity.getLocation()) <= Math.pow(INNER_RADIUS, 2));
+                        && getCenter().distanceSquared(entity.getLocation()) <= Math.pow(INNER_RADIUS, 2));
         Set<Player> set = new HashSet<>();
         collection.forEach(player -> set.add((Player) player));
         return set;
@@ -259,16 +254,13 @@ public class LargeRaid {
     }
 
     public boolean isSimilar(Raid raid) {
-        if (this.currentRaid == null)
-            return isSimilar(raid.getLocation());
+        Objects.requireNonNull(currentRaid);
         return this.currentRaid.getLocation().equals(raid.getLocation());
     }
 
-    public boolean isSimilar(Location location) {
-        AbstractBlockPositionWrapper blkPos = VersionUtil.getBlockPositionWrapper(location.getX(), location.getY(),
-                location.getZ());
-        AbstractWorldServerWrapper level = VersionUtil.getCraftWorldWrapper(location.getWorld()).getHandle();
-        return level.getRaidAt(blkPos).equals(getNMSRaid());
+    public boolean isInRange(Location location) {
+        Objects.requireNonNull(currentRaid);
+        return getCenter().distanceSquared(location) < Math.pow(RADIUS, 2);
     }
 
     /**
@@ -310,7 +302,6 @@ public class LargeRaid {
 
     private void setRaid(Raid raid) {
         currentRaid = raid;
-        center = raid.getLocation();
     }
 
     private void playSoundToPlayersInRadius(Sound sound) {
@@ -323,13 +314,13 @@ public class LargeRaid {
     }
 
     private void prepareLastWave() {
-        int withoutBonus = getDefaultWaveNumber(this.center.getWorld());
+        int withoutBonus = getDefaultWaveNumber(getCenter().getWorld());
         getNMSRaid().setGroupsSpawned(withoutBonus);
     }
 
     private AbstractRaidWrapper getNMSRaid() {
-        AbstractBlockPositionWrapper blkPos = VersionUtil.getBlockPositionWrapper(center);
-        AbstractWorldServerWrapper level = VersionUtil.getCraftWorldWrapper(center.getWorld()).getHandle();
+        AbstractBlockPositionWrapper blkPos = VersionUtil.getBlockPositionWrapper(getCenter());
+        AbstractWorldServerWrapper level = VersionUtil.getCraftWorldWrapper(getCenter().getWorld()).getHandle();
         return level.getRaidAt(blkPos);
     }
 
@@ -344,7 +335,7 @@ public class LargeRaid {
      */
     private AbstractRaidWrapper createRaid(Location location) {
         AbstractPlayerEntityWrapper abstractPlayer = createEntityPlayer(location);
-        AbstractWorldServerWrapper level = VersionUtil.getCraftWorldWrapper(center.getWorld()).getHandle();
+        AbstractWorldServerWrapper level = VersionUtil.getCraftWorldWrapper(location.getWorld()).getHandle();
         AbstractRaidsWrapper raids = level.getRaids();
         try {
             raids.createOrExtendRaid(abstractPlayer);

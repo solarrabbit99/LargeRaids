@@ -33,6 +33,8 @@ public abstract class TriggerListener implements Listener {
 
         LargeRaid largeRaid = new LargeRaid(plugin.getRaidConfig(), location, omenLevel);
         BukkitRaidListener listener = plugin.getBukkitRaidListener();
+        if (listener.getLargeRaidInRange(location).isPresent())
+            return;
         listener.setIdle();
         if (largeRaid.startRaid())
             listener.addLargeRaid(largeRaid);

@@ -39,7 +39,7 @@ public class Placeholder extends PlaceholderExpansion {
     @Override
     public String onRequest(OfflinePlayer player, String params) {
         Optional<LargeRaid> raid = Optional.ofNullable(player.getPlayer()).map(Player::getLocation)
-                .flatMap(loc -> plugin.getBukkitRaidListener().matchingLargeRaid(loc));
+                .flatMap(loc -> plugin.getBukkitRaidListener().getLargeRaidInRange(loc));
         switch (params) {
             case "in_range":
                 return String.valueOf(raid.isPresent());
