@@ -18,36 +18,62 @@ import org.bukkit.event.raid.RaidSpawnWaveEvent;
 import org.bukkit.event.raid.RaidStopEvent;
 import org.bukkit.event.raid.RaidTriggerEvent;
 
-public class RaidListener implements Listener {
-    private static final Set<LargeRaid> currentRaids = new HashSet<>();
-    private static final Set<Runnable> tickTasks = new HashSet<>();
-    private static final Set<Consumer<LargeRaid>> tickIteratingTasks = new HashSet<>();
+public class BukkitRaidListener implements Listener {
+    private final Set<LargeRaid> currentRaids = new HashSet<>();
+    private final Set<Runnable> tickTasks = new HashSet<>();
+    private final Set<Consumer<LargeRaid>> tickIteratingTasks = new HashSet<>();
     private final LargeRaids plugin;
+    private boolean isIdle;
 
-    public RaidListener(LargeRaids plugin) {
+    public BukkitRaidListener(LargeRaids plugin) {
         this.plugin = plugin;
+        isIdle = false;
     }
 
-    public static void addLargeRaid(LargeRaid raid) {
+    public void addLargeRaid(LargeRaid raid) {
         currentRaids.add(raid);
     }
 
-    public static void removeLargeRaid(LargeRaid raid) {
+    public void removeLargeRaid(LargeRaid raid) {
         currentRaids.remove(raid);
     }
 
-    public static int getNumOfRegisteredRaids() {
+    public boolean isIdle() {
+        return isIdle;
+    }
+
+    /**
+     * Idles the listener, mainly used to signify that any {@link RaidTriggerEvent}
+     * fired after part of a {@link LargeRaid}.
+     */
+    public void setIdle() {
+        isIdle = true;
+    }
+
+    /**
+     * Re-activates the listener, mainly used to signify that any
+     * {@link RaidTriggerEvent} fired after are vanilla.
+     */
+    public void setActive() {
+        isIdle = false;
+    }
+
+    public int getNumOfRegisteredRaids() {
         return currentRaids.size();
     }
 
     @EventHandler
     public void onSpawn(RaidSpawnWaveEvent evt) {
-        matchingLargeRaid(evt.getRaid()).ifPresent(largeRaid -> largeRaid.spawnWave());
+        matchingLargeRaid(evt.getRaid()).ifPresent(largeRaid -> {
+            setIdle();
+            largeRaid.spawnWave();
+            setActive();
+        });
     }
 
     @EventHandler
     public void onTrigger(RaidTriggerEvent evt) {
-        if (RaidListener.matchingLargeRaid(evt.getRaid()).isPresent())
+        if (isIdle())
             return;
         if (!plugin.getTriggerConfig().canNormalRaid())
             evt.setCancelled(true);
@@ -58,20 +84,17 @@ public class RaidListener implements Listener {
         Raid raid = evt.getRaid();
         matchingLargeRaid(raid).ifPresent(largeRaid -> {
             RaidStatus status = raid.getStatus();
-            if (status == RaidStatus.VICTORY) {
+            if (status == RaidStatus.VICTORY)
                 largeRaid.announceVictory();
-            } else if (status == RaidStatus.LOSS) {
+            else if (status == RaidStatus.LOSS)
                 largeRaid.announceDefeat();
-            }
             currentRaids.remove(largeRaid);
         });
     }
 
     @EventHandler
     public void onRaidStop(RaidStopEvent evt) {
-        matchingLargeRaid(evt.getRaid()).ifPresent(largeRaid -> {
-            currentRaids.remove(largeRaid);
-        });
+        matchingLargeRaid(evt.getRaid()).ifPresent(largeRaid -> currentRaids.remove(largeRaid));
     }
 
     public void init() {
@@ -81,8 +104,11 @@ public class RaidListener implements Listener {
     private void tick() {
         for (LargeRaid largeRaid : currentRaids) {
             if (largeRaid.isActive() && largeRaid.getTotalRaidersAlive() == 0 && !largeRaid.isLoading()
-                    && !largeRaid.isLastWave())
+                    && !largeRaid.isLastWave()) {
+                setIdle();
                 largeRaid.triggerNextWave();
+                setActive();
+            }
             for (Consumer<LargeRaid> task : tickIteratingTasks)
                 task.accept(largeRaid);
         }
@@ -91,27 +117,27 @@ public class RaidListener implements Listener {
             task.run();
     }
 
-    public static Optional<LargeRaid> matchingLargeRaid(Location location) {
+    public Optional<LargeRaid> matchingLargeRaid(Location location) {
         return currentRaids.stream().filter(largeRaid -> largeRaid.isSimilar(location)).findFirst();
     }
 
-    public static Optional<LargeRaid> matchingLargeRaid(Raid raid) {
+    public Optional<LargeRaid> matchingLargeRaid(Raid raid) {
         return currentRaids.stream().filter(largeRaid -> largeRaid.isSimilar(raid)).findFirst();
     }
 
-    public static void registerTickTask(Runnable task) {
+    public void registerTickTask(Runnable task) {
         tickTasks.add(task);
     }
 
-    public static void registerTickTask(Consumer<LargeRaid> task) {
+    public void registerTickTask(Consumer<LargeRaid> task) {
         tickIteratingTasks.add(task);
     }
 
-    public static void unregisterTickTask(Runnable task) {
+    public void unregisterTickTask(Runnable task) {
         tickTasks.remove(task);
     }
 
-    public static void unregisterTickTask(Consumer<LargeRaid> task) {
+    public void unregisterTickTask(Consumer<LargeRaid> task) {
         tickIteratingTasks.remove(task);
     }
 

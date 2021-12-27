@@ -2,7 +2,6 @@ package com.solarrabbit.largeraids.listener.omen;
 
 import java.util.function.Consumer;
 import com.solarrabbit.largeraids.LargeRaids;
-import com.solarrabbit.largeraids.listener.RaidListener;
 import com.solarrabbit.largeraids.listener.TriggerListener;
 import com.solarrabbit.largeraids.raid.LargeRaid;
 import org.bukkit.Bukkit;
@@ -20,12 +19,12 @@ public class VillageAbsorbOmenListener extends TriggerListener {
         this.killCaptainListener = new KillCaptainListener(plugin);
         Bukkit.getPluginManager().registerEvents(killCaptainListener, plugin);
         this.task = new IteratePlayersInRaidTask();
-        RaidListener.registerTickTask(task);
+        plugin.getBukkitRaidListener().registerTickTask(task);
     }
 
     @EventHandler
     public void onRaidCreation(RaidTriggerEvent evt) {
-        if (RaidListener.matchingLargeRaid(evt.getRaid()).isPresent())
+        if (plugin.getBukkitRaidListener().isIdle())
             return;
         evt.setCancelled(true);
         Player player = evt.getPlayer();
@@ -36,7 +35,7 @@ public class VillageAbsorbOmenListener extends TriggerListener {
 
     @Override
     public void unregisterListener() {
-        RaidListener.unregisterTickTask(task);
+        plugin.getBukkitRaidListener().unregisterTickTask(task);
         RaidTriggerEvent.getHandlerList().unregister(this);
         this.killCaptainListener.unregisterListener();
     }

@@ -14,9 +14,9 @@ import com.solarrabbit.largeraids.command.VillageCentresCommand;
 import com.solarrabbit.largeraids.config.RaidConfig;
 import com.solarrabbit.largeraids.config.trigger.TriggersConfig;
 import com.solarrabbit.largeraids.database.DatabaseAdapter;
+import com.solarrabbit.largeraids.listener.BukkitRaidListener;
 import com.solarrabbit.largeraids.listener.DropInLavaTriggerListener;
 import com.solarrabbit.largeraids.listener.TimeBombTriggerListener;
-import com.solarrabbit.largeraids.listener.RaidListener;
 import com.solarrabbit.largeraids.listener.TriggerListener;
 import com.solarrabbit.largeraids.listener.omen.VillageAbsorbOmenListener;
 import com.solarrabbit.largeraids.support.Placeholder;
@@ -35,6 +35,7 @@ public final class LargeRaids extends JavaPlugin {
     private Set<TriggerListener> registeredTriggerListeners;
     private RaidConfig raidConfig;
     private TriggersConfig triggerConfig;
+    private BukkitRaidListener mainListener;
 
     @Override
     public void onEnable() {
@@ -44,12 +45,12 @@ public final class LargeRaids extends JavaPlugin {
         this.db = new DatabaseAdapter(this);
         this.db.load();
 
-        RaidListener mainListener = new RaidListener(this);
+        mainListener = new BukkitRaidListener(this);
         this.getServer().getPluginManager().registerEvents(mainListener, this);
         mainListener.init();
 
         getCommand("lrstart").setExecutor(new StartRaidCommand(this));
-        getCommand("lrstop").setExecutor(new StopRaidCommand());
+        getCommand("lrstop").setExecutor(new StopRaidCommand(this));
         getCommand("lrgive").setExecutor(new GiveSummonItemCommand(this));
         getCommand("lrreload").setExecutor(new ReloadPlugin(this));
         getCommand("lrcenters").setExecutor(new VillageCentresCommand(this));
@@ -61,7 +62,7 @@ public final class LargeRaids extends JavaPlugin {
         reloadTriggers();
 
         if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {
-            new Placeholder().register();
+            new Placeholder(this).register();
         }
     }
 
@@ -87,6 +88,10 @@ public final class LargeRaids extends JavaPlugin {
 
     public String getMessage(String node) {
         return messages.getString(node, "");
+    }
+
+    public BukkitRaidListener getBukkitRaidListener() {
+        return mainListener;
     }
 
     public DatabaseAdapter getDatabaseAdapter() {
@@ -117,8 +122,8 @@ public final class LargeRaids extends JavaPlugin {
 
     private void registerTrigger(TriggerListener listener, boolean registerEvents) {
         if (registerEvents)
-            this.getServer().getPluginManager().registerEvents(listener, this);
-        this.registeredTriggerListeners.add(listener);
+            getServer().getPluginManager().registerEvents(listener, this);
+        registeredTriggerListeners.add(listener);
     }
 
     private void loadMessages() {

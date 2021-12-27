@@ -10,7 +10,6 @@ import java.util.UUID;
 
 import com.mojang.authlib.GameProfile;
 import com.solarrabbit.largeraids.config.RaidConfig;
-import com.solarrabbit.largeraids.listener.RaidListener;
 import com.solarrabbit.largeraids.nms.AbstractBlockPositionWrapper;
 import com.solarrabbit.largeraids.nms.AbstractMinecraftServerWrapper;
 import com.solarrabbit.largeraids.nms.AbstractPlayerEntityWrapper;
@@ -58,18 +57,20 @@ public class LargeRaid {
     /**
      * Kicks start the raid if there isn't one in progress in the location. The
      * first wave will be broadcasted to players within range with a summoning
-     * sound.
+     * sound. This method should always be called when {@link BukkitRaidListener} is
+     * idle, and set back to active after calling the method.
+     *
+     * @return {@code true} if a new raid starts successfully
      */
-    public void startRaid() {
+    public boolean startRaid() {
+        // TODO: Delete after
+        Bukkit.broadcastMessage("startRaid() is called");
         if (!getNMSRaid().isEmpty()) // There is an ongoing raid.
-            return;
+            return false;
 
-        RaidListener.addLargeRaid(this); // Register itself as large raid before RaidTriggerEvent
         AbstractRaidWrapper raid = createRaid(center);
-        if (raid.isEmpty()) { // fail to create raid
-            RaidListener.removeLargeRaid(this);
-            return;
-        }
+        if (raid.isEmpty()) // fail to create raid
+            return false;
 
         setRaid(VersionUtil.getCraftRaidWrapper(raid).getRaid());
 
@@ -77,13 +78,19 @@ public class LargeRaid {
         Sound sound = config.getSounds().getSummonSound();
         if (sound != null)
             playSoundToPlayersInRadius(sound);
+
+        return true;
     }
 
     /**
      * Triggers the next wave by updating the heros records and reassigning a new
-     * vanilla raid. The wave will be broadcasted to players within range.
+     * vanilla raid. The wave will be broadcasted to players within range. This
+     * method should always be called when {@link BukkitRaidListener} is idle, and
+     * set back to active after calling the method.
      */
     public void triggerNextWave() {
+        // TODO: Delete after
+        Bukkit.broadcastMessage("triggerNextWave() is called");
         transferHeroRecords();
 
         currentWave++;
@@ -98,7 +105,10 @@ public class LargeRaid {
 
     /**
      * Spawns the raiders for the wave. This is a follow-up method of
-     * {@link #triggerNextWave()}, and called to replace vanilla mobs spawns.
+     * {@link #triggerNextWave()}, and called to replace vanilla mobs spawns. This
+     * method should always be called when {@link BukkitRaidListener} is idle, and
+     * set
+     * set back to active after calling the method.
      */
     public void spawnWave() {
         List<Raider> raiders = currentRaid.getRaiders();
@@ -133,7 +143,6 @@ public class LargeRaid {
         AbstractRaidWrapper raid = getNMSRaid();
         if (!raid.isEmpty())
             raid.stop();
-        RaidListener.removeLargeRaid(this);
     }
 
     /**
@@ -326,7 +335,9 @@ public class LargeRaid {
 
     /**
      * Creates a raid with a fake player entity at the given location. The raid's
-     * bad omen is set to 2 arbitrarily.
+     * bad omen is set to 2 arbitrarily. This method should always be called when
+     * {@link BukkitRaidListener} is idle, and set back to active after calling the
+     * method.
      *
      * @param location to create the raid
      * @return wrapped NMS raid created
