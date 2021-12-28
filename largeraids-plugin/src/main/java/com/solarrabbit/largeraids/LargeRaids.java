@@ -11,6 +11,8 @@ import com.solarrabbit.largeraids.command.ReloadPlugin;
 import com.solarrabbit.largeraids.command.StartRaidCommand;
 import com.solarrabbit.largeraids.command.StopRaidCommand;
 import com.solarrabbit.largeraids.command.VillageCentresCommand;
+import com.solarrabbit.largeraids.command.completer.StartRaidCommandCompleter;
+import com.solarrabbit.largeraids.command.completer.VillageCentersCommandCompleter;
 import com.solarrabbit.largeraids.config.RaidConfig;
 import com.solarrabbit.largeraids.config.trigger.TriggersConfig;
 import com.solarrabbit.largeraids.database.DatabaseAdapter;
@@ -50,10 +52,12 @@ public final class LargeRaids extends JavaPlugin {
         mainListener.init();
 
         getCommand("lrstart").setExecutor(new StartRaidCommand(this));
+        getCommand("lrstart").setTabCompleter(new StartRaidCommandCompleter(db));
         getCommand("lrstop").setExecutor(new StopRaidCommand(this));
         getCommand("lrgive").setExecutor(new GiveSummonItemCommand(this));
         getCommand("lrreload").setExecutor(new ReloadPlugin(this));
         getCommand("lrcenters").setExecutor(new VillageCentresCommand(this));
+        getCommand("lrcenters").setTabCompleter(new VillageCentersCommandCompleter(db));
 
         loadMessages();
         testConfig();
