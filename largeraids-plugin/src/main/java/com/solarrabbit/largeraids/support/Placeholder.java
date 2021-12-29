@@ -44,13 +44,15 @@ public class Placeholder extends PlaceholderExpansion {
             case "in_range":
                 return String.valueOf(raid.isPresent());
             case "wave":
-                return raid.map(r -> r.getCurrentWave()).map(Object::toString).orElse(null);
+                return raid.map(LargeRaid::getCurrentWave).map(Object::toString).orElse(null);
             case "total_waves":
-                return raid.map(r -> r.getTotalWaves()).map(Object::toString).orElse(null);
+                return raid.map(LargeRaid::getTotalWaves).map(Object::toString).orElse(null);
             case "remaining_raiders":
-                return raid.map(r -> r.getTotalRaidersAlive()).map(Object::toString).orElse(null);
+                return raid.map(LargeRaid::getTotalRaidersAlive).map(Object::toString).orElse(null);
             case "omen_level":
-                return raid.map(r -> r.getBadOmenLevel()).map(Object::toString).orElse(null);
+                return raid.map(LargeRaid::getBadOmenLevel).map(Object::toString).orElse(null);
+            case "debug_total_registered":
+                return String.valueOf(plugin.getBukkitRaidListener().getNumOfRegisteredRaids());
             default:
                 return null;
         }

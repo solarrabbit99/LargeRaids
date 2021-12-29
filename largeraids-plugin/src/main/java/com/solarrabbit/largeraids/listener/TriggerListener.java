@@ -22,13 +22,12 @@ public abstract class TriggerListener implements Listener {
     }
 
     protected void triggerRaid(CommandSender triggerer, Location location, int omenLevel) {
+        String broadcastMessage = null;
         if (plugin.getTriggerConfig().isArtificialOnly()) {
             String centerName = getArtificialVillageCenterName(location);
             if (centerName == null)
                 return;
-            String message = plugin.getTriggerConfig().getBroadcastMessage(triggerer, centerName);
-            if (message != null)
-                Bukkit.broadcastMessage(message);
+            broadcastMessage = plugin.getTriggerConfig().getBroadcastMessage(triggerer, centerName);
         }
 
         LargeRaid largeRaid = new LargeRaid(plugin.getRaidConfig(), location, omenLevel);
@@ -36,8 +35,11 @@ public abstract class TriggerListener implements Listener {
         if (listener.getLargeRaidInRange(location).isPresent())
             return;
         listener.setIdle();
-        if (largeRaid.startRaid())
-            listener.addLargeRaid(largeRaid);
+        if (largeRaid.startRaid()) {
+            listener.currentRaids.add(largeRaid);
+            if (broadcastMessage != null)
+                Bukkit.broadcastMessage(broadcastMessage);
+        }
         listener.setActive();
     }
 

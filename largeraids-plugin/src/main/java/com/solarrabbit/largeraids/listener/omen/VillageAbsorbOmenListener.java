@@ -1,61 +1,70 @@
 package com.solarrabbit.largeraids.listener.omen;
 
-import java.util.function.Consumer;
+import java.util.Set;
+import java.util.stream.Collectors;
+
 import com.solarrabbit.largeraids.LargeRaids;
 import com.solarrabbit.largeraids.listener.TriggerListener;
 import com.solarrabbit.largeraids.raid.LargeRaid;
+
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.entity.EntityPotionEffectEvent;
+import org.bukkit.event.entity.EntityPotionEffectEvent.Action;
+import org.bukkit.event.entity.EntityPotionEffectEvent.Cause;
 import org.bukkit.event.raid.RaidTriggerEvent;
+import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
 public class VillageAbsorbOmenListener extends TriggerListener {
     private final KillCaptainListener killCaptainListener;
-    private final IteratePlayersInRaidTask task;
 
     public VillageAbsorbOmenListener(LargeRaids plugin) {
         super(plugin);
-        this.killCaptainListener = new KillCaptainListener(plugin);
+        killCaptainListener = new KillCaptainListener(plugin);
         Bukkit.getPluginManager().registerEvents(killCaptainListener, plugin);
-        this.task = new IteratePlayersInRaidTask();
-        plugin.getBukkitRaidListener().registerTickTask(task);
     }
 
+    /**
+     * Converts player's omen-triggered normal raids into {@link LargeRaid}s.
+     */
     @EventHandler
-    public void onRaidCreation(RaidTriggerEvent evt) {
-        if (plugin.getBukkitRaidListener().isIdle())
+    public void onVanillaRaidCreation(RaidTriggerEvent evt) {
+        if (evt.getRaid().getBadOmenLevel() != 0) // Raid is getting extended
+            return;
+        if (plugin.getBukkitRaidListener().isIdle()) // LargeRaid triggering
             return;
         evt.setCancelled(true);
         Player player = evt.getPlayer();
-        int recordedLevel = this.killCaptainListener.getRecordedOmenLevel(player);
-        triggerRaid(player, player.getLocation(), recordedLevel);
-        killCaptainListener.resetOmenLevel(player);
+        int amplifier = player.getPotionEffect(PotionEffectType.BAD_OMEN).getAmplifier();
+        triggerRaid(player, player.getLocation(), amplifier + 1);
+    }
+
+    @EventHandler
+    public void onEffectRemoval(EntityPotionEffectEvent evt) {
+        PotionEffectType type = evt.getModifiedType();
+        if (type == null || !type.equals(PotionEffectType.BAD_OMEN) || evt.getAction() != Action.REMOVED
+                || evt.getCause() != Cause.UNKNOWN)
+            return;
+        Set<LargeRaid> affectedLargeRaids = plugin.getBukkitRaidListener().currentRaids.stream()
+                .filter(LargeRaid::releaseOmen).collect(Collectors.toSet());
+        if (affectedLargeRaids.size() > 1)
+            throw new MultipleLargeRaidReleaseOmenException();
+        PotionEffect effect = evt.getOldEffect();
+        int absorbLevel = effect == null ? 0 : effect.getAmplifier() + 1;
+        for (LargeRaid lr : affectedLargeRaids)
+            lr.absorbOmenLevel(absorbLevel);
     }
 
     @Override
     public void unregisterListener() {
-        plugin.getBukkitRaidListener().unregisterTickTask(task);
         RaidTriggerEvent.getHandlerList().unregister(this);
-        this.killCaptainListener.unregisterListener();
+        EntityPotionEffectEvent.getHandlerList().unregister(this);
+        killCaptainListener.unregisterListener();
     }
 
-    private class IteratePlayersInRaidTask implements Consumer<LargeRaid> {
-
-        @Override
-        public void accept(LargeRaid raid) {
-            boolean hasReleasedOmen = raid.releaseOmen();
-            for (Player player : raid.getPlayersInInnerRadius()) {
-                int omenLevel = killCaptainListener.getRecordedOmenLevel(player);
-                int actualOmenLevel = killCaptainListener.getCurrentOmenLevel(player);
-                if (omenLevel != 0 || actualOmenLevel != 0) {
-                    player.removePotionEffect(PotionEffectType.BAD_OMEN);
-                    killCaptainListener.resetOmenLevel(player);
-                    if (hasReleasedOmen || actualOmenLevel != 0)
-                        raid.absorbOmenLevel(omenLevel);
-                }
-            }
-        }
+    private class MultipleLargeRaidReleaseOmenException extends RuntimeException {
 
     }
 

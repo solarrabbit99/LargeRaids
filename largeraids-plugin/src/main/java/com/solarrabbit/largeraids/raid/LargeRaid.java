@@ -10,6 +10,7 @@ import java.util.Set;
 import java.util.UUID;
 
 import com.mojang.authlib.GameProfile;
+import com.solarrabbit.largeraids.LargeRaids;
 import com.solarrabbit.largeraids.config.RaidConfig;
 import com.solarrabbit.largeraids.nms.AbstractBlockPositionWrapper;
 import com.solarrabbit.largeraids.nms.AbstractMinecraftServerWrapper;
@@ -26,15 +27,17 @@ import org.bukkit.Location;
 import org.bukkit.Raid;
 import org.bukkit.Sound;
 import org.bukkit.World;
+import org.bukkit.Raid.RaidStatus;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Raider;
+import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
 public class LargeRaid {
     private static final int RADIUS = 96;
-    private static final int INNER_RADIUS = 64;
+    private static final int VANILLA_RAID_OMEN_LEVEL = 2;
     protected final RaidConfig config;
     private final int maxTotalWaves;
     private final Location startLoc;
@@ -73,10 +76,14 @@ public class LargeRaid {
 
         setRaid(VersionUtil.getCraftRaidWrapper(raid).getRaid());
 
-        broadcastWave();
-        Sound sound = config.getSounds().getSummonSound();
-        if (sound != null)
-            playSoundToPlayersInRadius(sound);
+        Bukkit.getScheduler().runTaskLater(JavaPlugin.getPlugin(LargeRaids.class), () -> {
+            if (currentRaid.getStatus() == RaidStatus.STOPPED)
+                return;
+            broadcastWave();
+            Sound sound = config.getSounds().getSummonSound();
+            if (sound != null)
+                playSoundToPlayersInRadius(sound);
+        }, 2);
 
         return true;
     }
@@ -229,27 +236,18 @@ public class LargeRaid {
         return set;
     }
 
-    public Set<Player> getPlayersInInnerRadius() {
-        Collection<Entity> collection = getCenter().getWorld().getNearbyEntities(getCenter(), INNER_RADIUS,
-                INNER_RADIUS, INNER_RADIUS, entity -> entity instanceof Player
-                        && getCenter().distanceSquared(entity.getLocation()) <= Math.pow(INNER_RADIUS, 2));
-        Set<Player> set = new HashSet<>();
-        collection.forEach(player -> set.add((Player) player));
-        return set;
-    }
-
     /**
      * Set the bad omen level of the current raid back to {@code 2} if it has been
-     * increased by the absroption of player's omen. Used for detecting whether a
+     * increased by the absorption of player's omen. Used for detecting whether a
      * player with Bad Omen effect entered the raid.
      *
      * @return {@code true} if the omen level of the actual raid has been increased
      *         above 2
      */
     public boolean releaseOmen() {
-        if (currentRaid.getBadOmenLevel() == 2)
+        if (currentRaid.getBadOmenLevel() <= VANILLA_RAID_OMEN_LEVEL)
             return false;
-        currentRaid.setBadOmenLevel(2);
+        currentRaid.setBadOmenLevel(VANILLA_RAID_OMEN_LEVEL);
         return true;
     }
 
@@ -347,7 +345,7 @@ public class LargeRaid {
         AbstractBlockPositionWrapper blkPos = VersionUtil.getBlockPositionWrapper(location.getX(), location.getY(),
                 location.getZ());
         AbstractRaidWrapper raid = level.getRaidAt(blkPos);
-        raid.setBadOmenLevel(2);
+        raid.setBadOmenLevel(VANILLA_RAID_OMEN_LEVEL);
         return raid;
     }
 

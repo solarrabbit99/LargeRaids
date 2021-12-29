@@ -23,7 +23,7 @@ public class StopRaidCommand implements CommandExecutor {
             if (player != null) {
                 listener.getLargeRaidInRange(player.getLocation()).ifPresent(raid -> {
                     raid.stopRaid();
-                    listener.removeLargeRaid(raid);
+                    listener.currentRaids.remove(raid);
                 });
                 return true;
             }
@@ -32,7 +32,7 @@ public class StopRaidCommand implements CommandExecutor {
             Player player = (Player) sender;
             listener.getLargeRaidInRange(player.getLocation()).ifPresent(raid -> {
                 raid.stopRaid();
-                listener.removeLargeRaid(raid);
+                listener.currentRaids.remove(raid);
             });
             return true;
         } else {
