@@ -34,4 +34,3 @@ Refer to the [Configuration Guide](configurations.html).
 ## Limitations
 
 - **Mobs** - raiders are limited to entity type raiders
-- **Bad Omen** - bad omen effect statuses given by commands may not work as expected
