@@ -15,11 +15,6 @@ public class EventMythicRaider implements EventRaider {
     }
 
     @Override
-    public boolean canGiveOmen() {
-        return false;
-    }
-
-    @Override
     public Raider spawn(Location location) {
         ActiveMob activeMob = type.spawn(BukkitAdapter.adapt(location), 1);
         Entity bukkitEntity = activeMob.getEntity().getBukkitEntity();

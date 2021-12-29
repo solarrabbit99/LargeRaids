@@ -1,7 +1,6 @@
 package com.solarrabbit.largeraids.util;
 
 import com.solarrabbit.largeraids.raid.AbstractVillages;
-import com.solarrabbit.largeraids.raid.mob.AbstractRaider;
 import com.mojang.authlib.GameProfile;
 import com.solarrabbit.largeraids.nms.AbstractBlockPositionWrapper;
 import com.solarrabbit.largeraids.nms.AbstractCraftRaidWrapper;
@@ -22,20 +21,6 @@ import org.bukkit.entity.Raider;
 public class VersionUtil {
     private static final String[] VERSIONS = new String[] { "v1_14_R1", "v1_15_R1", "v1_16_R3", "v1_17_R1",
             "v1_18_R1" };
-
-    public static AbstractRaider fromRaider(Raider raider) {
-        if (getVersion().equals("v1_18_R1"))
-            return new com.solarrabbit.largeraids.v1_18.Raider(raider);
-        if (getVersion().equals("v1_17_R1"))
-            return new com.solarrabbit.largeraids.v1_17.Raider(raider);
-        if (getVersion().equals("v1_16_R3"))
-            return new com.solarrabbit.largeraids.v1_16.Raider(raider);
-        if (getVersion().equals("v1_15_R1"))
-            return new com.solarrabbit.largeraids.v1_15.Raider(raider);
-        if (getVersion().equals("v1_14_R1"))
-            return new com.solarrabbit.largeraids.v1_14.Raider(raider);
-        return null;
-    }
 
     public static AbstractVillages getVillageManager() {
         if (getVersion().equals("v1_18_R1"))

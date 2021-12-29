@@ -12,11 +12,6 @@ public class EventVanillaRaider implements EventRaider {
     }
 
     @Override
-    public boolean canGiveOmen() {
-        return false;
-    }
-
-    @Override
     public Raider spawn(Location location) {
         return (Raider) location.getWorld().spawnEntity(location, type);
     }
