@@ -11,9 +11,7 @@ The main triggering mechanism of the plugin, where every raid in the server turn
 
 A large raid have at least 5 waves. With bad omen level of 6 or higher, the raid will have equal the number of waves as its bad omen level. _This differs from a normal raid, where bad omen level of 2 or higher entails a bonus round._
 
-> 🚨 **IMPORTANT**: Bad omen effect given by commands may cause bugs!
-
-> ❓ **TRIVIA**: If a player leaves a village during a raid, obtains another level of Bad Omen, and returns to the village in the next wave, then the effect will be absorbed by the progressing raid, increasing its bad omen level.
+> ❓ **TRIVIA**: If a player with Bad Omen enters a large raid, the effect will be absorbed by the progressing raid, increasing its bad omen level.
 
 The maximum number of waves is set by the `raid.waves` configuration option in `config.yml`, instead of depending on individual worlds' difficulties.
 
