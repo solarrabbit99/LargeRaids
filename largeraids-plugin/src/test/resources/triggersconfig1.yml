@@ -1,0 +1,23 @@
+trigger:
+  omen:
+    enabled: true
+    max-level: 23
+  drop-item-in-lava:
+    enabled: true
+    item:
+      material: STONE
+      display-name: "&6Test Summoner"
+      lore:
+        # - "&5Drop the item into lava in a village"
+        # - "&5to summon a large raid!"
+      custom-model-data:
+      enchantment-glint: true
+  time-bomb:
+    enabled: true
+    ticks:
+      - 114000
+
+  enable-normal-raids: true
+  artificial-only:
+    enabled: true
+    broadcast-message: "&7<player> &btriggered a large raid at &l<center>&r&b!"

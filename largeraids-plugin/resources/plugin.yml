@@ -4,7 +4,7 @@ version: ${project.version}
 author: SolarRabbit
 api-version: 1.14
 
-softdepend: [PlaceholderAPI, MythicMobs]
+softdepend: [PlaceholderAPI, MythicMobs, Multiverse-Core]
 
 commands:
   lrreload:
