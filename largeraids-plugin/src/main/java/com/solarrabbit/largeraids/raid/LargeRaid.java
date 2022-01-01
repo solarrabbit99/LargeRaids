@@ -289,11 +289,6 @@ public class LargeRaid {
         return this.currentRaid.getLocation().equals(raid.getLocation());
     }
 
-    public boolean isInRange(Location location) {
-        Objects.requireNonNull(currentRaid);
-        return getCenter().distanceSquared(location) < Math.pow(RADIUS, 2);
-    }
-
     /**
      * Serves as a precaution for player to be awarded with vanilla rewards
      * unintentionally.

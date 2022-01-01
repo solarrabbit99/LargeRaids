@@ -21,7 +21,7 @@ public class StopRaidCommand implements CommandExecutor {
         if (args.length >= 1) {
             Player player = Bukkit.getPlayer(args[0]);
             if (player != null) {
-                listener.getLargeRaidInRange(player.getLocation()).ifPresent(raid -> {
+                listener.getLargeRaid(player.getLocation()).ifPresent(raid -> {
                     raid.stopRaid();
                     listener.currentRaids.remove(raid);
                 });
@@ -30,7 +30,7 @@ public class StopRaidCommand implements CommandExecutor {
             return false;
         } else if (sender instanceof Player) {
             Player player = (Player) sender;
-            listener.getLargeRaidInRange(player.getLocation()).ifPresent(raid -> {
+            listener.getLargeRaid(player.getLocation()).ifPresent(raid -> {
                 raid.stopRaid();
                 listener.currentRaids.remove(raid);
             });

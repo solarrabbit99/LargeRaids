@@ -5,7 +5,13 @@ import java.util.Optional;
 import java.util.Set;
 
 import com.solarrabbit.largeraids.LargeRaids;
+import com.solarrabbit.largeraids.nms.AbstractBlockPositionWrapper;
+import com.solarrabbit.largeraids.nms.AbstractCraftRaidWrapper;
+import com.solarrabbit.largeraids.nms.AbstractCraftWorldWrapper;
+import com.solarrabbit.largeraids.nms.AbstractRaidWrapper;
 import com.solarrabbit.largeraids.raid.LargeRaid;
+import com.solarrabbit.largeraids.util.VersionUtil;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Raid;
@@ -53,7 +59,7 @@ public class BukkitRaidListener implements Listener {
 
     @EventHandler
     public void onSpawn(RaidSpawnWaveEvent evt) {
-        matchingLargeRaid(evt.getRaid()).ifPresent(largeRaid -> {
+        getLargeRaid(evt.getRaid()).ifPresent(largeRaid -> {
             setIdle();
             largeRaid.spawnWave();
             setActive();
@@ -78,7 +84,7 @@ public class BukkitRaidListener implements Listener {
     @EventHandler
     public void onFinish(RaidFinishEvent evt) {
         Raid raid = evt.getRaid();
-        matchingLargeRaid(raid).ifPresent(largeRaid -> {
+        getLargeRaid(raid).ifPresent(largeRaid -> {
             RaidStatus status = raid.getStatus();
             if (status == RaidStatus.VICTORY)
                 largeRaid.announceVictory();
@@ -89,7 +95,7 @@ public class BukkitRaidListener implements Listener {
 
     @EventHandler
     public void onRaidStop(RaidStopEvent evt) {
-        matchingLargeRaid(evt.getRaid()).ifPresent(largeRaid -> currentRaids.remove(largeRaid));
+        getLargeRaid(evt.getRaid()).ifPresent(largeRaid -> currentRaids.remove(largeRaid));
     }
 
     public void init() {
@@ -106,11 +112,17 @@ public class BukkitRaidListener implements Listener {
             }
     }
 
-    public Optional<LargeRaid> getLargeRaidInRange(Location location) {
-        return currentRaids.stream().filter(largeRaid -> largeRaid.isInRange(location)).findFirst();
+    public Optional<LargeRaid> getLargeRaid(Location location) {
+        AbstractBlockPositionWrapper blockPos = VersionUtil.getBlockPositionWrapper(location);
+        AbstractCraftWorldWrapper craftWorld = VersionUtil.getCraftWorldWrapper(location.getWorld());
+        AbstractRaidWrapper nmsRaid = craftWorld.getHandle().getRaidAt(blockPos);
+        if (nmsRaid.isEmpty())
+            return Optional.empty();
+        AbstractCraftRaidWrapper craftRaid = VersionUtil.getCraftRaidWrapper(nmsRaid);
+        return getLargeRaid(craftRaid.getRaid());
     }
 
-    public Optional<LargeRaid> matchingLargeRaid(Raid raid) {
+    public Optional<LargeRaid> getLargeRaid(Raid raid) {
         return currentRaids.stream().filter(largeRaid -> largeRaid.isSimilar(raid)).findFirst();
     }
 
