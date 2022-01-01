@@ -69,7 +69,7 @@
 		<finalName>LargeRaids</finalName>
 		<resources>
 			<resource>
-				<directory>${project.basedir}/resources</directory>
+				<directory>${project.basedir}/src/main/resources</directory>
 				<filtering>true</filtering>
 				<includes>
 					<include>**/*.yml</include>

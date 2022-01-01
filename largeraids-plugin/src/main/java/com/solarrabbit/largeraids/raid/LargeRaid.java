@@ -178,18 +178,39 @@ public class LargeRaid {
         return currentRaid == null ? startLoc : currentRaid.getLocation();
     }
 
+    /**
+     * Returns the omen level of the large raid.
+     *
+     * @return large raid's omen level
+     */
     public int getBadOmenLevel() {
         return omenLevel;
     }
 
+    /**
+     * Returns the wave that the large raid is currently at.
+     *
+     * @return current wave of the large raid
+     */
     public int getCurrentWave() {
         return currentWave;
     }
 
+    /**
+     * Returns the total waves that the large raid current has. Total waves may
+     * change according to its omen levels.
+     *
+     * @return current total waves
+     */
     public int getTotalWaves() {
         return totalWaves;
     }
 
+    /**
+     * Returns whether the large raid is at its last wave.
+     *
+     * @return {@code true} if the large raid has reached its last wave
+     */
     public boolean isLastWave() {
         return currentWave == totalWaves;
     }
@@ -222,6 +243,12 @@ public class LargeRaid {
         }
     }
 
+    /**
+     * Absorbs a certain level of bad omen, which may change the overall omen level
+     * and total waves of the large raid.
+     *
+     * @param level levels to absorb
+     */
     public void absorbOmenLevel(int level) {
         omenLevel = Math.min(this.maxTotalWaves, this.omenLevel + level);
         totalWaves = Math.max(5, omenLevel);
