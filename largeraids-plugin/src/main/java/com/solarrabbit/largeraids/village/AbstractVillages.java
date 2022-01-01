@@ -1,4 +1,4 @@
-package com.solarrabbit.largeraids.raid;
+package com.solarrabbit.largeraids.village;
 
 import com.solarrabbit.largeraids.LargeRaids;
 

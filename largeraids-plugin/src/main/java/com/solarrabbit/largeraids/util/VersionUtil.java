@@ -1,6 +1,5 @@
 package com.solarrabbit.largeraids.util;
 
-import com.solarrabbit.largeraids.raid.AbstractVillages;
 import com.mojang.authlib.GameProfile;
 import com.solarrabbit.largeraids.nms.AbstractBlockPositionWrapper;
 import com.solarrabbit.largeraids.nms.AbstractCraftRaidWrapper;
@@ -11,6 +10,7 @@ import com.solarrabbit.largeraids.nms.AbstractMinecraftServerWrapper;
 import com.solarrabbit.largeraids.nms.AbstractPlayerEntityWrapper;
 import com.solarrabbit.largeraids.nms.AbstractRaidWrapper;
 import com.solarrabbit.largeraids.nms.AbstractWorldServerWrapper;
+import com.solarrabbit.largeraids.village.AbstractVillages;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
