@@ -38,16 +38,22 @@ import org.bukkit.potion.PotionEffectType;
 public class LargeRaid {
     private static final int RADIUS = 96;
     private static final int VANILLA_RAID_OMEN_LEVEL = 2;
-    protected final RaidConfig config;
+    private final RaidConfig config;
     private final int maxTotalWaves;
     private final Location startLoc;
+    private final Set<UUID> pendingHeroes;
     private int totalWaves;
     private int omenLevel;
-    protected Raid currentRaid;
-    protected int currentWave;
-    protected Set<UUID> pendingHeroes;
-    protected Player player;
+    private Raid currentRaid;
+    private int currentWave;
 
+    /**
+     * Constructs a large raid object.
+     *
+     * @param config    configurations that the large raid should follow
+     * @param location  location at which the large raid should be triggered
+     * @param omenLevel the starting omen level of the large raid
+     */
     public LargeRaid(RaidConfig config, Location location, int omenLevel) {
         this.config = config;
         startLoc = location;
