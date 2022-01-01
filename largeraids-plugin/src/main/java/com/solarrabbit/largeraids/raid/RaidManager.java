@@ -1,4 +1,4 @@
-package com.solarrabbit.largeraids.listener;
+package com.solarrabbit.largeraids.raid;
 
 import java.util.HashSet;
 import java.util.Optional;
@@ -9,7 +9,6 @@ import com.solarrabbit.largeraids.nms.AbstractBlockPositionWrapper;
 import com.solarrabbit.largeraids.nms.AbstractCraftRaidWrapper;
 import com.solarrabbit.largeraids.nms.AbstractCraftWorldWrapper;
 import com.solarrabbit.largeraids.nms.AbstractRaidWrapper;
-import com.solarrabbit.largeraids.raid.LargeRaid;
 import com.solarrabbit.largeraids.util.VersionUtil;
 
 import org.bukkit.Bukkit;
@@ -23,12 +22,12 @@ import org.bukkit.event.raid.RaidSpawnWaveEvent;
 import org.bukkit.event.raid.RaidStopEvent;
 import org.bukkit.event.raid.RaidTriggerEvent;
 
-public class BukkitRaidListener implements Listener {
+public class RaidManager implements Listener {
     public final Set<LargeRaid> currentRaids = new HashSet<>();
     private final LargeRaids plugin;
     private boolean isIdle;
 
-    public BukkitRaidListener(LargeRaids plugin) {
+    public RaidManager(LargeRaids plugin) {
         this.plugin = plugin;
         isIdle = false;
     }

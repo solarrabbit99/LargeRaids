@@ -1,7 +1,8 @@
 package com.solarrabbit.largeraids.command;
 
 import com.solarrabbit.largeraids.LargeRaids;
-import com.solarrabbit.largeraids.listener.BukkitRaidListener;
+import com.solarrabbit.largeraids.raid.RaidManager;
+
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -17,7 +18,7 @@ public class StopRaidCommand implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        BukkitRaidListener listener = plugin.getBukkitRaidListener();
+        RaidManager listener = plugin.getRaidManager();
         if (args.length >= 1) {
             Player player = Bukkit.getPlayer(args[0]);
             if (player != null) {

@@ -67,7 +67,7 @@ public class LargeRaid {
     /**
      * Kicks start the raid if there isn't one in progress in the location. The
      * first wave will be broadcasted to players within range with a summoning
-     * sound. This method should always be called when {@link BukkitRaidListener} is
+     * sound. This method should always be called when {@link RaidManager} is
      * idle, and set back to active after calling the method.
      *
      * @return {@code true} if a new raid starts successfully
@@ -97,7 +97,7 @@ public class LargeRaid {
     /**
      * Triggers the next wave by updating the heros records and reassigning a new
      * vanilla raid. The wave will be broadcasted to players within range. This
-     * method should always be called when {@link BukkitRaidListener} is idle, and
+     * method should always be called when {@link RaidManager} is idle, and
      * set back to active after calling the method.
      */
     public void triggerNextWave() {
@@ -116,7 +116,7 @@ public class LargeRaid {
     /**
      * Spawns the raiders for the wave. This is a follow-up method of
      * {@link #triggerNextWave()}, and called to replace vanilla mobs spawns. This
-     * method should always be called when {@link BukkitRaidListener} is idle, and
+     * method should always be called when {@link RaidManager} is idle, and
      * set
      * set back to active after calling the method.
      */
@@ -353,7 +353,7 @@ public class LargeRaid {
     /**
      * Creates a raid with a fake player entity at the given location. The raid's
      * bad omen is set to 2 arbitrarily. This method should always be called when
-     * {@link BukkitRaidListener} is idle, and set back to active after calling the
+     * {@link RaidManager} is idle, and set back to active after calling the
      * method.
      *
      * @param location to create the raid

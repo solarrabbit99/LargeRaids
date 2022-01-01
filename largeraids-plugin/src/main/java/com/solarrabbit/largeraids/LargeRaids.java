@@ -16,12 +16,12 @@ import com.solarrabbit.largeraids.command.completer.VillageCentersCommandComplet
 import com.solarrabbit.largeraids.config.RaidConfig;
 import com.solarrabbit.largeraids.config.trigger.TriggersConfig;
 import com.solarrabbit.largeraids.database.DatabaseAdapter;
-import com.solarrabbit.largeraids.listener.BukkitRaidListener;
-import com.solarrabbit.largeraids.listener.DropInLavaTriggerListener;
-import com.solarrabbit.largeraids.listener.TimeBombTriggerListener;
-import com.solarrabbit.largeraids.listener.TriggerListener;
-import com.solarrabbit.largeraids.listener.omen.VillageAbsorbOmenListener;
+import com.solarrabbit.largeraids.raid.RaidManager;
 import com.solarrabbit.largeraids.support.Placeholder;
+import com.solarrabbit.largeraids.trigger.DropInLavaTriggerListener;
+import com.solarrabbit.largeraids.trigger.TimeBombTriggerListener;
+import com.solarrabbit.largeraids.trigger.TriggerListener;
+import com.solarrabbit.largeraids.trigger.omen.VillageAbsorbOmenListener;
 
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
@@ -37,7 +37,7 @@ public final class LargeRaids extends JavaPlugin {
     private Set<TriggerListener> registeredTriggerListeners;
     private RaidConfig raidConfig;
     private TriggersConfig triggerConfig;
-    private BukkitRaidListener mainListener;
+    private RaidManager mainListener;
 
     @Override
     public void onEnable() {
@@ -47,7 +47,7 @@ public final class LargeRaids extends JavaPlugin {
         this.db = new DatabaseAdapter(this);
         this.db.load();
 
-        mainListener = new BukkitRaidListener(this);
+        mainListener = new RaidManager(this);
         this.getServer().getPluginManager().registerEvents(mainListener, this);
         mainListener.init();
 
@@ -94,7 +94,7 @@ public final class LargeRaids extends JavaPlugin {
         return messages.getString(node, "");
     }
 
-    public BukkitRaidListener getBukkitRaidListener() {
+    public RaidManager getRaidManager() {
         return mainListener;
     }
 

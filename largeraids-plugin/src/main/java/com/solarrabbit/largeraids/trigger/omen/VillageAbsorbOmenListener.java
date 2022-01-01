@@ -1,11 +1,11 @@
-package com.solarrabbit.largeraids.listener.omen;
+package com.solarrabbit.largeraids.trigger.omen;
 
 import java.util.Set;
 import java.util.stream.Collectors;
 
 import com.solarrabbit.largeraids.LargeRaids;
-import com.solarrabbit.largeraids.listener.TriggerListener;
 import com.solarrabbit.largeraids.raid.LargeRaid;
+import com.solarrabbit.largeraids.trigger.TriggerListener;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -33,7 +33,7 @@ public class VillageAbsorbOmenListener extends TriggerListener {
     public void onVanillaRaidCreation(RaidTriggerEvent evt) {
         if (evt.getRaid().getBadOmenLevel() != 0) // Raid is getting extended
             return;
-        if (plugin.getBukkitRaidListener().isIdle()) // LargeRaid triggering
+        if (plugin.getRaidManager().isIdle()) // LargeRaid triggering
             return;
         evt.setCancelled(true);
         Player player = evt.getPlayer();
@@ -47,7 +47,7 @@ public class VillageAbsorbOmenListener extends TriggerListener {
         if (type == null || !type.equals(PotionEffectType.BAD_OMEN) || evt.getAction() != Action.REMOVED
                 || evt.getCause() != Cause.UNKNOWN)
             return;
-        Set<LargeRaid> affectedLargeRaids = plugin.getBukkitRaidListener().currentRaids.stream()
+        Set<LargeRaid> affectedLargeRaids = plugin.getRaidManager().currentRaids.stream()
                 .filter(LargeRaid::releaseOmen).collect(Collectors.toSet());
         if (affectedLargeRaids.size() > 1)
             throw new MultipleLargeRaidReleaseOmenException();

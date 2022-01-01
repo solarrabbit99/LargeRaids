@@ -1,8 +1,9 @@
-package com.solarrabbit.largeraids.listener;
+package com.solarrabbit.largeraids.trigger;
 
 import javax.annotation.Nullable;
 
 import com.solarrabbit.largeraids.LargeRaids;
+import com.solarrabbit.largeraids.raid.RaidManager;
 import com.solarrabbit.largeraids.raid.LargeRaid;
 
 import org.bukkit.Bukkit;
@@ -31,7 +32,7 @@ public abstract class TriggerListener implements Listener {
         }
 
         LargeRaid largeRaid = new LargeRaid(plugin.getRaidConfig(), location, omenLevel);
-        BukkitRaidListener listener = plugin.getBukkitRaidListener();
+        RaidManager listener = plugin.getRaidManager();
         if (listener.getLargeRaid(location).isPresent())
             return;
         listener.setIdle();

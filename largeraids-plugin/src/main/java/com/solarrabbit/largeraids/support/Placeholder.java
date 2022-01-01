@@ -39,7 +39,7 @@ public class Placeholder extends PlaceholderExpansion {
     @Override
     public String onRequest(OfflinePlayer player, String params) {
         Optional<LargeRaid> raid = Optional.ofNullable(player.getPlayer()).map(Player::getLocation)
-                .flatMap(loc -> plugin.getBukkitRaidListener().getLargeRaid(loc));
+                .flatMap(loc -> plugin.getRaidManager().getLargeRaid(loc));
         switch (params) {
             case "in_range":
                 return String.valueOf(raid.isPresent());
@@ -52,7 +52,7 @@ public class Placeholder extends PlaceholderExpansion {
             case "omen_level":
                 return raid.map(LargeRaid::getBadOmenLevel).map(Object::toString).orElse(null);
             case "debug_total_registered":
-                return String.valueOf(plugin.getBukkitRaidListener().getNumOfRegisteredRaids());
+                return String.valueOf(plugin.getRaidManager().getNumOfRegisteredRaids());
             default:
                 return null;
         }

@@ -1,7 +1,7 @@
 package com.solarrabbit.largeraids.command;
 
 import com.solarrabbit.largeraids.LargeRaids;
-import com.solarrabbit.largeraids.listener.TriggerListener;
+import com.solarrabbit.largeraids.trigger.TriggerListener;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
