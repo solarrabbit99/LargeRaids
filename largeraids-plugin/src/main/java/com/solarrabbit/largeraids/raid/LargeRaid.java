@@ -2,8 +2,10 @@ package com.solarrabbit.largeraids.raid;
 
 import java.util.Collection;
 import java.util.ConcurrentModificationException;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
@@ -41,7 +43,7 @@ public class LargeRaid {
     private final RaidConfig config;
     private final int maxTotalWaves;
     private final Location startLoc;
-    private final Set<UUID> pendingHeroes;
+    private final Map<UUID, Integer> playerKills;
     private int totalWaves;
     private int omenLevel;
     private Raid currentRaid;
@@ -59,7 +61,7 @@ public class LargeRaid {
         startLoc = location;
         maxTotalWaves = config.getMaximumWaves();
         currentWave = 1;
-        pendingHeroes = new HashSet<>();
+        playerKills = new HashMap<>();
         totalWaves = Math.max(5, omenLevel);
         this.omenLevel = omenLevel;
     }
@@ -101,8 +103,6 @@ public class LargeRaid {
      * set back to active after calling the method.
      */
     public void triggerNextWave() {
-        transferHeroRecords();
-
         currentWave++;
         broadcastWave();
 
@@ -162,9 +162,8 @@ public class LargeRaid {
         Sound sound = config.getSounds().getVictorySound();
         if (sound != null)
             playSoundToPlayersInRadius(sound);
-
-        transferHeroRecords();
-        this.pendingHeroes.forEach(uuid -> Optional.ofNullable(Bukkit.getPlayer(uuid)).filter(Player::isOnline)
+        getNMSRaid().getHeroesOfTheVillage().clear(); // prevent unintentional vanilla rewards
+        this.playerKills.forEach((uuid, i) -> Optional.ofNullable(Bukkit.getPlayer(uuid)).filter(Player::isOnline)
                 .ifPresent(player -> awardPlayer(player)));
     }
 
@@ -269,6 +268,10 @@ public class LargeRaid {
         return set;
     }
 
+    public Map<UUID, Integer> getPlayerKills() {
+        return playerKills;
+    }
+
     /**
      * Set the bad omen level of the current raid back to {@code 2} if it has been
      * increased by the absorption of player's omen. Used for detecting whether a
@@ -289,13 +292,8 @@ public class LargeRaid {
         return this.currentRaid.getLocation().equals(raid.getLocation());
     }
 
-    /**
-     * Serves as a precaution for player to be awarded with vanilla rewards
-     * unintentionally.
-     */
-    private void transferHeroRecords() {
-        currentRaid.getHeroes().forEach(uuid -> pendingHeroes.add(uuid));
-        getNMSRaid().getHeroesOfTheVillage().clear();
+    public void incrementPlayerKill(Player player) {
+        playerKills.merge(player.getUniqueId(), 1, Integer::sum);
     }
 
     private void broadcastWave() {

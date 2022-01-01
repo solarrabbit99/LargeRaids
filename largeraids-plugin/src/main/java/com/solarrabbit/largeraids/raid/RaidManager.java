@@ -9,14 +9,20 @@ import com.solarrabbit.largeraids.nms.AbstractBlockPositionWrapper;
 import com.solarrabbit.largeraids.nms.AbstractCraftRaidWrapper;
 import com.solarrabbit.largeraids.nms.AbstractCraftWorldWrapper;
 import com.solarrabbit.largeraids.nms.AbstractRaidWrapper;
+import com.solarrabbit.largeraids.nms.AbstractRaiderWrapper;
 import com.solarrabbit.largeraids.util.VersionUtil;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Raid;
 import org.bukkit.Raid.RaidStatus;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.Player;
+import org.bukkit.entity.Raider;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.raid.RaidFinishEvent;
 import org.bukkit.event.raid.RaidSpawnWaveEvent;
 import org.bukkit.event.raid.RaidStopEvent;
@@ -95,6 +101,29 @@ public class RaidManager implements Listener {
     @EventHandler
     public void onRaidStop(RaidStopEvent evt) {
         getLargeRaid(evt.getRaid()).ifPresent(largeRaid -> currentRaids.remove(largeRaid));
+    }
+
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void onKill(EntityDamageByEntityEvent evt) {
+        if (evt.isCancelled())
+            return;
+        Entity killed = evt.getEntity();
+        if (!(killed instanceof Raider))
+            return;
+        Raider raider = (Raider) killed;
+        if (raider.getHealth() - evt.getFinalDamage() > 0)
+            return;
+        Player killer = raider.getKiller();
+        if (killer == null)
+            return;
+
+        AbstractRaiderWrapper wrapper = VersionUtil.getCraftRaiderWrapper(raider).getHandle();
+        AbstractRaidWrapper nmsRaid = wrapper.getCurrentRaid();
+        if (nmsRaid.isEmpty())
+            return;
+        AbstractCraftRaidWrapper craftRaid = VersionUtil.getCraftRaidWrapper(nmsRaid);
+        Optional<LargeRaid> lr = getLargeRaid(craftRaid.getRaid());
+        lr.ifPresent(r -> r.incrementPlayerKill(killer));
     }
 
     public void init() {

@@ -10,4 +10,9 @@ public class RaiderWrapper implements AbstractRaiderWrapper {
     RaiderWrapper(Raider raider) {
         this.raider = raider;
     }
+
+    @Override
+    public RaidWrapper getCurrentRaid() {
+        return new RaidWrapper(raider.getCurrentRaid());
+    }
 }

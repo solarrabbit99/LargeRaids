@@ -51,6 +51,12 @@ public class Placeholder extends PlaceholderExpansion {
                 return raid.map(LargeRaid::getTotalRaidersAlive).map(Object::toString).orElse(null);
             case "omen_level":
                 return raid.map(LargeRaid::getBadOmenLevel).map(Object::toString).orElse(null);
+            case "player_kills":
+                if (!raid.isPresent())
+                    return null;
+                else
+                    return raid.map(LargeRaid::getPlayerKills).map(map -> map.get(player.getUniqueId()))
+                            .map(Object::toString).orElse("0");
             case "debug_total_registered":
                 return String.valueOf(plugin.getRaidManager().getNumOfRegisteredRaids());
             default:
