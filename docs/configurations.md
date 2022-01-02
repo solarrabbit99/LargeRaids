@@ -9,6 +9,7 @@ title: Configurations
   - [Hero of the Village](#hero-of-the-village)
   - [Rewards](#rewards)
 - [**Trigger Mechanism**](#trigger-mechanism)
+- [**Placeholder**](#placeholder)
 
 The only configuration file available is the default `config.yml` generated the first time the plugin is loaded on the server. In the future versions to come, new configurable options may be added. The already generated `config.yml` does not get automatically updated. You can either backup the old configuration file in a different directory for the plugin to regenerate a new one, or update it manually according to the changes reflected below.
 
@@ -168,4 +169,13 @@ trigger:
     enabled: false
     # Broadcast message to be sent to entire server, leave it blank to disable.
     broadcast-message: "&7<player> &btriggered a large raid at &l<center>&r&b!"
+```
+
+## Placeholder
+
+Server administrators may wish to use the plugin's placeholders for scoreboards, but the plugin returns a `null` value for most placeholders of players who are not in range of any large raids by default. This section allows you to configure a replacement string for the `null` value.
+
+```yml
+placeholder:
+  not-in-range-string: Not In Range
 ```

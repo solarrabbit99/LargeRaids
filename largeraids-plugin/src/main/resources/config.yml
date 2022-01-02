@@ -1,8 +1,4 @@
-############################################################
-# +------------------------------------------------------+ #
-# |                  Main Configurations                 | #
-# +------------------------------------------------------+ #
-############################################################
+# Kindly refer to https://zhenghanlee.github.io/LargeRaids/configurations.html for configuration guide.
 
 raid:
   waves: 20
@@ -53,12 +49,6 @@ raid:
       # - lrgive <player> 1
       # - give <player> stick
 
-############################################################
-# +------------------------------------------------------+ #
-# |                  Trigger Mechanisms                  | #
-# +------------------------------------------------------+ #
-############################################################
-
 trigger:
   omen:
     enabled: true
@@ -82,3 +72,6 @@ trigger:
   artificial-only:
     enabled: false
     broadcast-message: "&7<player> &btriggered a large raid at &l<center>&r&b!"
+
+placeholder:
+  not-in-range-string: Not In Range

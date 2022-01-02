@@ -13,6 +13,7 @@ import com.solarrabbit.largeraids.command.StopRaidCommand;
 import com.solarrabbit.largeraids.command.VillageCentresCommand;
 import com.solarrabbit.largeraids.command.completer.StartRaidCommandCompleter;
 import com.solarrabbit.largeraids.command.completer.VillageCentersCommandCompleter;
+import com.solarrabbit.largeraids.config.PlaceholderConfig;
 import com.solarrabbit.largeraids.config.RaidConfig;
 import com.solarrabbit.largeraids.config.trigger.TriggersConfig;
 import com.solarrabbit.largeraids.database.DatabaseAdapter;
@@ -24,7 +25,6 @@ import com.solarrabbit.largeraids.trigger.TriggerListener;
 import com.solarrabbit.largeraids.trigger.omen.VillageAbsorbOmenListener;
 
 import org.bukkit.Bukkit;
-import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -37,7 +37,8 @@ public final class LargeRaids extends JavaPlugin {
     private Set<TriggerListener> registeredTriggerListeners;
     private RaidConfig raidConfig;
     private TriggersConfig triggerConfig;
-    private RaidManager mainListener;
+    private Placeholder placeholder;
+    private RaidManager raidManager;
 
     @Override
     public void onEnable() {
@@ -47,9 +48,9 @@ public final class LargeRaids extends JavaPlugin {
         this.db = new DatabaseAdapter(this);
         this.db.load();
 
-        mainListener = new RaidManager(this);
-        this.getServer().getPluginManager().registerEvents(mainListener, this);
-        mainListener.init();
+        raidManager = new RaidManager(this);
+        this.getServer().getPluginManager().registerEvents(raidManager, this);
+        raidManager.init();
 
         getCommand("lrstart").setExecutor(new StartRaidCommand(this));
         getCommand("lrstart").setTabCompleter(new StartRaidCommandCompleter(db));
@@ -60,14 +61,7 @@ public final class LargeRaids extends JavaPlugin {
         getCommand("lrcenters").setTabCompleter(new VillageCentersCommandCompleter(db));
 
         loadMessages();
-        testConfig();
-        raidConfig = new RaidConfig(getConfig().getConfigurationSection("raid"));
-        triggerConfig = new TriggersConfig(getConfig().getConfigurationSection("trigger"));
-        reloadTriggers();
-
-        if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {
-            new Placeholder(this).register();
-        }
+        loadCustomConfig();
     }
 
     public void log(String message, Level level) {
@@ -78,16 +72,24 @@ public final class LargeRaids extends JavaPlugin {
         }
     }
 
-    public NamespacedKey getNamespacedKey(String key) {
-        return new NamespacedKey(this, key);
-    }
-
     public void reload() {
         reloadConfig();
+        loadCustomConfig();
+    }
+
+    private void loadCustomConfig() {
         testConfig();
         raidConfig = new RaidConfig(getConfig().getConfigurationSection("raid"));
         triggerConfig = new TriggersConfig(getConfig().getConfigurationSection("trigger"));
         reloadTriggers();
+        if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {
+            if (placeholder != null)
+                placeholder.unregister();
+            PlaceholderConfig placeholderConfig = new PlaceholderConfig(
+                    getConfig().getConfigurationSection("placeholder"));
+            placeholder = new Placeholder(raidManager, placeholderConfig);
+            placeholder.register();
+        }
     }
 
     public String getMessage(String node) {
@@ -95,7 +97,7 @@ public final class LargeRaids extends JavaPlugin {
     }
 
     public RaidManager getRaidManager() {
-        return mainListener;
+        return raidManager;
     }
 
     public DatabaseAdapter getDatabaseAdapter() {

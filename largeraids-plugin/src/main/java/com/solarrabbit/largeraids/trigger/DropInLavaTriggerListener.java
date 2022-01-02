@@ -55,7 +55,7 @@ public class DropInLavaTriggerListener extends TriggerListener {
     }
 
     private NamespacedKey getNamespacedKey() {
-        return plugin.getNamespacedKey("dropped-summon-item");
+        return new NamespacedKey(plugin, "dropped-summon-item");
     }
 
 }
