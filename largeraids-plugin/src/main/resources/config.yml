@@ -75,3 +75,9 @@ trigger:
 
 placeholder:
   not-in-range-string: Not In Range
+
+miscellaneous:
+  bell-outline-raiders:
+    normal-raid: false
+    large-raid: false
+    duration: 5

@@ -154,4 +154,11 @@ public class RaidManager implements Listener {
         return currentRaids.stream().filter(largeRaid -> largeRaid.isSimilar(raid)).findFirst();
     }
 
+    public Optional<Raid> getRaid(Location location) {
+        AbstractBlockPositionWrapper blockPos = VersionUtil.getBlockPositionWrapper(location);
+        AbstractCraftWorldWrapper world = VersionUtil.getCraftWorldWrapper(location.getWorld());
+        AbstractRaidWrapper raid = world.getHandle().getRaidAt(blockPos);
+        return Optional.of(raid).filter(r -> !r.isEmpty()).map(VersionUtil::getCraftRaidWrapper)
+                .map(AbstractCraftRaidWrapper::getRaid);
+    }
 }

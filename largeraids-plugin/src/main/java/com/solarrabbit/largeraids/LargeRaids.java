@@ -13,6 +13,7 @@ import com.solarrabbit.largeraids.command.StopRaidCommand;
 import com.solarrabbit.largeraids.command.VillageCentresCommand;
 import com.solarrabbit.largeraids.command.completer.StartRaidCommandCompleter;
 import com.solarrabbit.largeraids.command.completer.VillageCentersCommandCompleter;
+import com.solarrabbit.largeraids.config.MiscConfig;
 import com.solarrabbit.largeraids.config.PlaceholderConfig;
 import com.solarrabbit.largeraids.config.RaidConfig;
 import com.solarrabbit.largeraids.config.trigger.TriggersConfig;
@@ -23,6 +24,7 @@ import com.solarrabbit.largeraids.trigger.DropInLavaTriggerListener;
 import com.solarrabbit.largeraids.trigger.TimeBombTriggerListener;
 import com.solarrabbit.largeraids.trigger.TriggerListener;
 import com.solarrabbit.largeraids.trigger.omen.VillageAbsorbOmenListener;
+import com.solarrabbit.largeraids.village.BellListener;
 
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
@@ -37,6 +39,7 @@ public final class LargeRaids extends JavaPlugin {
     private Set<TriggerListener> registeredTriggerListeners;
     private RaidConfig raidConfig;
     private TriggersConfig triggerConfig;
+    private MiscConfig miscConfig;
     private Placeholder placeholder;
     private RaidManager raidManager;
 
@@ -49,8 +52,9 @@ public final class LargeRaids extends JavaPlugin {
         this.db.load();
 
         raidManager = new RaidManager(this);
-        this.getServer().getPluginManager().registerEvents(raidManager, this);
         raidManager.init();
+        getServer().getPluginManager().registerEvents(raidManager, this);
+        getServer().getPluginManager().registerEvents(new BellListener(this), this);
 
         getCommand("lrstart").setExecutor(new StartRaidCommand(this));
         getCommand("lrstart").setTabCompleter(new StartRaidCommandCompleter(db));
@@ -81,6 +85,7 @@ public final class LargeRaids extends JavaPlugin {
         testConfig();
         raidConfig = new RaidConfig(getConfig().getConfigurationSection("raid"));
         triggerConfig = new TriggersConfig(getConfig().getConfigurationSection("trigger"));
+        miscConfig = new MiscConfig(getConfig().getConfigurationSection("miscellaneous"));
         reloadTriggers();
         if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {
             if (placeholder != null)
@@ -110,6 +115,10 @@ public final class LargeRaids extends JavaPlugin {
 
     public TriggersConfig getTriggerConfig() {
         return triggerConfig;
+    }
+
+    public MiscConfig getMiscConfig() {
+        return miscConfig;
     }
 
     private void reloadTriggers() {
