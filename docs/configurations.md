@@ -10,6 +10,7 @@ title: Configurations
   - [Rewards](#rewards)
 - [**Trigger Mechanism**](#trigger-mechanism)
 - [**Placeholder**](#placeholder)
+- [**Miscellaneous**](#miscellaneous)
 
 The only configuration file available is the default `config.yml` generated the first time the plugin is loaded on the server. In the future versions to come, new configurable options may be added. The already generated `config.yml` does not get automatically updated. You can either backup the old configuration file in a different directory for the plugin to regenerate a new one, or update it manually according to the changes reflected below.
 
@@ -178,4 +179,17 @@ Server administrators may wish to use the plugin's placeholders for scoreboards,
 ```yml
 placeholder:
   not-in-range-string: Not In Range
+```
+
+## Miscellaneous
+
+```yml
+miscellaneous:
+  # Whether ringing of bell will outline every single raider in the raid, regardless of distance
+  # from the bell. This will only work on players (not villagers) ringing the bell.
+  bell-outline-raiders:
+    normal-raid: false
+    large-raid: false
+    # Duration of glow (in seconds)
+    duration: 5
 ```
