@@ -49,6 +49,7 @@ public abstract class TriggerListener implements Listener {
     @Nullable
     private String getArtificialVillageCenterName(Location location) {
         return plugin.getDatabaseAdapter().getCentres().entrySet().stream()
+                .filter(entry -> entry.getValue().getWorld().equals(location.getWorld()))
                 .filter(entry -> entry.getValue().distanceSquared(location) < Math.pow(64, 2))
                 .map(entry -> entry.getKey())
                 .findFirst().orElse(null);
