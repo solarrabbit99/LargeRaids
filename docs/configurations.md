@@ -6,7 +6,6 @@ title: Configurations
 - [**Main Configurations**](#main-configurations)
   - [Raid (Mobs/Waves/Sounds)](#raid-mobswavessounds)
   - [MythicMobs](#mythicmobs)
-  - [Hero of the Village](#hero-of-the-village)
   - [Rewards](#rewards)
 - [**Trigger Mechanism**](#trigger-mechanism)
 - [**Placeholder**](#placeholder)
@@ -20,7 +19,7 @@ The only configuration file available is the default `config.yml` generated the 
 
 ```yml
 raid:
-  # The number of waves must be at least 1. The length of the arrays under the `mobs`
+  # The number of waves must be at least 5. The length of the arrays under the `mobs`
   # configuration section below must also be at least the number of waves. Each wave
   # must have at least one raider.
   waves: 20
@@ -73,38 +72,33 @@ mobs:
   SpeedRaider: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 2, 2, 2, 3]
 ```
 
-### Hero of the Village
-
-This is an essential feature of large raids. The status effect is given to players, who kill at least one of the participating raiders, at the end of the raid assuming that the players emerge victorious.
-
-```yml
-hero-of-the-village:
-  # Level 12 is enough to grant a player a cost of 1 emerald for any default trades.
-  # Players will always receive the hero of the village effect with level of this value,
-  # or the omen level of the large raid, whichever is lower.
-  level: 12
-  # In minutes.
-  duration: 40
-```
-
 ### Rewards
 
-Similar to the Hero of the Village status effect, rewards are given to players, who kill at least one of the participating raiders, at the end of the raid assuming that the players emerge victorious. Rewards are optional. Players who do not have enough inventory space upon receiving rewards will have their share spawn on the floor instead.
+Similar to the Hero of the Village status effect, rewards are given to players, who **dealt damage** to any participating raiders, at the end of the raid assuming that the players emerge victorious. Rewards are optional. Players who do not have enough inventory space upon receiving rewards will have their share spawn on the floor instead.
 
 ```yml
 rewards:
-  # Leave it blank to disable.
   message: "&aReceiving rewards..."
+  # Minimum raiders a player must kill to obtain rewards.
+  min-raider-kills: 1
+  # Minimum damage a player must deal to raiders to obtain rewards.
+  min-damage-deal: 0.0
+  hero-of-the-village:
+    # Level 12 is enough to grant a player a cost of 1 emerald for any default trades.
+    # Players will receive the hero of the village effect with level of this value, or
+    # the omen level of the large raid, whichever is lower.
+    level: 12
+    # In minutes.
+    duration: 40
   # Leave this section blank to disable the feature.
   items:
     1:
-      material: BOOK
+      material: DIAMOND
       # Amount must be more than 0 but no more than the maximum stack size of the item
       amount: 1
-      display-name: "&6Example Reward"
+      display-name: "&6Hero Diamond"
       lore:
-        # - "&5Drop the item into lava in a village"
-        # - "&5to summon a large raid!"
+        - "&5Thank you for saving the village!"
       custom-model-data:
       enchantments:
         1:
@@ -190,6 +184,6 @@ miscellaneous:
   bell-outline-raiders:
     normal-raid: false
     large-raid: false
-    # Duration of glow (in seconds)
+    # Duration of glow (in seconds), put 0 to use default effect duration
     duration: 5
 ```

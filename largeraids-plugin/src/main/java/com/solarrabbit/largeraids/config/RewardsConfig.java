@@ -12,14 +12,23 @@ public class RewardsConfig {
     private final String message;
     private final ItemStack[] items;
     private final String[] commands;
+    private final int minRaiderKills;
+    private final double minDamageDeal;
+    private final int heroLevel;
+    private final int heroDuration;
 
-    RewardsConfig(ConfigurationSection config) {
+    public RewardsConfig(ConfigurationSection config) {
         message = config.getString("message", null);
         ConfigurationSection itemsConfig = config.getConfigurationSection("items");
         items = itemsConfig.getKeys(false).stream()
                 .map(key -> ItemCreator.getItemFromConfig(itemsConfig.getConfigurationSection(key)))
                 .toArray(ItemStack[]::new);
         commands = config.getStringList("commands").toArray(new String[0]);
+        minRaiderKills = config.getInt("min-raider-kills");
+        minDamageDeal = config.getDouble("min-damage-deal");
+        ConfigurationSection heroConfig = config.getConfigurationSection("hero-of-the-village");
+        heroLevel = heroConfig.getInt("level");
+        heroDuration = heroConfig.getInt("duration");
     }
 
     @Nullable
@@ -33,5 +42,21 @@ public class RewardsConfig {
 
     public String[] getCommands() {
         return commands.clone();
+    }
+
+    public int getMinRaiderKills() {
+        return minRaiderKills;
+    }
+
+    public double getMinDamageDeal() {
+        return minDamageDeal;
+    }
+
+    public int getHeroLevel() {
+        return heroLevel;
+    }
+
+    public int getHeroDuration() {
+        return heroDuration;
     }
 }

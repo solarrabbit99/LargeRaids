@@ -104,17 +104,15 @@ public class RaidManager implements Listener {
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
-    public void onKill(EntityDamageByEntityEvent evt) {
+    public void onDamage(EntityDamageByEntityEvent evt) {
         if (evt.isCancelled())
             return;
         Entity killed = evt.getEntity();
         if (!(killed instanceof Raider))
             return;
         Raider raider = (Raider) killed;
-        if (raider.getHealth() - evt.getFinalDamage() > 0)
-            return;
-        Player killer = raider.getKiller();
-        if (killer == null)
+        Player damager = raider.getKiller(); // #getKiller() returns last hurt by player
+        if (damager == null)
             return;
 
         AbstractRaiderWrapper wrapper = VersionUtil.getCraftRaiderWrapper(raider).getHandle();
@@ -123,7 +121,11 @@ public class RaidManager implements Listener {
             return;
         AbstractCraftRaidWrapper craftRaid = VersionUtil.getCraftRaidWrapper(nmsRaid);
         Optional<LargeRaid> lr = getLargeRaid(craftRaid.getRaid());
-        lr.ifPresent(r -> r.incrementPlayerKill(killer));
+        lr.ifPresent(r -> {
+            r.incrementPlayerDamage(damager, Math.min(raider.getHealth(), evt.getFinalDamage()));
+            if (raider.getHealth() - evt.getFinalDamage() <= 0)
+                r.incrementPlayerKill(damager);
+        });
     }
 
     public void init() {

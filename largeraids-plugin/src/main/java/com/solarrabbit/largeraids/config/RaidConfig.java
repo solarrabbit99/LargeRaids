@@ -12,7 +12,6 @@ import org.bukkit.configuration.ConfigurationSection;
 public class RaidConfig {
     private final SoundsConfig soundsConfig;
     private final RaiderConfig raiderConfig;
-    private final RewardsConfig rewardsConfig;
 
     private final int maximumWaves;
     private final boolean isTitleEnabled;
@@ -21,13 +20,10 @@ public class RaidConfig {
     private final boolean isMessageEnabled;
     private final String defaultWaveMessage;
     private final String finalWaveMessage;
-    private final int heroLevel;
-    private final int heroDuration;
 
     public RaidConfig(ConfigurationSection config) {
         soundsConfig = new SoundsConfig(config.getConfigurationSection("sounds"));
         raiderConfig = new RaiderConfig(config.getConfigurationSection("mobs"));
-        rewardsConfig = new RewardsConfig(config.getConfigurationSection("rewards"));
         maximumWaves = config.getInt("waves");
         ConfigurationSection waveAnnouncementConfig = config.getConfigurationSection("announce-waves");
         ConfigurationSection titleConfig = waveAnnouncementConfig.getConfigurationSection("title");
@@ -38,9 +34,6 @@ public class RaidConfig {
         isMessageEnabled = messageConfig.getBoolean("enabled");
         defaultWaveMessage = messageConfig.getString("default", null);
         finalWaveMessage = messageConfig.getString("final", null);
-        ConfigurationSection heroConfig = config.getConfigurationSection("hero-of-the-village");
-        heroLevel = heroConfig.getInt("level");
-        heroDuration = heroConfig.getInt("duration");
     }
 
     public SoundsConfig getSounds() {
@@ -49,10 +42,6 @@ public class RaidConfig {
 
     public RaiderConfig getRaiders() {
         return raiderConfig;
-    }
-
-    public RewardsConfig getRewards() {
-        return rewardsConfig;
     }
 
     public int getMaximumWaves() {
@@ -85,13 +74,5 @@ public class RaidConfig {
     @Nullable
     public String getFinalWaveMessage() {
         return finalWaveMessage == null ? null : ChatColorUtil.colorize(finalWaveMessage);
-    }
-
-    public int getHeroLevel() {
-        return heroLevel;
-    }
-
-    public int getHeroDuration() {
-        return heroDuration;
     }
 }

@@ -16,6 +16,7 @@ import com.solarrabbit.largeraids.command.completer.VillageCentersCommandComplet
 import com.solarrabbit.largeraids.config.MiscConfig;
 import com.solarrabbit.largeraids.config.PlaceholderConfig;
 import com.solarrabbit.largeraids.config.RaidConfig;
+import com.solarrabbit.largeraids.config.RewardsConfig;
 import com.solarrabbit.largeraids.config.trigger.TriggersConfig;
 import com.solarrabbit.largeraids.database.DatabaseAdapter;
 import com.solarrabbit.largeraids.raid.RaidManager;
@@ -37,9 +38,12 @@ public final class LargeRaids extends JavaPlugin {
     private PluginLogger logger;
     private DatabaseAdapter db;
     private Set<TriggerListener> registeredTriggerListeners;
+
     private RaidConfig raidConfig;
+    private RewardsConfig rewardsConfig;
     private TriggersConfig triggerConfig;
     private MiscConfig miscConfig;
+
     private Placeholder placeholder;
     private RaidManager raidManager;
 
@@ -65,7 +69,7 @@ public final class LargeRaids extends JavaPlugin {
         getCommand("lrcenters").setTabCompleter(new VillageCentersCommandCompleter(db));
 
         loadMessages();
-        loadCustomConfig();
+        loadCustomConfigs();
     }
 
     public void log(String message, Level level) {
@@ -78,12 +82,13 @@ public final class LargeRaids extends JavaPlugin {
 
     public void reload() {
         reloadConfig();
-        loadCustomConfig();
+        loadCustomConfigs();
     }
 
-    private void loadCustomConfig() {
+    private void loadCustomConfigs() {
         testConfig();
         raidConfig = new RaidConfig(getConfig().getConfigurationSection("raid"));
+        rewardsConfig = new RewardsConfig(getConfig().getConfigurationSection("rewards"));
         triggerConfig = new TriggersConfig(getConfig().getConfigurationSection("trigger"));
         miscConfig = new MiscConfig(getConfig().getConfigurationSection("miscellaneous"));
         reloadTriggers();
@@ -111,6 +116,10 @@ public final class LargeRaids extends JavaPlugin {
 
     public RaidConfig getRaidConfig() {
         return raidConfig;
+    }
+
+    public RewardsConfig getRewardsConfig() {
+        return rewardsConfig;
     }
 
     public TriggersConfig getTriggerConfig() {

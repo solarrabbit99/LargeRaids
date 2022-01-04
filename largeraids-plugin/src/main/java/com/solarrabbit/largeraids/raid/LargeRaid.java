@@ -14,6 +14,7 @@ import java.util.UUID;
 import com.mojang.authlib.GameProfile;
 import com.solarrabbit.largeraids.LargeRaids;
 import com.solarrabbit.largeraids.config.RaidConfig;
+import com.solarrabbit.largeraids.config.RewardsConfig;
 import com.solarrabbit.largeraids.nms.AbstractBlockPositionWrapper;
 import com.solarrabbit.largeraids.nms.AbstractMinecraftServerWrapper;
 import com.solarrabbit.largeraids.nms.AbstractPlayerEntityWrapper;
@@ -40,10 +41,12 @@ import org.bukkit.potion.PotionEffectType;
 public class LargeRaid {
     private static final int RADIUS = 96;
     private static final int VANILLA_RAID_OMEN_LEVEL = 2;
-    private final RaidConfig config;
+    private final RaidConfig raidConfig;
+    private final RewardsConfig rewardsConfig;
     private final int maxTotalWaves;
     private final Location startLoc;
     private final Map<UUID, Integer> playerKills;
+    private final Map<UUID, Double> playerDamage;
     private int totalWaves;
     private int omenLevel;
     private Raid currentRaid;
@@ -56,12 +59,14 @@ public class LargeRaid {
      * @param location  location at which the large raid should be triggered
      * @param omenLevel the starting omen level of the large raid
      */
-    public LargeRaid(RaidConfig config, Location location, int omenLevel) {
-        this.config = config;
+    public LargeRaid(RaidConfig raidConfig, RewardsConfig rewardsConfig, Location location, int omenLevel) {
+        this.raidConfig = raidConfig;
+        this.rewardsConfig = rewardsConfig;
         startLoc = location;
-        maxTotalWaves = config.getMaximumWaves();
+        maxTotalWaves = raidConfig.getMaximumWaves();
         currentWave = 1;
         playerKills = new HashMap<>();
+        playerDamage = new HashMap<>();
         totalWaves = Math.max(5, omenLevel);
         this.omenLevel = omenLevel;
     }
@@ -88,7 +93,7 @@ public class LargeRaid {
             if (currentRaid.getStatus() == RaidStatus.STOPPED)
                 return;
             broadcastWave();
-            Sound sound = config.getSounds().getSummonSound();
+            Sound sound = raidConfig.getSounds().getSummonSound();
             if (sound != null)
                 playSoundToPlayersInRadius(sound);
         }, 2);
@@ -135,7 +140,7 @@ public class LargeRaid {
 
         AbstractRaidWrapper nmsRaid = getNMSRaid();
 
-        for (EventRaider raider : config.getRaiders().getWaveMobs(this.currentWave)) {
+        for (EventRaider raider : raidConfig.getRaiders().getWaveMobs(this.currentWave)) {
             Raider entity = raider.spawn(loc);
             nmsRaid.joinRaid(2, VersionUtil.getCraftRaiderWrapper(entity).getHandle(), null, true);
         }
@@ -159,19 +164,19 @@ public class LargeRaid {
      * Announces victory with a sound and award heros with configured rewards.
      */
     public void announceVictory() {
-        Sound sound = config.getSounds().getVictorySound();
+        Sound sound = raidConfig.getSounds().getVictorySound();
         if (sound != null)
             playSoundToPlayersInRadius(sound);
         getNMSRaid().getHeroesOfTheVillage().clear(); // prevent unintentional vanilla rewards
-        this.playerKills.forEach((uuid, i) -> Optional.ofNullable(Bukkit.getPlayer(uuid)).filter(Player::isOnline)
-                .ifPresent(player -> awardPlayer(player)));
+        playerDamage.forEach((uuid, i) -> Optional.ofNullable(Bukkit.getPlayer(uuid)).filter(Player::isOnline)
+                .filter(this::shouldAwardPlayer).ifPresent(player -> awardPlayer(player)));
     }
 
     /**
      * Announces defeat with a sound.
      */
     public void announceDefeat() {
-        Sound sound = config.getSounds().getDefeatSound();
+        Sound sound = raidConfig.getSounds().getDefeatSound();
         if (sound != null)
             playSoundToPlayersInRadius(sound);
     }
@@ -296,31 +301,45 @@ public class LargeRaid {
         playerKills.merge(player.getUniqueId(), 1, Integer::sum);
     }
 
+    public void incrementPlayerDamage(Player player, double damage) {
+        playerDamage.merge(player.getUniqueId(), damage, Double::sum);
+    }
+
     private void broadcastWave() {
         for (Player player : getPlayersInRadius()) {
-            if (config.isTitleEnabled()) {
-                String defaultStr = config.getDefaultWaveTitle(currentWave);
-                String finalStr = config.getFinalWaveTitle();
+            if (raidConfig.isTitleEnabled()) {
+                String defaultStr = raidConfig.getDefaultWaveTitle(currentWave);
+                String finalStr = raidConfig.getFinalWaveTitle();
                 player.sendTitle(isLastWave() ? finalStr : defaultStr, null, 10, 70, 20);
             }
-            if (config.isMessageEnabled()) {
-                String defaultStr = config.getDefaultWaveMessage(currentWave);
-                String finalStr = config.getFinalWaveMessage();
+            if (raidConfig.isMessageEnabled()) {
+                String defaultStr = raidConfig.getDefaultWaveMessage(currentWave);
+                String finalStr = raidConfig.getFinalWaveMessage();
                 player.sendMessage(isLastWave() ? finalStr : defaultStr);
             }
         }
     }
 
-    private void awardPlayer(Player player) {
-        int level = Math.min(config.getHeroLevel(), omenLevel);
-        int duration = config.getHeroDuration() * 60 * 20;
-        player.addPotionEffect(new PotionEffect(PotionEffectType.HERO_OF_THE_VILLAGE, duration, level - 1));
+    private boolean shouldAwardPlayer(Player player) {
+        UUID uuid = player.getUniqueId();
+        boolean hasMinKills = Optional.ofNullable(playerKills.get(uuid)).orElse(0).intValue() >= rewardsConfig
+                .getMinRaiderKills();
+        boolean hasMinDamage = Optional.ofNullable(playerDamage.get(uuid)).orElse(0.0).doubleValue() >= rewardsConfig
+                .getMinDamageDeal();
+        return hasMinKills && hasMinDamage;
+    }
 
-        player.sendMessage(config.getRewards().getMessage());
-        player.getInventory().addItem(config.getRewards().getItems())
+    private void awardPlayer(Player player) {
+        int level = Math.min(rewardsConfig.getHeroLevel(), omenLevel);
+        int duration = rewardsConfig.getHeroDuration() * 60 * 20;
+        if (level > 0)
+            player.addPotionEffect(new PotionEffect(PotionEffectType.HERO_OF_THE_VILLAGE, duration, level - 1));
+
+        player.sendMessage(rewardsConfig.getMessage());
+        player.getInventory().addItem(rewardsConfig.getItems())
                 .forEach((i, item) -> player.getWorld().dropItem(player.getLocation(), item));
 
-        for (String command : config.getRewards().getCommands())
+        for (String command : rewardsConfig.getCommands())
             Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command.replace("<player>", player.getName()));
     }
 

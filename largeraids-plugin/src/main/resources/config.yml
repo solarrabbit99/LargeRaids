@@ -23,31 +23,23 @@ raid:
     evoker: [0, 0, 0, 0, 1, 2, 2, 3, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 4, 4]
     illusioner: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 2, 2, 2, 3, 3, 3]
 
+rewards:
+  message: "&aReceiving rewards..."
+  min-raider-kills: 1
+  min-damage-deal: 0.0
   hero-of-the-village:
     level: 12
     duration: 40
-
-  rewards:
-    message: "&aReceiving rewards..."
-    items:
-      1:
-        material: BOOK
-        amount: 1
-        display-name: "&6Example Reward"
-        lore:
-          # - "&5Drop the item into lava in a village"
-          # - "&5to summon a large raid!"
-        custom-model-data:
-        enchantments:
-          1:
-            type: MENDING
-            level: 1
-          2:
-            type: DURABILITY
-            level: 1
-    commands:
-      # - lrgive <player> 1
-      # - give <player> stick
+  items:
+    1:
+      material: DIAMOND
+      amount: 1
+      display-name: "&6Hero Diamond"
+      lore:
+        - "&5Thank you for saving the village!"
+  commands:
+    # - lrgive <player> 1
+    # - give <player> stick
 
 trigger:
   omen:

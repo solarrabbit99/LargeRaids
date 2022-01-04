@@ -31,7 +31,7 @@ public abstract class TriggerListener implements Listener {
             broadcastMessage = plugin.getTriggerConfig().getBroadcastMessage(triggerer, centerName);
         }
 
-        LargeRaid largeRaid = new LargeRaid(plugin.getRaidConfig(), location, omenLevel);
+        LargeRaid largeRaid = new LargeRaid(plugin.getRaidConfig(), plugin.getRewardsConfig(), location, omenLevel);
         RaidManager listener = plugin.getRaidManager();
         if (listener.getLargeRaid(location).isPresent())
             return;
