@@ -10,6 +10,7 @@ title: Configurations
 - [**Trigger Mechanism**](#trigger-mechanism)
 - [**Placeholder**](#placeholder)
 - [**Miscellaneous**](#miscellaneous)
+- [**Summary**](#summary)
 
 The only configuration file available is the default `config.yml` generated the first time the plugin is loaded on the server. In the future versions to come, new configurable options may be added. The already generated `config.yml` does not get automatically updated. You can either backup the old configuration file in a different directory for the plugin to regenerate a new one, or update it manually according to the changes reflected below.
 
@@ -185,5 +186,84 @@ miscellaneous:
     normal-raid: false
     large-raid: false
     # Duration of glow (in seconds), put 0 to use default effect duration
+    duration: 5
+```
+
+## Summary
+
+This is a summary of what the full document should look like with proper indentation.
+
+```yml
+raid:
+  waves: 20
+  sounds:
+    summon: ITEM_TRIDENT_THUNDER
+    victory: ENTITY_ENDER_DRAGON_DEATH
+    defeat: ENTITY_ENDER_DRAGON_DEATH
+  announce-waves:
+    title:
+      enabled: true
+      default: "&6Wave %s"
+      final: "&6Final Wave"
+    message:
+      enabled: false
+      default: "&6Spawning wave %s..."
+      final: "&6Spawning final wave..."
+  mobs:
+    pillager: [5, 7, 7, 8, 8, 8, 8, 9, 9, 9, 9, 9, 9, 9, 9, 10, 10, 10, 10, 10]
+    vindicator: [0, 3, 5, 5, 5, 5, 5, 6, 7, 7, 7, 8, 8, 8, 9, 9, 9, 10, 10, 10]
+    ravager: [0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3]
+    witch: [0, 0, 0, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3]
+    evoker: [0, 0, 0, 0, 1, 2, 2, 3, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 4, 4]
+    illusioner: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 2, 2, 2, 3, 3, 3]
+
+rewards:
+  message: "&aReceiving rewards..."
+  min-raider-kills: 1
+  min-damage-deal: 0.0
+  hero-of-the-village:
+    level: 12
+    duration: 40
+  items:
+    1:
+      material: DIAMOND
+      amount: 1
+      display-name: "&6Hero Diamond"
+      lore:
+        - "&5Thank you for saving the village!"
+  commands:
+    # - lrgive <player> 1
+
+trigger:
+  omen:
+    enabled: true
+    max-level: 10
+  drop-item-in-lava:
+    enabled: false
+    item:
+      material: TOTEM_OF_UNDYING
+      display-name: "&6Large Raid Summoner"
+      lore:
+        - "&5Drop the item into lava in a village"
+        - "&5to summon a large raid!"
+      custom-model-data:
+      enchantment-glint: true
+  time-bomb:
+    enabled: false
+    ticks:
+      - 114000
+
+  enable-normal-raids: false
+  artificial-only:
+    enabled: false
+    broadcast-message: "&7<player> &btriggered a large raid at &l<center>&r&b!"
+
+placeholder:
+  not-in-range-string: Not In Range
+
+miscellaneous:
+  bell-outline-raiders:
+    normal-raid: false
+    large-raid: false
     duration: 5
 ```
