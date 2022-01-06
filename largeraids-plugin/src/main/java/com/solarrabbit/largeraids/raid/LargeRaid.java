@@ -168,8 +168,8 @@ public class LargeRaid {
         if (sound != null)
             playSoundToPlayersInRadius(sound);
         getNMSRaid().getHeroesOfTheVillage().clear(); // prevent unintentional vanilla rewards
-        playerDamage.forEach((uuid, i) -> Optional.ofNullable(Bukkit.getPlayer(uuid)).filter(Player::isOnline)
-                .filter(this::shouldAwardPlayer).ifPresent(player -> awardPlayer(player)));
+        for (UUID uuid : playerDamage.keySet())
+            Optional.ofNullable(Bukkit.getPlayer(uuid)).filter(this::shouldAwardPlayer).ifPresent(this::awardPlayer);
     }
 
     /**
