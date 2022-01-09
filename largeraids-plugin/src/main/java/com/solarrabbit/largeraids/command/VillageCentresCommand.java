@@ -57,13 +57,11 @@ public class VillageCentresCommand implements CommandExecutor {
         }
 
         Location newCenter = player.getLocation();
-        Runnable ifSuccess = () -> {
+        if (VersionUtil.getVillageManager().addVillage(newCenter)) {
             this.plugin.getDatabaseAdapter().addCentre(newCenter, name);
             player.sendMessage(ChatColor.GREEN + this.plugin.getMessage("village-centers.add.add-success"));
-        };
-        Runnable ifFail = () -> player
-                .sendMessage(ChatColor.RED + this.plugin.getMessage("village-centers.add.add-fail"));
-        VersionUtil.getVillageManager().addVillage(newCenter, ifSuccess, ifFail);
+        } else
+            player.sendMessage(ChatColor.RED + this.plugin.getMessage("village-centers.add.add-fail"));
     }
 
     private void remove(Player player, String name) {

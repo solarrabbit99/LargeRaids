@@ -5,7 +5,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public interface AbstractVillages {
 
-    void addVillage(Location location, Runnable ifSuccess, Runnable ifFail);
+    boolean addVillage(Location location);
 
     void removeVillage(Location location);
 
