@@ -11,11 +11,9 @@ Refer to the [Configuration Guide](configurations.html).
 
 - `/lrstart [player | center] [name]` - start a large raid at player location or given center
 - `/lrstop [player]` - stop a large raid in the vicinity (or the player's vicinity)
-- `/lrcenters [add | remove] [name]` - manage artificial villages\*
+- `/lrcenters [add | remove] [name]` - manage artificial villages
 - `/lrgive <player> [amount]` - give player summoning items
 - `/lrreload` - reload plugin configurations
-
-\* _The command requires villagers spawning to be enabled, villagers will despawn within 5 seconds. The command also has a chance of failing, re-run the command if the center isn't registered._
 
 ## Placeholders
 
