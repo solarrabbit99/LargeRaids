@@ -27,6 +27,7 @@ import com.solarrabbit.largeraids.trigger.TriggerListener;
 import com.solarrabbit.largeraids.trigger.omen.VillageAbsorbOmenListener;
 import com.solarrabbit.largeraids.village.BellListener;
 
+import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
@@ -49,6 +50,10 @@ public final class LargeRaids extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        // Initialize bstats
+        final int pluginId = 13910;
+        new Metrics(this, pluginId);
+
         this.saveDefaultConfig();
         this.logger = new PluginLogger();
 
