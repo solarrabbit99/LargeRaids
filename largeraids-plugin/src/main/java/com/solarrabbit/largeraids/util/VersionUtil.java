@@ -27,7 +27,7 @@ public class VersionUtil {
     }
 
     public static AbstractBlockPositionWrapper getBlockPositionWrapper(double x, double y, double z) {
-        switch (getVersion()) {
+        switch (getAPIVersion()) {
             case "v1_14_R1":
                 return new com.solarrabbit.largeraids.v1_14.nms.BlockPositionWrapper(x, y, z);
             case "v1_15_R1":
@@ -44,7 +44,7 @@ public class VersionUtil {
     }
 
     public static AbstractCraftRaidWrapper getCraftRaidWrapper(AbstractRaidWrapper wrapper) {
-        switch (getVersion()) {
+        switch (getAPIVersion()) {
             case "v1_14_R1":
                 return new com.solarrabbit.largeraids.v1_14.nms.CraftRaidWrapper(wrapper);
             case "v1_15_R1":
@@ -61,7 +61,7 @@ public class VersionUtil {
     }
 
     public static AbstractCraftRaiderWrapper getCraftRaiderWrapper(Raider raider) {
-        switch (getVersion()) {
+        switch (getAPIVersion()) {
             case "v1_14_R1":
                 return new com.solarrabbit.largeraids.v1_14.nms.CraftRaiderWrapper(raider);
             case "v1_15_R1":
@@ -78,7 +78,7 @@ public class VersionUtil {
     }
 
     public static AbstractCraftServerWrapper getCraftServerWrapper(Server server) {
-        switch (getVersion()) {
+        switch (getAPIVersion()) {
             case "v1_14_R1":
                 return new com.solarrabbit.largeraids.v1_14.nms.CraftServerWrapper(server);
             case "v1_15_R1":
@@ -95,7 +95,7 @@ public class VersionUtil {
     }
 
     public static AbstractCraftWorldWrapper getCraftWorldWrapper(World world) {
-        switch (getVersion()) {
+        switch (getAPIVersion()) {
             case "v1_14_R1":
                 return new com.solarrabbit.largeraids.v1_14.nms.CraftWorldWrapper(world);
             case "v1_15_R1":
@@ -114,7 +114,7 @@ public class VersionUtil {
     public static AbstractPlayerEntityWrapper getPlayerEntityWrapper(AbstractMinecraftServerWrapper server,
             AbstractWorldServerWrapper world,
             GameProfile profile) {
-        switch (getVersion()) {
+        switch (getAPIVersion()) {
             case "v1_14_R1":
                 return new com.solarrabbit.largeraids.v1_14.nms.PlayerEntityWrapper(server, world, profile);
             case "v1_15_R1":
@@ -131,7 +131,7 @@ public class VersionUtil {
     }
 
     public static AbstractPoiTypeWrapper getMasonPoiTypeWrapper() {
-        switch (getVersion()) {
+        switch (getAPIVersion()) {
             case "v1_14_R1":
                 return com.solarrabbit.largeraids.v1_14.nms.PoiTypeWrapper.MASON;
             case "v1_15_R1":
@@ -147,19 +147,24 @@ public class VersionUtil {
         }
     }
 
-    public static boolean isAtLeast(String version) {
-        boolean hasMet = false;
-        String currentVersion = getVersion();
-        for (int i = 0; i < VERSIONS.length; i++) {
-            if (!hasMet && VERSIONS[i].equals(version))
-                hasMet = true;
-            if (VERSIONS[i].equals(currentVersion))
-                return hasMet;
-        }
+    public static int getMajorVersion() {
+        String[] splits = getServerVersion().split("\\.");
+        return splits.length < 2 ? 0 : Integer.parseInt(splits[1]);
+    }
+
+    public static boolean isSupported() {
+        String apiVersion = getAPIVersion();
+        for (String version : VERSIONS)
+            if (version.equals(apiVersion))
+                return true;
         return false;
     }
 
-    public static String getVersion() {
+    private static String getServerVersion() {
+        return getCraftServerWrapper(Bukkit.getServer()).getServer().getServerVersion();
+    }
+
+    private static String getAPIVersion() {
         return Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3];
     }
 

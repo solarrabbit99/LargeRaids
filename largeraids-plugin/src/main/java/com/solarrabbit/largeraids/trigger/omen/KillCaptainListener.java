@@ -39,7 +39,7 @@ public class KillCaptainListener extends TriggerListener {
                 prevAmplifier = effect == null ? -1 : effect.getAmplifier();
                 break;
             case ADDED:
-                Cause cause = VersionUtil.getVersion().equals("v1_14_R1") ? Cause.UNKNOWN : Cause.PATROL_CAPTAIN;
+                Cause cause = VersionUtil.getMajorVersion() == 14 ? Cause.UNKNOWN : Cause.PATROL_CAPTAIN;
                 if (evt.getCause() != cause) // Could be added by commands or the plugin itself
                     return;
                 if (evt.getNewEffect().getAmplifier() == 0) // Ignore newly applied effect

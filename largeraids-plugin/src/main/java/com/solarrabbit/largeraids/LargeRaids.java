@@ -25,6 +25,7 @@ import com.solarrabbit.largeraids.trigger.DropInLavaTriggerListener;
 import com.solarrabbit.largeraids.trigger.TimeBombTriggerListener;
 import com.solarrabbit.largeraids.trigger.TriggerListener;
 import com.solarrabbit.largeraids.trigger.omen.VillageAbsorbOmenListener;
+import com.solarrabbit.largeraids.util.VersionUtil;
 import com.solarrabbit.largeraids.village.BellListener;
 import com.solarrabbit.largeraids.village.VillageManager;
 
@@ -52,6 +53,8 @@ public final class LargeRaids extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        verifyServerVersion();
+
         // Initialize bstats
         final int pluginId = 13910;
         new Metrics(this, pluginId);
@@ -189,6 +192,11 @@ public final class LargeRaids extends JavaPlugin {
                 return;
             }
         }
+    }
+
+    private void verifyServerVersion() {
+        if (!VersionUtil.isSupported())
+            log("Server implementation version not supported!", Level.FAIL);
     }
 
 }

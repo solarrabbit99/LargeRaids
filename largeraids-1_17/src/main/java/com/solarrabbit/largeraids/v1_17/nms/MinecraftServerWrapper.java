@@ -10,4 +10,9 @@ public class MinecraftServerWrapper implements AbstractMinecraftServerWrapper {
     MinecraftServerWrapper(MinecraftServer server) {
         this.server = server;
     }
+
+    @Override
+    public String getServerVersion() {
+        return server.getServerVersion();
+    }
 }
