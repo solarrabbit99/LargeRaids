@@ -57,22 +57,22 @@ public class VillageCentresCommand implements CommandExecutor {
         }
 
         Location newCenter = player.getLocation();
-        if (VersionUtil.getVillageManager().addVillage(newCenter)) {
-            this.plugin.getDatabaseAdapter().addCentre(newCenter, name);
+        if (plugin.getVillageManager().addVillage(newCenter)) {
+            plugin.getDatabaseAdapter().addCentre(newCenter, name);
             player.sendMessage(ChatColor.GREEN + this.plugin.getMessage("village-centers.add.add-success"));
         } else
             player.sendMessage(ChatColor.RED + this.plugin.getMessage("village-centers.add.add-fail"));
     }
 
     private void remove(Player player, String name) {
-        Location center = this.plugin.getDatabaseAdapter().getCentre(name);
+        Location center = plugin.getDatabaseAdapter().getCentre(name);
 
         if (center == null) {
             player.sendMessage(ChatColor.RED + this.plugin.getMessage("village-centers.remove.no-exist"));
             return;
         }
-        VersionUtil.getVillageManager().removeVillage(center);
-        this.plugin.getDatabaseAdapter().removeCentre(name);
+        plugin.getVillageManager().removeVillage(center);
+        plugin.getDatabaseAdapter().removeCentre(name);
         player.sendMessage(ChatColor.GREEN + this.plugin.getMessage("village-centers.remove.remove-success"));
 
     }

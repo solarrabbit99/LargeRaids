@@ -8,9 +8,9 @@ import com.solarrabbit.largeraids.nms.AbstractCraftServerWrapper;
 import com.solarrabbit.largeraids.nms.AbstractCraftWorldWrapper;
 import com.solarrabbit.largeraids.nms.AbstractMinecraftServerWrapper;
 import com.solarrabbit.largeraids.nms.AbstractPlayerEntityWrapper;
+import com.solarrabbit.largeraids.nms.AbstractPoiTypeWrapper;
 import com.solarrabbit.largeraids.nms.AbstractRaidWrapper;
 import com.solarrabbit.largeraids.nms.AbstractWorldServerWrapper;
-import com.solarrabbit.largeraids.village.AbstractVillages;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -21,20 +21,6 @@ import org.bukkit.entity.Raider;
 public class VersionUtil {
     private static final String[] VERSIONS = new String[] { "v1_14_R1", "v1_15_R1", "v1_16_R3", "v1_17_R1",
             "v1_18_R1" };
-
-    public static AbstractVillages getVillageManager() {
-        if (getVersion().equals("v1_18_R1"))
-            return new com.solarrabbit.largeraids.v1_18.CustomVillages();
-        if (getVersion().equals("v1_17_R1"))
-            return new com.solarrabbit.largeraids.v1_17.CustomVillages();
-        if (getVersion().equals("v1_16_R3"))
-            return new com.solarrabbit.largeraids.v1_16.CustomVillages();
-        if (getVersion().equals("v1_15_R1"))
-            return new com.solarrabbit.largeraids.v1_15.CustomVillages();
-        if (getVersion().equals("v1_14_R1"))
-            return new com.solarrabbit.largeraids.v1_14.CustomVillages();
-        return null;
-    }
 
     public static AbstractBlockPositionWrapper getBlockPositionWrapper(Location location) {
         return getBlockPositionWrapper(location.getX(), location.getY(), location.getZ());
@@ -139,6 +125,23 @@ public class VersionUtil {
                 return new com.solarrabbit.largeraids.v1_17.nms.PlayerEntityWrapper(server, world, profile);
             case "v1_18_R1":
                 return new com.solarrabbit.largeraids.v1_18.nms.PlayerEntityWrapper(server, world, profile);
+            default:
+                return null;
+        }
+    }
+
+    public static AbstractPoiTypeWrapper getMasonPoiTypeWrapper() {
+        switch (getVersion()) {
+            case "v1_14_R1":
+                return com.solarrabbit.largeraids.v1_14.nms.PoiTypeWrapper.MASON;
+            case "v1_15_R1":
+                return com.solarrabbit.largeraids.v1_15.nms.PoiTypeWrapper.MASON;
+            case "v1_16_R3":
+                return com.solarrabbit.largeraids.v1_16.nms.PoiTypeWrapper.MASON;
+            case "v1_17_R1":
+                return com.solarrabbit.largeraids.v1_17.nms.PoiTypeWrapper.MASON;
+            case "v1_18_R1":
+                return com.solarrabbit.largeraids.v1_18.nms.PoiTypeWrapper.MASON;
             default:
                 return null;
         }

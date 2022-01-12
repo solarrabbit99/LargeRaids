@@ -26,6 +26,7 @@ import com.solarrabbit.largeraids.trigger.TimeBombTriggerListener;
 import com.solarrabbit.largeraids.trigger.TriggerListener;
 import com.solarrabbit.largeraids.trigger.omen.VillageAbsorbOmenListener;
 import com.solarrabbit.largeraids.village.BellListener;
+import com.solarrabbit.largeraids.village.VillageManager;
 
 import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
@@ -47,6 +48,7 @@ public final class LargeRaids extends JavaPlugin {
 
     private Placeholder placeholder;
     private RaidManager raidManager;
+    private VillageManager villageManager;
 
     @Override
     public void onEnable() {
@@ -62,6 +64,7 @@ public final class LargeRaids extends JavaPlugin {
 
         raidManager = new RaidManager(this);
         raidManager.init();
+        villageManager = new VillageManager();
         getServer().getPluginManager().registerEvents(raidManager, this);
         getServer().getPluginManager().registerEvents(new BellListener(this), this);
 
@@ -113,6 +116,10 @@ public final class LargeRaids extends JavaPlugin {
 
     public RaidManager getRaidManager() {
         return raidManager;
+    }
+
+    public VillageManager getVillageManager() {
+        return villageManager;
     }
 
     public DatabaseAdapter getDatabaseAdapter() {

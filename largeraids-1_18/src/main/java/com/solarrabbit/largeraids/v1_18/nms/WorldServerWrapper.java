@@ -22,4 +22,9 @@ public class WorldServerWrapper implements AbstractWorldServerWrapper {
         return new RaidsWrapper(this.server.getRaids());
     }
 
+    @Override
+    public VillageManagerWrapper getVillageRecordManager() {
+        return new VillageManagerWrapper(this.server.getPoiManager());
+    }
+
 }
