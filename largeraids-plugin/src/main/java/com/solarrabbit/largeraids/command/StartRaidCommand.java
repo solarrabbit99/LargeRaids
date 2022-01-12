@@ -39,6 +39,9 @@ public class StartRaidCommand extends TriggerListener implements CommandExecutor
                         sender.sendMessage(
                                 ChatColor.RED + "There are no existing artificial village centers with that name!");
                         return false;
+                    } else if (location.getWorld() == null) {
+                        sender.sendMessage(ChatColor.RED + "Specified artificial village center's world is missing!");
+                        return false;
                     }
                     break;
                 default:

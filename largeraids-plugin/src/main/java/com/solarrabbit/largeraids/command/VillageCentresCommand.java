@@ -71,7 +71,9 @@ public class VillageCentresCommand implements CommandExecutor {
             player.sendMessage(ChatColor.RED + this.plugin.getMessage("village-centers.remove.no-exist"));
             return;
         }
-        plugin.getVillageManager().removeVillage(center);
+
+        if (center.getWorld() != null)
+            plugin.getVillageManager().removeVillage(center);
         plugin.getDatabaseAdapter().removeCentre(name);
         player.sendMessage(ChatColor.GREEN + this.plugin.getMessage("village-centers.remove.remove-success"));
 
@@ -89,8 +91,8 @@ public class VillageCentresCommand implements CommandExecutor {
     }
 
     private String getLocString(Location loc) {
-        return "[" + loc.getWorld().getName() + ", " + getRoundedDouble(loc.getX()) + ", "
-                + getRoundedDouble(loc.getY()) + ", " + getRoundedDouble(loc.getZ()) + "]";
+        return "[" + (loc.getWorld() == null ? "null" : loc.getWorld().getName()) + ", " + getRoundedDouble(loc.getX())
+                + ", " + getRoundedDouble(loc.getY()) + ", " + getRoundedDouble(loc.getZ()) + "]";
     }
 
     private String getRoundedDouble(double d) {
