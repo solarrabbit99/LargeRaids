@@ -54,16 +54,16 @@ public final class LargeRaids extends JavaPlugin {
     @Override
     public void onEnable() {
         verifyServerVersion();
+        fetchSpigotUpdates();
 
         // Initialize bstats
         final int pluginId = 13910;
         new Metrics(this, pluginId);
 
-        this.saveDefaultConfig();
-        this.logger = new PluginLogger();
-
-        this.db = new DatabaseAdapter(this);
-        this.db.load();
+        saveDefaultConfig();
+        logger = new PluginLogger();
+        db = new DatabaseAdapter(this);
+        db.load();
 
         raidManager = new RaidManager(this);
         raidManager.init();
@@ -71,14 +71,7 @@ public final class LargeRaids extends JavaPlugin {
         getServer().getPluginManager().registerEvents(raidManager, this);
         getServer().getPluginManager().registerEvents(new BellListener(this), this);
 
-        getCommand("lrstart").setExecutor(new StartRaidCommand(this));
-        getCommand("lrstart").setTabCompleter(new StartRaidCommandCompleter(db));
-        getCommand("lrstop").setExecutor(new StopRaidCommand(this));
-        getCommand("lrgive").setExecutor(new GiveSummonItemCommand(this));
-        getCommand("lrreload").setExecutor(new ReloadPlugin(this));
-        getCommand("lrcenters").setExecutor(new VillageCentresCommand(this));
-        getCommand("lrcenters").setTabCompleter(new VillageCentersCommandCompleter(db));
-
+        loadCommands();
         loadMessages();
         loadCustomConfigs();
     }
@@ -94,6 +87,16 @@ public final class LargeRaids extends JavaPlugin {
     public void reload() {
         reloadConfig();
         loadCustomConfigs();
+    }
+
+    private void loadCommands() {
+        getCommand("lrstart").setExecutor(new StartRaidCommand(this));
+        getCommand("lrstart").setTabCompleter(new StartRaidCommandCompleter(db));
+        getCommand("lrstop").setExecutor(new StopRaidCommand(this));
+        getCommand("lrgive").setExecutor(new GiveSummonItemCommand(this));
+        getCommand("lrreload").setExecutor(new ReloadPlugin(this));
+        getCommand("lrcenters").setExecutor(new VillageCentresCommand(this));
+        getCommand("lrcenters").setTabCompleter(new VillageCentersCommandCompleter(db));
     }
 
     private void loadCustomConfigs() {
@@ -197,6 +200,18 @@ public final class LargeRaids extends JavaPlugin {
     private void verifyServerVersion() {
         if (!VersionUtil.isSupported())
             log("Server implementation version not supported!", Level.FAIL);
+    }
+
+    private void fetchSpigotUpdates() {
+        final int resourceId = 95422;
+        final String resourcePage = "https://www.spigotmc.org/resources/largeraids-1-14-x-1-18-x.95422/";
+        ResourceChecker checker = new ResourceChecker();
+        checker.hasUpdate(this, resourceId).whenComplete((res, ex) -> {
+            if (ex != null)
+                log("Unable to retrieve updates from spigot website", Level.WARN);
+            else if (res)
+                log("New updates available, download it at " + resourcePage, Level.WARN);
+        });
     }
 
 }
