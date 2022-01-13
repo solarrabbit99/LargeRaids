@@ -2,7 +2,6 @@ package com.solarrabbit.largeraids.command;
 
 import java.util.Map;
 import com.solarrabbit.largeraids.LargeRaids;
-import com.solarrabbit.largeraids.util.VersionUtil;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
@@ -48,11 +47,6 @@ public class VillageCentresCommand implements CommandExecutor {
 
         if (center != null) {
             player.sendMessage(ChatColor.RED + this.plugin.getMessage("village-centers.add.already-exist"));
-            return;
-        }
-
-        if (player.isFlying() || (VersionUtil.getMajorVersion() >= 16 && player.isInWater())) {
-            player.sendMessage(ChatColor.RED + this.plugin.getMessage("village-centers.add.add-unsafe"));
             return;
         }
 

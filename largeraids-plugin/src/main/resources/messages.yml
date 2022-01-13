@@ -5,7 +5,6 @@ config:
 village-centers:
   add:
     already-exist: There is already an artificial village center of the same name!
-    add-unsafe: Stand on a safe platform when creating an artificial village center!
     add-success: Successfully added a new artificial village center!
     add-fail: Failed to add a new artificial village center, please run the command again!
   remove:

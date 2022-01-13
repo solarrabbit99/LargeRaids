@@ -10,6 +10,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
+import org.bukkit.entity.Player;
 
 public class StartRaidCommandCompleter implements TabCompleter {
     private final DatabaseAdapter db;
@@ -30,7 +31,7 @@ public class StartRaidCommandCompleter implements TabCompleter {
                 switch (args[0]) {
                     case "player":
                         list.addAll(
-                                Bukkit.getOnlinePlayers().stream().map(player -> player.getName())
+                                Bukkit.getOnlinePlayers().stream().map(Player::getName)
                                         .collect(Collectors.toSet()));
                         break;
                     case "center":
