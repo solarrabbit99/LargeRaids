@@ -5,6 +5,8 @@ import java.net.URL;
 import java.util.Scanner;
 import java.util.concurrent.CompletableFuture;
 
+import com.solarrabbit.largeraids.util.VersionUtil;
+
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class ResourceChecker {
@@ -13,7 +15,7 @@ public class ResourceChecker {
     public CompletableFuture<Boolean> hasUpdate(JavaPlugin plugin, int resourceId) {
         final String pluginVersion = plugin.getDescription().getVersion();
         return CompletableFuture.supplyAsync(() -> getVersion(resourceId))
-                .thenApply(update -> !update.equals(pluginVersion));
+                .thenApply(update -> VersionUtil.compare(update, pluginVersion) > 0);
     }
 
     private String getVersion(int resourceId) {
