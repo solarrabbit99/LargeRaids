@@ -11,7 +11,7 @@ Refer to the [Configuration Guide](configurations.html).
 
 - `/lrstart [player | center] [name]` - start a large raid at player location or given center
 - `/lrstop [player]` - stop a large raid in the vicinity (or the player's vicinity)
-- `/lrcenters [add | remove] [name]` - manage artificial villages
+- `/lrcenters [add | remove | show | hide] [name]` - manage artificial villages
 - `/lrgive <player> [amount]` - give player summoning items
 - `/lrreload` - reload plugin configurations
 

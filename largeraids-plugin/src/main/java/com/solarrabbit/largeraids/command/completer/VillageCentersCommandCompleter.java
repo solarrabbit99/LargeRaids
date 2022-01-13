@@ -23,6 +23,8 @@ public class VillageCentersCommandCompleter implements TabCompleter {
             case 1:
                 list.add("add");
                 list.add("remove");
+                list.add("show");
+                list.add("hide");
                 break;
             case 2:
                 switch (args[0]) {
