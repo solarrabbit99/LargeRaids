@@ -1,12 +1,14 @@
 package com.solarrabbit.largeraids.command;
 
 import java.util.Map;
+
 import com.solarrabbit.largeraids.LargeRaids;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Particle;
+import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -59,7 +61,10 @@ public class VillageCentresCommand implements CommandExecutor {
             return;
         Map<String, Location> centers = plugin.getDatabaseAdapter().getCentres();
         taskId = Bukkit.getScheduler()
-                .runTaskTimer(plugin, () -> centers.values().forEach(this::highlightLocation), 0, 5)
+                .runTaskTimer(plugin, () -> centers.values().forEach(loc -> {
+                    highlightLocation(loc);
+                    plotSphere(loc, 96);
+                }), 0, 20)
                 .getTaskId();
         isShowing = true;
     }
@@ -124,6 +129,30 @@ public class VillageCentresCommand implements CommandExecutor {
     private void highlightLocation(Location location) {
         if (location.getWorld() == null || !location.getChunk().isLoaded())
             return;
-        location.getWorld().spawnParticle(Particle.CRIT_MAGIC, location, 100);
+        location.getWorld().spawnParticle(Particle.CRIT_MAGIC, location, 50, 0.5, 0.5, 0.5, 0);
+    }
+
+    private void plotSphere(Location center, double radius) {
+        World world = center.getWorld();
+        if (world == null || !center.getChunk().isLoaded())
+            return;
+        Location mutLoc = center.clone();
+        int freq = 75;
+        for (int i = 0; i <= freq; i++) {
+            double y = (double) (2 * i - freq) / freq;
+            double r = Math.cos(Math.asin(y));
+            for (int j = 0; j <= freq; j++) {
+                double x = (double) (2 * j - freq) / freq;
+                double z = Math.cos(Math.asin(x));
+
+                mutLoc.setX((x * radius * r) + center.getBlockX());
+                mutLoc.setZ((z * radius * r) + center.getBlockZ());
+                mutLoc.setY((y * radius) + center.getBlockY());
+                world.spawnParticle(Particle.DRAGON_BREATH, mutLoc, 1, 1, 1, 1, 0);
+
+                mutLoc.setZ((-z * radius * r) + center.getBlockZ());
+                world.spawnParticle(Particle.DRAGON_BREATH, mutLoc, 1, 1, 1, 1, 0);
+            }
+        }
     }
 }
