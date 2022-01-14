@@ -23,6 +23,10 @@ public abstract class TriggerListener implements Listener {
     }
 
     protected void triggerRaid(CommandSender triggerer, Location location, int omenLevel) {
+        int maxRaids = plugin.getMiscConfig().getMaxRaid();
+        if (maxRaids > 0 && plugin.getRaidManager().currentRaids.size() >= maxRaids)
+            return;
+
         String broadcastMessage = null;
         if (plugin.getTriggerConfig().isArtificialOnly()) {
             String centerName = getArtificialVillageCenterName(location);
