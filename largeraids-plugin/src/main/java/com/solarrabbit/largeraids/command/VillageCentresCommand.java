@@ -6,9 +6,11 @@ import com.solarrabbit.largeraids.LargeRaids;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Color;
 import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.World;
+import org.bukkit.Particle.DustOptions;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -136,22 +138,23 @@ public class VillageCentresCommand implements CommandExecutor {
         World world = center.getWorld();
         if (world == null || !center.getChunk().isLoaded())
             return;
+
+        DustOptions options = new DustOptions(Color.ORANGE, 200.0F);
         Location mutLoc = center.clone();
-        int freq = 75;
+        final int freq = 25;
+
         for (int i = 0; i <= freq; i++) {
             double y = (double) (2 * i - freq) / freq;
             double r = Math.cos(Math.asin(y));
-            for (int j = 0; j <= freq; j++) {
-                double x = (double) (2 * j - freq) / freq;
-                double z = Math.cos(Math.asin(x));
+            for (int j = 0; j < freq; j++) {
+                double alpha = 2 * Math.PI * j / freq;
+                double x = Math.sin(alpha);
+                double z = Math.cos(alpha);
 
                 mutLoc.setX((x * radius * r) + center.getBlockX());
                 mutLoc.setZ((z * radius * r) + center.getBlockZ());
                 mutLoc.setY((y * radius) + center.getBlockY());
-                world.spawnParticle(Particle.DRAGON_BREATH, mutLoc, 1, 1, 1, 1, 0);
-
-                mutLoc.setZ((-z * radius * r) + center.getBlockZ());
-                world.spawnParticle(Particle.DRAGON_BREATH, mutLoc, 1, 1, 1, 1, 0);
+                world.spawnParticle(Particle.REDSTONE, mutLoc, 1, 1, 1, 1, 0, options, true);
             }
         }
     }
