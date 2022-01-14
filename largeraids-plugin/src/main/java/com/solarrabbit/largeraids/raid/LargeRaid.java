@@ -80,7 +80,7 @@ public class LargeRaid {
      * @return {@code true} if a new raid starts successfully
      */
     public boolean startRaid() {
-        if (!getNMSRaid().isEmpty()) // There is an ongoing raid
+        if (!getNMSRaidAtCenter().isEmpty()) // There is an ongoing raid
             return false;
 
         AbstractRaidWrapper raid = createRaid(startLoc);
@@ -111,7 +111,7 @@ public class LargeRaid {
         currentWave++;
         broadcastWave();
 
-        getNMSRaid().stop();
+        getCurrentNMSRaid().stop();
         setRaid(VersionUtil.getCraftRaidWrapper(createRaid(getCenter())).getRaid());
 
         if (isLastWave())
@@ -138,7 +138,7 @@ public class LargeRaid {
             return;
         }
 
-        AbstractRaidWrapper nmsRaid = getNMSRaid();
+        AbstractRaidWrapper nmsRaid = getCurrentNMSRaid();
 
         for (EventRaider raider : raidConfig.getRaiders().getWaveMobs(this.currentWave)) {
             Raider entity = raider.spawn(loc);
@@ -155,9 +155,7 @@ public class LargeRaid {
      * Stops the ongoing raid.
      */
     public void stopRaid() {
-        AbstractRaidWrapper raid = getNMSRaid();
-        if (!raid.isEmpty())
-            raid.stop();
+        getCurrentNMSRaid().stop();
     }
 
     /**
@@ -167,7 +165,7 @@ public class LargeRaid {
         Sound sound = raidConfig.getSounds().getVictorySound();
         if (sound != null)
             playSoundToPlayersInRadius(sound);
-        getNMSRaid().getHeroesOfTheVillage().clear(); // prevent unintentional vanilla rewards
+        getCurrentNMSRaid().getHeroesOfTheVillage().clear(); // prevent unintentional vanilla rewards
         for (UUID uuid : playerDamage.keySet())
             Optional.ofNullable(Bukkit.getPlayer(uuid)).filter(this::shouldAwardPlayer).ifPresent(this::awardPlayer);
     }
@@ -226,7 +224,7 @@ public class LargeRaid {
     }
 
     public boolean isActive() {
-        return !getNMSRaid().isEmpty();
+        return getCurrentNMSRaid().isActive();
     }
 
     /**
@@ -236,7 +234,7 @@ public class LargeRaid {
      * @return {@code true} if wave is loading
      */
     public boolean isLoading() {
-        AbstractRaidWrapper nmsRaid = getNMSRaid();
+        AbstractRaidWrapper nmsRaid = getCurrentNMSRaid();
         return !nmsRaid.hasFirstWaveSpawned() || nmsRaid.isBetweenWaves();
     }
 
@@ -358,10 +356,14 @@ public class LargeRaid {
 
     private void prepareLastWave() {
         int withoutBonus = getDefaultWaveNumber(getCenter().getWorld());
-        getNMSRaid().setGroupsSpawned(withoutBonus);
+        getCurrentNMSRaid().setGroupsSpawned(withoutBonus);
     }
 
-    private AbstractRaidWrapper getNMSRaid() {
+    private AbstractRaidWrapper getCurrentNMSRaid() {
+        return currentRaid == null ? null : VersionUtil.getCraftRaidWrapper(currentRaid).getHandle();
+    }
+
+    private AbstractRaidWrapper getNMSRaidAtCenter() {
         AbstractBlockPositionWrapper blkPos = VersionUtil.getBlockPositionWrapper(getCenter());
         AbstractWorldServerWrapper level = VersionUtil.getCraftWorldWrapper(getCenter().getWorld()).getHandle();
         return level.getRaidAt(blkPos);

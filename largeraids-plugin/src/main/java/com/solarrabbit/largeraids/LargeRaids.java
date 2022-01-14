@@ -19,6 +19,7 @@ import com.solarrabbit.largeraids.config.RaidConfig;
 import com.solarrabbit.largeraids.config.RewardsConfig;
 import com.solarrabbit.largeraids.config.trigger.TriggersConfig;
 import com.solarrabbit.largeraids.database.DatabaseAdapter;
+import com.solarrabbit.largeraids.raid.LargeRaid;
 import com.solarrabbit.largeraids.raid.RaidManager;
 import com.solarrabbit.largeraids.support.Placeholder;
 import com.solarrabbit.largeraids.trigger.DropInLavaTriggerListener;
@@ -74,6 +75,12 @@ public final class LargeRaids extends JavaPlugin {
         loadCommands();
         loadMessages();
         loadCustomConfigs();
+    }
+
+    @Override
+    public void onDisable() {
+        for (LargeRaid raid : raidManager.currentRaids)
+            raid.stopRaid();
     }
 
     public void log(String message, Level level) {

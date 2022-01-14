@@ -89,4 +89,9 @@ public class RaidWrapper implements AbstractRaidWrapper {
             return false;
         }
     }
+
+    @Override
+    public boolean isActive() {
+        return raid.isActive();
+    }
 }

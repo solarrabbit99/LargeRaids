@@ -33,4 +33,6 @@ public interface AbstractRaidWrapper {
     void removeFromRaid(AbstractRaiderWrapper raider, boolean flag);
 
     Set<UUID> getHeroesOfTheVillage();
+
+    boolean isActive();
 }

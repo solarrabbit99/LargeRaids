@@ -14,6 +14,7 @@ import com.solarrabbit.largeraids.nms.AbstractWorldServerWrapper;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.Raid;
 import org.bukkit.Server;
 import org.bukkit.World;
 import org.bukkit.entity.Raider;
@@ -55,6 +56,23 @@ public class VersionUtil {
                 return new com.solarrabbit.largeraids.v1_17.nms.CraftRaidWrapper(wrapper);
             case "v1_18_R1":
                 return new com.solarrabbit.largeraids.v1_18.nms.CraftRaidWrapper(wrapper);
+            default:
+                return null;
+        }
+    }
+
+    public static AbstractCraftRaidWrapper getCraftRaidWrapper(Raid raid) {
+        switch (getAPIVersion()) {
+            case "v1_14_R1":
+                return new com.solarrabbit.largeraids.v1_14.nms.CraftRaidWrapper(raid);
+            case "v1_15_R1":
+                return new com.solarrabbit.largeraids.v1_15.nms.CraftRaidWrapper(raid);
+            case "v1_16_R3":
+                return new com.solarrabbit.largeraids.v1_16.nms.CraftRaidWrapper(raid);
+            case "v1_17_R1":
+                return new com.solarrabbit.largeraids.v1_17.nms.CraftRaidWrapper(raid);
+            case "v1_18_R1":
+                return new com.solarrabbit.largeraids.v1_18.nms.CraftRaidWrapper(raid);
             default:
                 return null;
         }

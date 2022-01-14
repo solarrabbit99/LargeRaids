@@ -67,6 +67,7 @@ public class VillageCentresCommand implements CommandExecutor {
     private void hide() {
         if (isShowing)
             Bukkit.getScheduler().cancelTask(taskId);
+        isShowing = false;
     }
 
     private void add(Player player, String name) {

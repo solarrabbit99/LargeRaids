@@ -13,4 +13,6 @@ public abstract class AbstractCraftRaidWrapper {
         return this.raid;
     }
 
+    public abstract AbstractRaidWrapper getHandle();
+
 }
