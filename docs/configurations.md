@@ -180,6 +180,8 @@ placeholder:
 
 ```yml
 miscellaneous:
+  # Maximum number of ongoing large raids permitted at any point in time. Set to 0 for no limit.
+  max-raids: 0
   # Whether ringing of bell will outline every single raider in the raid, regardless of distance
   # from the bell. This will only work on players (not villagers) ringing the bell.
   bell-outline-raiders:
@@ -262,6 +264,7 @@ placeholder:
   not-in-range-string: Not In Range
 
 miscellaneous:
+  max-raids: 0
   bell-outline-raiders:
     normal-raid: false
     large-raid: false
