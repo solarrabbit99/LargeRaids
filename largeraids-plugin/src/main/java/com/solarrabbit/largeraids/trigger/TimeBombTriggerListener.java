@@ -5,7 +5,7 @@ import com.solarrabbit.largeraids.LargeRaids;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 
-public class TimeBombTriggerListener extends TriggerListener {
+public class TimeBombTriggerListener extends Trigger {
     private int tickTaskId;
 
     public TimeBombTriggerListener(LargeRaids plugin) {

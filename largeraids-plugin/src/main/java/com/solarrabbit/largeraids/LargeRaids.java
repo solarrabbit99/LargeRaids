@@ -24,7 +24,8 @@ import com.solarrabbit.largeraids.raid.RaidManager;
 import com.solarrabbit.largeraids.support.Placeholder;
 import com.solarrabbit.largeraids.trigger.DropInLavaTriggerListener;
 import com.solarrabbit.largeraids.trigger.TimeBombTriggerListener;
-import com.solarrabbit.largeraids.trigger.TriggerListener;
+import com.solarrabbit.largeraids.trigger.Trigger;
+import com.solarrabbit.largeraids.trigger.TriggerManager;
 import com.solarrabbit.largeraids.trigger.omen.VillageAbsorbOmenListener;
 import com.solarrabbit.largeraids.util.VersionUtil;
 import com.solarrabbit.largeraids.village.BellListener;
@@ -41,7 +42,7 @@ public final class LargeRaids extends JavaPlugin {
     private YamlConfiguration messages;
     private PluginLogger logger;
     private DatabaseAdapter db;
-    private Set<TriggerListener> registeredTriggerListeners;
+    private Set<Trigger> registeredTriggerListeners;
 
     private RaidConfig raidConfig;
     private RewardsConfig rewardsConfig;
@@ -50,6 +51,7 @@ public final class LargeRaids extends JavaPlugin {
 
     private Placeholder placeholder;
     private RaidManager raidManager;
+    private TriggerManager triggerManager;
     private VillageManager villageManager;
 
     @Override
@@ -68,8 +70,10 @@ public final class LargeRaids extends JavaPlugin {
 
         raidManager = new RaidManager(this);
         raidManager.init();
-        villageManager = new VillageManager();
         getServer().getPluginManager().registerEvents(raidManager, this);
+        triggerManager = new TriggerManager(this);
+        getServer().getPluginManager().registerEvents(triggerManager, this);
+        villageManager = new VillageManager();
         getServer().getPluginManager().registerEvents(new BellListener(this), this);
 
         loadCommands();
@@ -131,6 +135,10 @@ public final class LargeRaids extends JavaPlugin {
         return raidManager;
     }
 
+    public TriggerManager getTriggerManager() {
+        return triggerManager;
+    }
+
     public VillageManager getVillageManager() {
         return villageManager;
     }
@@ -157,7 +165,7 @@ public final class LargeRaids extends JavaPlugin {
 
     private void reloadTriggers() {
         if (registeredTriggerListeners != null) // Unregister
-            for (TriggerListener listener : registeredTriggerListeners)
+            for (Trigger listener : registeredTriggerListeners)
                 listener.unregisterListener();
         registeredTriggerListeners = new HashSet<>();
 
@@ -169,7 +177,7 @@ public final class LargeRaids extends JavaPlugin {
             registerTrigger(new TimeBombTriggerListener(this), false);
     }
 
-    private void registerTrigger(TriggerListener listener, boolean registerEvents) {
+    private void registerTrigger(Trigger listener, boolean registerEvents) {
         if (registerEvents)
             getServer().getPluginManager().registerEvents(listener, this);
         registeredTriggerListeners.add(listener);

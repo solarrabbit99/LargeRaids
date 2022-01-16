@@ -182,7 +182,7 @@ public class LargeRaid {
     /**
      * Returns the center of the raid.
      */
-    private Location getCenter() {
+    public Location getCenter() {
         return currentRaid == null ? startLoc : currentRaid.getLocation();
     }
 

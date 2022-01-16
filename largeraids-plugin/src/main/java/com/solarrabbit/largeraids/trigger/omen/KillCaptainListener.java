@@ -1,7 +1,7 @@
 package com.solarrabbit.largeraids.trigger.omen;
 
 import com.solarrabbit.largeraids.LargeRaids;
-import com.solarrabbit.largeraids.trigger.TriggerListener;
+import com.solarrabbit.largeraids.trigger.Trigger;
 import com.solarrabbit.largeraids.util.VersionUtil;
 
 import org.bukkit.entity.Player;
@@ -11,7 +11,7 @@ import org.bukkit.event.entity.EntityPotionEffectEvent.Cause;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-public class KillCaptainListener extends TriggerListener {
+public class KillCaptainListener extends Trigger {
     private static final int DEFAULT_EFFECT_DURATION = 100 * 60 * 20;
     private int prevAmplifier;
 

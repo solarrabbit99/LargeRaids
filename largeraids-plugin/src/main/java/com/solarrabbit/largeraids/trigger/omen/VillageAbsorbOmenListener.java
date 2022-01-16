@@ -5,7 +5,7 @@ import java.util.stream.Collectors;
 
 import com.solarrabbit.largeraids.LargeRaids;
 import com.solarrabbit.largeraids.raid.LargeRaid;
-import com.solarrabbit.largeraids.trigger.TriggerListener;
+import com.solarrabbit.largeraids.trigger.Trigger;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -17,7 +17,7 @@ import org.bukkit.event.raid.RaidTriggerEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-public class VillageAbsorbOmenListener extends TriggerListener {
+public class VillageAbsorbOmenListener extends Trigger {
     private final KillCaptainListener killCaptainListener;
 
     public VillageAbsorbOmenListener(LargeRaids plugin) {
@@ -54,7 +54,7 @@ public class VillageAbsorbOmenListener extends TriggerListener {
         PotionEffect effect = evt.getOldEffect();
         int absorbLevel = effect == null ? 0 : effect.getAmplifier() + 1;
         for (LargeRaid lr : affectedLargeRaids)
-            lr.absorbOmenLevel(absorbLevel);
+            plugin.getRaidManager().extendRaid(lr, absorbLevel);
     }
 
     @Override

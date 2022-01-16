@@ -16,7 +16,7 @@ import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 
-public class DropInLavaTriggerListener extends TriggerListener {
+public class DropInLavaTriggerListener extends Trigger {
 
     public DropInLavaTriggerListener(LargeRaids plugin) {
         super(plugin);

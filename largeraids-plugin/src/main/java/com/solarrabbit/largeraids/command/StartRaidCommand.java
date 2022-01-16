@@ -1,7 +1,7 @@
 package com.solarrabbit.largeraids.command;
 
 import com.solarrabbit.largeraids.LargeRaids;
-import com.solarrabbit.largeraids.trigger.TriggerListener;
+import com.solarrabbit.largeraids.trigger.Trigger;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -11,7 +11,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-public class StartRaidCommand extends TriggerListener implements CommandExecutor {
+public class StartRaidCommand extends Trigger implements CommandExecutor {
 
     public StartRaidCommand(LargeRaids plugin) {
         super(plugin);

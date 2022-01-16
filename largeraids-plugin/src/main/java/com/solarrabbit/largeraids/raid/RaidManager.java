@@ -5,6 +5,8 @@ import java.util.Optional;
 import java.util.Set;
 
 import com.solarrabbit.largeraids.LargeRaids;
+import com.solarrabbit.largeraids.event.LargeRaidExtendEvent;
+import com.solarrabbit.largeraids.event.LargeRaidTriggerEvent;
 import com.solarrabbit.largeraids.nms.AbstractBlockPositionWrapper;
 import com.solarrabbit.largeraids.nms.AbstractCraftRaidWrapper;
 import com.solarrabbit.largeraids.nms.AbstractCraftWorldWrapper;
@@ -63,7 +65,7 @@ public class RaidManager implements Listener {
     }
 
     @EventHandler
-    public void onSpawn(RaidSpawnWaveEvent evt) {
+    private void onSpawn(RaidSpawnWaveEvent evt) {
         getLargeRaid(evt.getRaid()).ifPresent(largeRaid -> {
             setIdle();
             largeRaid.spawnWave();
@@ -77,7 +79,7 @@ public class RaidManager implements Listener {
      * @param evt raid triggering event
      */
     @EventHandler
-    public void onNormalRaidTrigger(RaidTriggerEvent evt) {
+    private void onNormalRaidTrigger(RaidTriggerEvent evt) {
         if (evt.getRaid().getBadOmenLevel() != 0) // Raid is getting extended
             return;
         if (isIdle()) // LargeRaid triggering
@@ -87,7 +89,7 @@ public class RaidManager implements Listener {
     }
 
     @EventHandler
-    public void onFinish(RaidFinishEvent evt) {
+    private void onFinish(RaidFinishEvent evt) {
         Raid raid = evt.getRaid();
         getLargeRaid(raid).ifPresent(largeRaid -> {
             RaidStatus status = raid.getStatus();
@@ -99,12 +101,12 @@ public class RaidManager implements Listener {
     }
 
     @EventHandler
-    public void onRaidStop(RaidStopEvent evt) {
+    private void onRaidStop(RaidStopEvent evt) {
         getLargeRaid(evt.getRaid()).ifPresent(largeRaid -> currentRaids.remove(largeRaid));
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
-    public void onDamage(EntityDamageByEntityEvent evt) {
+    private void onDamage(EntityDamageByEntityEvent evt) {
         if (evt.isCancelled())
             return;
         Entity killed = evt.getEntity();
@@ -163,4 +165,43 @@ public class RaidManager implements Listener {
         return Optional.of(raid).filter(r -> !r.isEmpty()).map(VersionUtil::getCraftRaidWrapper)
                 .map(AbstractCraftRaidWrapper::getRaid);
     }
+
+    /**
+     * Creates a raid at a given location with the given omen level. This method
+     * will fail silently if there is already an ongoing raid in this vacinity.
+     *
+     * @param location  to trigger the raid
+     * @param omenLevel for the raid start with
+     */
+    public void createRaid(Location location, int omenLevel) {
+        Optional<LargeRaid> currentRaid = getLargeRaid(location);
+        if (currentRaid.isPresent())
+            return;
+        LargeRaid largeRaid = new LargeRaid(plugin.getRaidConfig(), plugin.getRewardsConfig(), location, omenLevel);
+        setIdle();
+        if (largeRaid.startRaid()) {
+            LargeRaidTriggerEvent evt = new LargeRaidTriggerEvent(largeRaid);
+            Bukkit.getPluginManager().callEvent(evt);
+            if (evt.isCancelled())
+                largeRaid.stopRaid();
+            else
+                currentRaids.add(largeRaid);
+        }
+        setActive();
+    }
+
+    /**
+     * Extends the given raid by absorbing the given omen level.
+     *
+     * @param raid      to absorb omen
+     * @param omenLevel levels to absorb
+     */
+    public void extendRaid(LargeRaid raid, int omenLevel) {
+        int oldLevel = raid.getBadOmenLevel();
+        raid.absorbOmenLevel(omenLevel);
+        int newLevel = raid.getBadOmenLevel();
+        if (newLevel != oldLevel)
+            Bukkit.getPluginManager().callEvent(new LargeRaidExtendEvent(raid, oldLevel, newLevel));
+    }
+
 }
