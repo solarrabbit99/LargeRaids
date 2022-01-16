@@ -59,7 +59,7 @@ public class LargeRaid {
      * @param location  location at which the large raid should be triggered
      * @param omenLevel the starting omen level of the large raid
      */
-    public LargeRaid(RaidConfig raidConfig, RewardsConfig rewardsConfig, Location location, int omenLevel) {
+    LargeRaid(RaidConfig raidConfig, RewardsConfig rewardsConfig, Location location, int omenLevel) {
         this.raidConfig = raidConfig;
         this.rewardsConfig = rewardsConfig;
         startLoc = location;
@@ -67,8 +67,8 @@ public class LargeRaid {
         currentWave = 1;
         playerKills = new HashMap<>();
         playerDamage = new HashMap<>();
-        totalWaves = Math.max(5, omenLevel);
-        this.omenLevel = omenLevel;
+        this.omenLevel = Math.min(this.maxTotalWaves, omenLevel);
+        totalWaves = Math.max(5, this.omenLevel);
     }
 
     /**
@@ -79,7 +79,7 @@ public class LargeRaid {
      *
      * @return {@code true} if a new raid starts successfully
      */
-    public boolean startRaid() {
+    boolean startRaid() {
         if (!getNMSRaidAtCenter().isEmpty()) // There is an ongoing raid
             return false;
 
@@ -107,7 +107,7 @@ public class LargeRaid {
      * method should always be called when {@link RaidManager} is idle, and
      * set back to active after calling the method.
      */
-    public void triggerNextWave() {
+    void triggerNextWave() {
         currentWave++;
         broadcastWave();
 
@@ -125,7 +125,7 @@ public class LargeRaid {
      * set
      * set back to active after calling the method.
      */
-    public void spawnWave() {
+    void spawnWave() {
         List<Raider> raiders = currentRaid.getRaiders();
         Location loc = getWaveSpawnLocation();
 
@@ -161,7 +161,7 @@ public class LargeRaid {
     /**
      * Announces victory with a sound and award heros with configured rewards.
      */
-    public void announceVictory() {
+    void announceVictory() {
         Sound sound = raidConfig.getSounds().getVictorySound();
         if (sound != null)
             playSoundToPlayersInRadius(sound);
@@ -173,7 +173,7 @@ public class LargeRaid {
     /**
      * Announces defeat with a sound.
      */
-    public void announceDefeat() {
+    void announceDefeat() {
         Sound sound = raidConfig.getSounds().getDefeatSound();
         if (sound != null)
             playSoundToPlayersInRadius(sound);
@@ -257,7 +257,7 @@ public class LargeRaid {
      *
      * @param level levels to absorb
      */
-    public void absorbOmenLevel(int level) {
+    void absorbOmenLevel(int level) {
         omenLevel = Math.min(this.maxTotalWaves, this.omenLevel + level);
         totalWaves = Math.max(5, omenLevel);
     }
@@ -295,11 +295,11 @@ public class LargeRaid {
         return this.currentRaid.getLocation().equals(raid.getLocation());
     }
 
-    public void incrementPlayerKill(Player player) {
+    void incrementPlayerKill(Player player) {
         playerKills.merge(player.getUniqueId(), 1, Integer::sum);
     }
 
-    public void incrementPlayerDamage(Player player, double damage) {
+    void incrementPlayerDamage(Player player, double damage) {
         playerDamage.merge(player.getUniqueId(), damage, Double::sum);
     }
 

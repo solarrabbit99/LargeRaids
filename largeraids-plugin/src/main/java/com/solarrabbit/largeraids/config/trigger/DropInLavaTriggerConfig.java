@@ -15,10 +15,12 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public class DropInLavaTriggerConfig implements TriggerConfig {
     private final boolean isEnabled;
+    private final int contributeOmenLevel;
     private final ItemStack item;
 
     DropInLavaTriggerConfig(ConfigurationSection config) {
         isEnabled = config.getBoolean("enabled");
+        contributeOmenLevel = config.getInt("contribute-omen-level");
 
         ConfigurationSection itemConf = config.getConfigurationSection("item");
         item = ItemCreator.getItemFromConfig(itemConf);
@@ -37,6 +39,10 @@ public class DropInLavaTriggerConfig implements TriggerConfig {
     @Override
     public boolean isEnabled() {
         return isEnabled;
+    }
+
+    public int getContributeOmenLevel() {
+        return contributeOmenLevel;
     }
 
     public ItemStack getItem() {

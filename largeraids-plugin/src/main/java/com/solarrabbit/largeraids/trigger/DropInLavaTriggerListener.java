@@ -1,10 +1,14 @@
 package com.solarrabbit.largeraids.trigger;
 
+import java.util.Optional;
 import java.util.UUID;
 
 import com.solarrabbit.largeraids.LargeRaids;
 import com.solarrabbit.largeraids.config.trigger.DropInLavaTriggerConfig;
+import com.solarrabbit.largeraids.raid.LargeRaid;
+
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Item;
@@ -39,13 +43,23 @@ public class DropInLavaTriggerListener extends Trigger {
         Item entity = (Item) evt.getEntity();
         if (!entity.getPersistentDataContainer().has(getNamespacedKey(), PersistentDataType.STRING))
             return;
-        if (evt.getCause() == DamageCause.LAVA) {
-            UUID uuid = UUID.fromString(
-                    entity.getPersistentDataContainer().get(getNamespacedKey(), PersistentDataType.STRING));
-            entity.remove();
-            Player player = Bukkit.getPlayer(uuid);
-            triggerRaid(player, player.getLocation());
-        }
+        if (evt.getCause() != DamageCause.LAVA)
+            return;
+
+        UUID uuid = UUID.fromString(
+                entity.getPersistentDataContainer().get(getNamespacedKey(), PersistentDataType.STRING));
+        entity.remove();
+        Player player = Bukkit.getPlayer(uuid);
+        Location location = entity.getLocation();
+        Optional<LargeRaid> currentRaid = plugin.getRaidManager().getLargeRaid(location);
+        int contributeLevel = plugin.getTriggerConfig().getDropInLavaConfig().getContributeOmenLevel();
+        if (!currentRaid.isPresent())
+            if (contributeLevel <= 0)
+                triggerRaid(player, location);
+            else
+                triggerRaid(player, location, contributeLevel);
+        else
+            plugin.getRaidManager().extendRaid(currentRaid.get(), contributeLevel);
     }
 
     @Override

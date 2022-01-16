@@ -47,6 +47,7 @@ trigger:
     max-level: 10
   drop-item-in-lava:
     enabled: false
+    contribute-omen-level: 0
     item:
       material: TOTEM_OF_UNDYING
       display-name: "&6Large Raid Summoner"
