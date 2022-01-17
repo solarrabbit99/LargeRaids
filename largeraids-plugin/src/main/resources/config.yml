@@ -70,6 +70,7 @@ placeholder:
   not-in-range-string: Not In Range
 
 miscellaneous:
+  silence-warnings: false
   max-raids: 0
   bell-outline-raiders:
     normal-raid: false

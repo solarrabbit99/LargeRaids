@@ -48,7 +48,7 @@ public class RaidManager implements Listener {
      * Idles the listener, mainly used to signify that any {@link RaidTriggerEvent}
      * fired after part of a {@link LargeRaid}.
      */
-    public void setIdle() {
+    private void setIdle() {
         isIdle = true;
     }
 
@@ -56,7 +56,7 @@ public class RaidManager implements Listener {
      * Re-activates the listener, mainly used to signify that any
      * {@link RaidTriggerEvent} fired after are vanilla.
      */
-    public void setActive() {
+    private void setActive() {
         isIdle = false;
     }
 

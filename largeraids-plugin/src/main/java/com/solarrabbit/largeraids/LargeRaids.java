@@ -33,6 +33,8 @@ import com.solarrabbit.largeraids.village.VillageManager;
 
 import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
+import org.bukkit.GameRule;
+import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -210,6 +212,22 @@ public final class LargeRaids extends JavaPlugin {
                 return;
             }
         }
+        if (!getConfig().getBoolean("miscellaneous.silence-warnings"))
+            for (World world : Bukkit.getWorlds())
+                for (int i = 0; i < totalWaves; i++) {
+                    final int wave = i;
+                    int totalRaiders = section.getKeys(false).stream().map(key -> section.getIntegerList(key).get(wave))
+                            .reduce(0, (x, y) -> x + y);
+                    if (totalRaiders > world.getGameRuleValue(GameRule.MAX_ENTITY_CRAMMING)) {
+                        log("Please note that you have " + totalRaiders + " raiders in wave " + (i + 1)
+                                + ", which may cause entity cramming in world \"" + world.getName() + "\".",
+                                Level.WARN);
+                        log("If it is intended, you may silence this warning by disabling `silence-warnings` in config.yml.",
+                                Level.WARN);
+                        break;
+                    }
+                }
+
     }
 
     private void verifyServerVersion() {

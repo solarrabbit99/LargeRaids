@@ -133,6 +133,9 @@ trigger:
   # village.
   drop-item-in-lava:
     enabled: false
+    # Number of levels that a single item contributes to the raid. Set the 0 for maximum
+    # omen level.
+    contribute-omen-level: 0
     # Note: The summoning item stated here will not lose its primary functionality. For
     # example, totems will still be consumed and revive the player holding it.
     item:
@@ -242,6 +245,7 @@ trigger:
     max-level: 10
   drop-item-in-lava:
     enabled: false
+    contribute-omen-level: 0
     item:
       material: TOTEM_OF_UNDYING
       display-name: "&6Large Raid Summoner"

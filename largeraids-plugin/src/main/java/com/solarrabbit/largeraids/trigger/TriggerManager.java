@@ -1,5 +1,7 @@
 package com.solarrabbit.largeraids.trigger;
 
+import java.util.Map.Entry;
+
 import javax.annotation.Nullable;
 
 import com.solarrabbit.largeraids.LargeRaids;
@@ -38,10 +40,9 @@ public class TriggerManager implements Listener {
     @Nullable
     private String getCenterName(Location location) {
         return plugin.getDatabaseAdapter().getCentres().entrySet().stream()
-                .filter(entry -> entry.getValue().getWorld() != null)
-                .filter(entry -> entry.getValue().getWorld().equals(location.getWorld()))
+                .filter(entry -> location.getWorld().equals(entry.getValue().getWorld()))
                 .filter(entry -> entry.getValue().distanceSquared(location) < Math.pow(64, 2))
-                .map(entry -> entry.getKey())
+                .map(Entry::getKey)
                 .findFirst().orElse(null);
     }
 }
