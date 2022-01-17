@@ -183,6 +183,9 @@ placeholder:
 
 ```yml
 miscellaneous:
+  # The plugin will warn if there will be entity cramming while spawning waves. Set to `true`
+  # to disable the warnings.
+  silence-warnings: false
   # Maximum number of ongoing large raids permitted at any point in time. Set to 0 for no limit.
   max-raids: 0
   # Whether ringing of bell will outline every single raider in the raid, regardless of distance
@@ -268,6 +271,7 @@ placeholder:
   not-in-range-string: Not In Range
 
 miscellaneous:
+  silence-warnings: false
   max-raids: 0
   bell-outline-raiders:
     normal-raid: false
