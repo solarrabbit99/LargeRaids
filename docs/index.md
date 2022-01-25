@@ -17,17 +17,27 @@ layout: home
 
 **LargeRaids** is a vanilla Spigot game experience enhancement plugin for [raids](https://minecraft.fandom.com/wiki/Raid), which are added to the game in the _Village & Pillage Update_. It expands the raid's mechanism to accommodate for the multiplayer environment with higher difficulty, higher bad omen levels, more raiders, more waves and higher rewards.
 
-## Server Requirements
+<center><h1 style="font-family: Luminari">Server Requirements</h1></center>
 
-- Version: 1.14.4, 1.15.2, 1.16.5, 1.17.1, 1.18.1
+The plugin is generally meant for game versions 1.14.x - 1.18.x. More specifically, the supported NMS versions are:
 
-The plugin may work for other versions under 1.14.x - 1.18.x, but no support will be given.
+- 1_14_R1 (1.14, 1.14.1, 1.14.2, 1.14.3, 1.14.4)
+- 1_15_R1 (1.15, 1.15.1, 1.15.2)
+- 1_16_R3 (1.16.4, 1.16.5)
+- 1_17_R1 (1.17, 1.17.1)
+- 1_18_R1 (1.18, 1.18.1)
 
-## Support
+You may also refer to the corresponding versions [here](https://www.spigotmc.org/wiki/spigot-nms-and-minecraft-versions-1-16/) to check if your server version is supported.
 
-Approach our [Discord server](https://discord.gg/YSv7pptDjE) for support. This can include bug reporting, suggestions and usages.
+<center><h1 style="font-family: Luminari">Support</h1></center>
 
-## Sponsors
+Approach our [Discord server](https://discord.gg/YSv7pptDjE) or [Github Issues](https://github.com/zhenghanlee/LargeRaids/issues) for support. This can include bug reporting, usages and suggestions. You are also welcome to put up your suggestions on our [Spigot Discussion page](https://www.spigotmc.org/threads/largeraids-1-14-x-1-18-x.521752/).
+
+<center><h1 style="font-family: Luminari">bStats</h1></center>
+
+[![](https://bstats.org/signatures/bukkit/LargeRaids.svg)](https://bstats.org/plugin/bukkit/LargeRaids/13910)
+
+<center><h1 style="font-family: Luminari">Sponsors</h1></center>
 
 [![StelleNode](https://cdn.discordapp.com/attachments/928421223958970369/928756914345631785/stellanode.gif)](https://stellanode.com/)
 

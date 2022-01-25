@@ -13,6 +13,10 @@
 
 - Version: 1.14.4, 1.15.2, 1.16.5, 1.17.1, 1.18.1
 
+## Statistics
+
+[![](https://bstats.org/signatures/bukkit/LargeRaids.svg)](https://bstats.org/plugin/bukkit/LargeRaids/13910)
+
 ## Installation
 
 If you wish to install the repository locally, you might want to first install the [remapped jars](https://www.spigotmc.org/threads/spigot-bungeecord-1-17-1-17-1.510208/#:~:text=In%20order%20to%20assist%20developers%20with%20the%20transition%20we%20have%20added%20an%20additional%20option%20to%20BuildTools%2C%20%2D%2Dremapped) for versions 1.17.1 and 1.18 via [BuildTools](https://hub.spigotmc.org/jenkins/job/BuildTools/). Afterwhich, follow these steps to ensure that the project builds correctly.
