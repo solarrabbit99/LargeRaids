@@ -20,6 +20,7 @@ import org.bukkit.Raid;
 import org.bukkit.Raid.RaidStatus;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Projectile;
 import org.bukkit.entity.Raider;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -29,6 +30,7 @@ import org.bukkit.event.raid.RaidFinishEvent;
 import org.bukkit.event.raid.RaidSpawnWaveEvent;
 import org.bukkit.event.raid.RaidStopEvent;
 import org.bukkit.event.raid.RaidTriggerEvent;
+import org.bukkit.projectiles.ProjectileSource;
 
 public class RaidManager implements Listener {
     public final Set<LargeRaid> currentRaids = new HashSet<>();
@@ -113,9 +115,25 @@ public class RaidManager implements Listener {
         if (!(killed instanceof Raider))
             return;
         Raider raider = (Raider) killed;
-        Player damager = raider.getKiller(); // #getKiller() returns last hurt by player
-        if (damager == null)
-            return;
+        Entity attacker = evt.getDamager();
+        Player damager;
+        switch (evt.getCause()) {
+            case ENTITY_ATTACK:
+            case ENTITY_SWEEP_ATTACK:
+                if (!(attacker instanceof Player))
+                    return;
+                damager = (Player) attacker;
+                break;
+            case PROJECTILE:
+                Projectile projectile = (Projectile) attacker;
+                ProjectileSource source = projectile.getShooter();
+                if (!(source instanceof Player))
+                    return;
+                damager = (Player) source;
+                break;
+            default:
+                return;
+        }
 
         AbstractRaiderWrapper wrapper = VersionUtil.getCraftRaiderWrapper(raider).getHandle();
         AbstractRaidWrapper nmsRaid = wrapper.getCurrentRaid();
