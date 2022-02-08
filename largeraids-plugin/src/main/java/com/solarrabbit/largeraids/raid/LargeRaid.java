@@ -112,7 +112,10 @@ public class LargeRaid {
         broadcastWave();
 
         getCurrentNMSRaid().stop();
-        setRaid(VersionUtil.getCraftRaidWrapper(createRaid(getCenter())).getRaid());
+        AbstractRaidWrapper raid = createRaid(getCenter());
+        if (raid.isEmpty()) // fail to create raid
+            return;
+        setRaid(VersionUtil.getCraftRaidWrapper(raid).getRaid());
 
         if (isLastWave())
             prepareLastWave();
@@ -373,7 +376,8 @@ public class LargeRaid {
      * Creates a raid with a fake player entity at the given location. The raid's
      * bad omen is set to 2 arbitrarily. This method should always be called when
      * {@link RaidManager} is idle, and set back to active after calling the
-     * method.
+     * method. This method may return empty wrapper if the raid is cancelled by
+     * third party.
      *
      * @param location to create the raid
      * @return wrapped NMS raid created
@@ -392,7 +396,8 @@ public class LargeRaid {
         AbstractBlockPositionWrapper blkPos = VersionUtil.getBlockPositionWrapper(location.getX(), location.getY(),
                 location.getZ());
         AbstractRaidWrapper raid = level.getRaidAt(blkPos);
-        raid.setBadOmenLevel(VANILLA_RAID_OMEN_LEVEL);
+        if (!raid.isEmpty())
+            raid.setBadOmenLevel(VANILLA_RAID_OMEN_LEVEL);
         return raid;
     }
 
