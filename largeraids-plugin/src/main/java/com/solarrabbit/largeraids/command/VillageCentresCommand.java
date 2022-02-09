@@ -16,6 +16,11 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import net.md_5.bungee.api.chat.ClickEvent;
+import net.md_5.bungee.api.chat.HoverEvent;
+import net.md_5.bungee.api.chat.TextComponent;
+import net.md_5.bungee.api.chat.hover.content.Text;
+
 public class VillageCentresCommand implements CommandExecutor {
     private final LargeRaids plugin;
     private boolean isShowing;
@@ -114,9 +119,20 @@ public class VillageCentresCommand implements CommandExecutor {
             sender.sendMessage(ChatColor.YELLOW + this.plugin.getMessage("village-centers.list.no-exist"));
             return;
         }
-        map.forEach((str, loc) -> {
-            sender.sendMessage(ChatColor.GREEN + str + " " + getLocString(loc));
-        });
+        map.forEach((str, loc) -> sender.spigot().sendMessage(getClickableComponent(str, loc)));
+    }
+
+    private TextComponent getClickableComponent(String name, Location loc) {
+        TextComponent text = new TextComponent(name + " " + getLocString(loc));
+        text.setColor(net.md_5.bungee.api.ChatColor.GREEN);
+        text.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text("Click to teleport")));
+        text.setClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, getTeleportCommand(loc)));
+        return text;
+    }
+
+    private String getTeleportCommand(Location loc) {
+        return String.join(" ", "/tp", "@s", String.valueOf(loc.getX()), String.valueOf(loc.getY()),
+                String.valueOf(loc.getZ()));
     }
 
     private String getLocString(Location loc) {
