@@ -36,14 +36,14 @@ Refer to the [Configuration Guide](configurations.html).
 
 ## FAQ
 
-### 1. I have Lands installed. Why ain't raids triggering?
+**1. I have Lands installed. Why ain't raids triggering?**
 
 Disable the `land.combat.block-raids` option in Lands' configurations to use LargeRaids, as it triggers raids with fake players.
 
-### 2. Why does the boss bar decrease in health as soon as the wave spawns?
+**2. Why does the boss bar decrease in health as soon as the wave spawns?**
 
 The spawned waves suffered entity cramming. The only way around this is to increase the entity cramming limit for that world.
 
-### 3. Why does my raid farm stop working?
+**3. Why does my raid farm stop working?**
 
 The plugin is designed to prevent farms. Waves will not spawn if the designated spawn location is out of the 96 block radius from the raid center.
