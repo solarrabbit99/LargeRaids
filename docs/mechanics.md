@@ -29,7 +29,7 @@ This mechanism aims to surprise unprepared players loitering around villages dur
 
 ![Raid FlowChart](./assets/images/raid-flowchart.png){: .image-center }
 
-Large raids mimic the behaviour of normal raids, sharing mostly similarities. Hence, it can be easily defeated yet again given enough preparation, altering of landscape or taking advantage of it, such as building raid grinders in the middle of oceans. Hence, an `artificial-only` configuration option is provided in the `config.yml`.
+Large raids mimic the behaviour of normal raids, sharing mostly similarities. Hence, it can be easily defeated yet again given enough preparation, altering of landscape or taking advantage of it. Hence, an `artificial-only` configuration option is provided in the `config.yml`.
 
 If `artificial-only` is enabled, then large raids can only be triggered around registered artificial village centers. As the game takes surrounding occupied village blocks/points of interest (POI) to determine a raid center, artificial village centers must be at least 128 blocks/8 chunks away from each other and other villager-claimed POIs (e.g. job block, bed, bell) to maximize the effective area for triggering large raids. As the bad omen triggering mechanism turn every raid into a large raid, no raids (normal/large) can be triggered in normal villages if `artificial-only` is enabled.
 
