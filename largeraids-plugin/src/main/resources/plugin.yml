@@ -1,6 +1,6 @@
 main: com.solarrabbit.largeraids.LargeRaids
 name: LargeRaids
-version: ${project.version}
+version: '${project.version}'
 author: SolarRabbit
 api-version: 1.14
 
@@ -26,8 +26,14 @@ commands:
     description: Managing artificial villages.
     usage: /<command> [add | remove | show | hide] [name]
     permission: largeraids.admin
+  lrglow:
+    description: Outline all raiders in the current raid.
+    permission: largeraids.glow
 
 permissions:
   largeraids.admin:
     description: Allow access to LargeRaids commands.
+    default: op
+  largeraids.glow:
+    description: Allow access to lrglow command.
     default: op

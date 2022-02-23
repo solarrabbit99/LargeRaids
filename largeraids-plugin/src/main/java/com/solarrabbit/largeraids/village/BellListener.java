@@ -1,34 +1,23 @@
 package com.solarrabbit.largeraids.village;
 
-import java.util.List;
 import java.util.Optional;
 
 import com.solarrabbit.largeraids.LargeRaids;
 import com.solarrabbit.largeraids.raid.LargeRaid;
 import com.solarrabbit.largeraids.raid.RaidManager;
+import com.solarrabbit.largeraids.raid.RaidersOutliner;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Raid;
-import org.bukkit.Sound;
 import org.bukkit.Statistic;
 import org.bukkit.block.Block;
-import org.bukkit.entity.Raider;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerStatisticIncrementEvent;
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
 
-public class BellListener implements Listener {
-    /** Default duration for glowing effect (in ticks). */
-    private static final int DEFAULT_GLOW_TICK = 60;
-    /** Offset from ringing of bell to application of effect (in ticks). */
-    private static final int OFFSET_TICK = 45;
-    /** Maximum distance from bell in which raiders would have been affected. */
-    private static final int INNER_RADIUS = 32;
+public class BellListener extends RaidersOutliner implements Listener {
     private final LargeRaids plugin;
     private final RaidManager manager;
     private Location lastBellLoc;
@@ -63,17 +52,14 @@ public class BellListener implements Listener {
     }
 
     private void outlineAllRaiders(Raid raid, Location source) {
-        List<Raider> raiders = raid.getRaiders();
-        if (raiders.isEmpty())
+        if (raid.getRaiders().isEmpty())
             return;
-        boolean anyClose = raiders.stream()
-                .anyMatch(raider -> raider.getLocation().distanceSquared(source) < Math.pow(INNER_RADIUS, 2));
-        if (!anyClose)
-            source.getWorld().playSound(source, Sound.BLOCK_BELL_RESONATE, 1, 1);
-        int confDuration = plugin.getMiscConfig().getBellOutlineDuration() * 20;
-        PotionEffect effect = new PotionEffect(PotionEffectType.GLOWING,
-                confDuration > 0 ? confDuration : DEFAULT_GLOW_TICK, 0);
-        Bukkit.getScheduler().runTaskLater(plugin, () -> raiders.forEach(raider -> raider.addPotionEffect(effect)),
-                OFFSET_TICK);
+        if (!anyRaidersInRange(raid, source))
+            resonateBell(source);
+        int duration = plugin.getMiscConfig().getBellOutlineDuration() * 20;
+        if (duration > 0)
+            outlineAllRaiders(raid, duration);
+        else
+            outlineAllRaiders(raid);
     }
 }
