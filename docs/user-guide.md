@@ -14,6 +14,7 @@ Refer to the [Configuration Guide](configurations.html).
 - `/lrcenters [add | remove | show | hide] [name]` - manage artificial villages
 - `/lrgive <player> [amount]` - give player summoning items
 - `/lrreload` - reload plugin configurations
+- `/lrglow` - outline all raiders in the current raid
 
 ## Placeholders
 
@@ -29,6 +30,7 @@ Refer to the [Configuration Guide](configurations.html).
 ## Permissions
 
 - `largeraids.admin` - user able to perform plugin commands
+- `largeraids.glow` - user able to perform `/lrglow` command
 
 ## Limitations
 
