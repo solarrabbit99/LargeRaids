@@ -159,6 +159,8 @@ public class LargeRaid {
      */
     public void stopRaid() {
         getCurrentNMSRaid().stop();
+        for (Raider raider : currentRaid.getRaiders())
+            raider.remove();
     }
 
     /**
