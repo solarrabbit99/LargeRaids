@@ -125,7 +125,6 @@ public class LargeRaid {
      * Spawns the raiders for the wave. This is a follow-up method of
      * {@link #triggerNextWave()}, and called to replace vanilla mobs spawns. This
      * method should always be called when {@link RaidManager} is idle, and
-     * set
      * set back to active after calling the method.
      */
     void spawnWave() {
@@ -152,6 +151,20 @@ public class LargeRaid {
             nmsRaid.removeFromRaid(VersionUtil.getCraftRaiderWrapper(raider).getHandle(), true);
             raider.remove();
         });
+    }
+
+    /**
+     * Last wave is not skippable, use {@link #stopRaid()} instead. This
+     * method should always be called when {@link RaidManager} is idle, and
+     * set back to active after calling the method.
+     */
+    public void skipWave() {
+        if (isLastWave())
+            return;
+        else if (!isLoading())
+            for (Raider raider : currentRaid.getRaiders())
+                raider.remove();
+        triggerNextWave();
     }
 
     /**

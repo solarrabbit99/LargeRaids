@@ -10,6 +10,7 @@ Refer to the [Configuration Guide](configurations.html).
 ## Commands
 
 - `/lrstart [player | center] [name]` - start a large raid at player location or given center
+- `/lrskip` - skip the current wave if the large raid isn't in its last wave
 - `/lrstop [player]` - stop a large raid in the vicinity (or the player's vicinity)
 - `/lrcenters [add | remove | show | hide] [name]` - manage artificial villages
 - `/lrgive <player> [amount]` - give player summoning items

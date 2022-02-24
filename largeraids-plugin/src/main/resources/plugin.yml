@@ -14,6 +14,9 @@ commands:
     description: Start a large raid at player location or given center.
     usage: /<command> [player | center] [name]
     permission: largeraids.admin
+  lrskip:
+    description: Skip the current wave.
+    permission: largeraids.admin
   lrstop:
     description: Stop a large raid.
     usage: /<command> [player]
