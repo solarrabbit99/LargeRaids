@@ -1,5 +1,6 @@
 package com.solarrabbit.largeraids.raid;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.ConcurrentModificationException;
 import java.util.HashMap;
@@ -41,6 +42,11 @@ import org.bukkit.potion.PotionEffectType;
 public class LargeRaid {
     private static final int RADIUS = 96;
     private static final int VANILLA_RAID_OMEN_LEVEL = 2;
+    /**
+     * Raiders will be invulnerable for 1 second to avoid damage from entity
+     * cramming.
+     */
+    private static final int INVULNERABLE_TICKS = 20;
     private final RaidConfig raidConfig;
     private final RewardsConfig rewardsConfig;
     private final int maxTotalWaves;
@@ -142,10 +148,17 @@ public class LargeRaid {
 
         AbstractRaidWrapper nmsRaid = getCurrentNMSRaid();
 
+        List<Raider> newRaiders = new ArrayList<>();
         for (EventRaider raider : raidConfig.getRaiders().getWaveMobs(this.currentWave)) {
             Raider entity = raider.spawn(loc);
             nmsRaid.joinRaid(2, VersionUtil.getCraftRaiderWrapper(entity).getHandle(), null, true);
+            entity.setInvulnerable(true);
+            newRaiders.add(entity);
         }
+        Bukkit.getScheduler().runTaskLater(JavaPlugin.getPlugin(LargeRaids.class), () -> {
+            for (Raider raider : newRaiders)
+                raider.setInvulnerable(false);
+        }, INVULNERABLE_TICKS);
 
         raiders.forEach(raider -> {
             nmsRaid.removeFromRaid(VersionUtil.getCraftRaiderWrapper(raider).getHandle(), true);
