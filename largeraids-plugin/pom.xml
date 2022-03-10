@@ -66,7 +66,7 @@
 		</dependency>
 		<dependency>
 			<groupId>com.solarrabbit</groupId>
-			<artifactId>largeraids-1_18</artifactId>
+			<artifactId>largeraids-1_18_R1</artifactId>
 			<version>${revision}</version>
 		</dependency>
 	</dependencies>

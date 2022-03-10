@@ -1,4 +1,4 @@
-package com.solarrabbit.largeraids.v1_18.nms;
+package com.solarrabbit.largeraids.v1_18_R1.nms;
 
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;

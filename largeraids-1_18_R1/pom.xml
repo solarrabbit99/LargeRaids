@@ -5,7 +5,7 @@
 		<artifactId>largeraids</artifactId>
 		<version>${revision}</version>
 	</parent>
-	<artifactId>largeraids-1_18</artifactId>
+	<artifactId>largeraids-1_18_R1</artifactId>
 
 	<dependencies>
 		<dependency>

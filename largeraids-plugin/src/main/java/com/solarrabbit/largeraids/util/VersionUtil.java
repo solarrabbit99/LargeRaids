@@ -38,7 +38,7 @@ public class VersionUtil {
             case "v1_17_R1":
                 return new com.solarrabbit.largeraids.v1_17.nms.BlockPositionWrapper(x, y, z);
             case "v1_18_R1":
-                return new com.solarrabbit.largeraids.v1_18.nms.BlockPositionWrapper(x, y, z);
+                return new com.solarrabbit.largeraids.v1_18_R1.nms.BlockPositionWrapper(x, y, z);
             default:
                 return null;
         }
@@ -55,7 +55,7 @@ public class VersionUtil {
             case "v1_17_R1":
                 return new com.solarrabbit.largeraids.v1_17.nms.CraftRaidWrapper(wrapper);
             case "v1_18_R1":
-                return new com.solarrabbit.largeraids.v1_18.nms.CraftRaidWrapper(wrapper);
+                return new com.solarrabbit.largeraids.v1_18_R1.nms.CraftRaidWrapper(wrapper);
             default:
                 return null;
         }
@@ -72,7 +72,7 @@ public class VersionUtil {
             case "v1_17_R1":
                 return new com.solarrabbit.largeraids.v1_17.nms.CraftRaidWrapper(raid);
             case "v1_18_R1":
-                return new com.solarrabbit.largeraids.v1_18.nms.CraftRaidWrapper(raid);
+                return new com.solarrabbit.largeraids.v1_18_R1.nms.CraftRaidWrapper(raid);
             default:
                 return null;
         }
@@ -89,7 +89,7 @@ public class VersionUtil {
             case "v1_17_R1":
                 return new com.solarrabbit.largeraids.v1_17.nms.CraftRaiderWrapper(raider);
             case "v1_18_R1":
-                return new com.solarrabbit.largeraids.v1_18.nms.CraftRaiderWrapper(raider);
+                return new com.solarrabbit.largeraids.v1_18_R1.nms.CraftRaiderWrapper(raider);
             default:
                 return null;
         }
@@ -106,7 +106,7 @@ public class VersionUtil {
             case "v1_17_R1":
                 return new com.solarrabbit.largeraids.v1_17.nms.CraftServerWrapper(server);
             case "v1_18_R1":
-                return new com.solarrabbit.largeraids.v1_18.nms.CraftServerWrapper(server);
+                return new com.solarrabbit.largeraids.v1_18_R1.nms.CraftServerWrapper(server);
             default:
                 return null;
         }
@@ -123,7 +123,7 @@ public class VersionUtil {
             case "v1_17_R1":
                 return new com.solarrabbit.largeraids.v1_17.nms.CraftWorldWrapper(world);
             case "v1_18_R1":
-                return new com.solarrabbit.largeraids.v1_18.nms.CraftWorldWrapper(world);
+                return new com.solarrabbit.largeraids.v1_18_R1.nms.CraftWorldWrapper(world);
             default:
                 return null;
         }
@@ -142,7 +142,7 @@ public class VersionUtil {
             case "v1_17_R1":
                 return new com.solarrabbit.largeraids.v1_17.nms.PlayerEntityWrapper(server, world, profile);
             case "v1_18_R1":
-                return new com.solarrabbit.largeraids.v1_18.nms.PlayerEntityWrapper(server, world, profile);
+                return new com.solarrabbit.largeraids.v1_18_R1.nms.PlayerEntityWrapper(server, world, profile);
             default:
                 return null;
         }
@@ -159,7 +159,7 @@ public class VersionUtil {
             case "v1_17_R1":
                 return com.solarrabbit.largeraids.v1_17.nms.PoiTypeWrapper.MASON;
             case "v1_18_R1":
-                return com.solarrabbit.largeraids.v1_18.nms.PoiTypeWrapper.MASON;
+                return com.solarrabbit.largeraids.v1_18_R1.nms.PoiTypeWrapper.MASON;
             default:
                 return null;
         }

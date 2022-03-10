@@ -58,6 +58,8 @@ public final class LargeRaids extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        logger = new PluginLogger();
+
         verifyServerVersion();
         fetchSpigotUpdates();
 
@@ -66,7 +68,6 @@ public final class LargeRaids extends JavaPlugin {
         new Metrics(this, pluginId);
 
         saveDefaultConfig();
-        logger = new PluginLogger();
         db = new DatabaseAdapter(this);
         db.load();
 
