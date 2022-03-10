@@ -23,6 +23,7 @@ import com.solarrabbit.largeraids.nms.AbstractRaidWrapper;
 import com.solarrabbit.largeraids.nms.AbstractRaidsWrapper;
 import com.solarrabbit.largeraids.nms.AbstractWorldServerWrapper;
 import com.solarrabbit.largeraids.raid.mob.EventRaider;
+import com.solarrabbit.largeraids.raid.mob.EventVanillaRaiderRider;
 import com.solarrabbit.largeraids.util.VersionUtil;
 
 import org.bukkit.Bukkit;
@@ -154,6 +155,12 @@ public class LargeRaid {
             nmsRaid.joinRaid(2, VersionUtil.getCraftRaiderWrapper(entity).getHandle(), null, true);
             entity.setInvulnerable(true);
             newRaiders.add(entity);
+            if (raider instanceof EventVanillaRaiderRider) {
+                Raider rider = ((EventVanillaRaiderRider) raider).getRider();
+                nmsRaid.joinRaid(2, VersionUtil.getCraftRaiderWrapper(rider).getHandle(), null, true);
+                rider.setInvulnerable(true);
+                newRaiders.add(rider);
+            }
         }
         Bukkit.getScheduler().runTaskLater(JavaPlugin.getPlugin(LargeRaids.class), () -> {
             for (Raider raider : newRaiders)

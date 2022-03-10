@@ -9,6 +9,8 @@ import java.util.Map.Entry;
 import com.solarrabbit.largeraids.raid.mob.EventMythicRaider;
 import com.solarrabbit.largeraids.raid.mob.EventRaider;
 import com.solarrabbit.largeraids.raid.mob.EventVanillaRaider;
+import com.solarrabbit.largeraids.raid.mob.EventVanillaRaiderRider;
+
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.EntityType;
@@ -51,6 +53,10 @@ public class RaiderConfig {
             EventVanillaRaider vanillaRaider = new EventVanillaRaider(type);
             List<Integer> list = stringMappings.remove(type.name().toLowerCase());
             mobsMap.put(vanillaRaider, list);
+            // Counterparts raiders riding ravagers
+            EventVanillaRaiderRider raiderRider = new EventVanillaRaiderRider(type);
+            List<Integer> riderList = stringMappings.remove(type.name().toLowerCase() + "rider");
+            mobsMap.put(raiderRider, riderList);
         }
     }
 
