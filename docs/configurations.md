@@ -114,12 +114,13 @@ rewards:
         2:
           type: DURABILITY
           level: 1
-  # Leave this section blank to disable the feature. The plugin provides `<player>` as a
-  # placeholder for the console to execute a command with the target player's name. Note
-  # that every command listed here will be executed once per player.
+  # Leave this section blank to disable the feature. The plugin provides `<player>` and
+  # `<omen>` as placeholders for the console to execute a command with the target player's
+  # name and raid's omen level. Note that every command listed here will be executed once
+  # per player.
   commands:
     # - lrgive <player> 1
-    # - give <player> stick
+    # - give <player> stick <omen>
 ```
 
 ## Trigger Mechanism
@@ -250,6 +251,7 @@ rewards:
         - "&5Thank you for saving the village!"
   commands:
     # - lrgive <player> 1
+    # - give <player> stick <omen>
 
 trigger:
   omen:

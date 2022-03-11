@@ -376,7 +376,8 @@ public class LargeRaid {
                 .forEach((i, item) -> player.getWorld().dropItem(player.getLocation(), item));
 
         for (String command : rewardsConfig.getCommands())
-            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command.replace("<player>", player.getName()));
+            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command.replace("<player>", player.getName())
+                    .replace("<omen>", String.valueOf(getBadOmenLevel())));
     }
 
     private void setRaid(Raid raid) {

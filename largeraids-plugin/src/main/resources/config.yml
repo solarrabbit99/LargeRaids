@@ -45,7 +45,7 @@ rewards:
         - "&5Thank you for saving the village!"
   commands:
     # - lrgive <player> 1
-    # - give <player> stick
+    # - give <player> stick <omen>
 
 trigger:
   omen:
