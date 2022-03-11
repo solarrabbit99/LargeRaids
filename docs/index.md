@@ -26,6 +26,7 @@ The plugin is generally meant for game versions 1.14.x - 1.18.x. More specifical
 - 1_16_R3 (1.16.4, 1.16.5)
 - 1_17_R1 (1.17, 1.17.1)
 - 1_18_R1 (1.18, 1.18.1)
+- 1_18_R2 (1.18.2)
 
 You may also refer to the corresponding versions [here](https://www.spigotmc.org/wiki/spigot-nms-and-minecraft-versions-1-16/) to check if your server version is supported.
 

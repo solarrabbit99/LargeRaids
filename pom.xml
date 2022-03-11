@@ -7,11 +7,12 @@
 	<modules>
 		<module>largeraids-plugin</module>
 		<module>largeraids-api</module>
-		<module>largeraids-1_18_R1</module>
-		<module>largeraids-1_17</module>
-		<module>largeraids-1_16</module>
-		<module>largeraids-1_15</module>
 		<module>largeraids-1_14</module>
+		<module>largeraids-1_15</module>
+		<module>largeraids-1_16</module>
+		<module>largeraids-1_17</module>
+		<module>largeraids-1_18_R1</module>
+		<module>largeraids-1_18_R2</module>
 	</modules>
 
 	<properties>

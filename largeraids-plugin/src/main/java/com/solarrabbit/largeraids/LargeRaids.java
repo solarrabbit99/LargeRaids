@@ -60,7 +60,10 @@ public final class LargeRaids extends JavaPlugin {
     public void onEnable() {
         logger = new PluginLogger();
 
-        verifyServerVersion();
+        if (!VersionUtil.isSupported()) {
+            log("Server implementation version not supported!", Level.FAIL);
+            return;
+        }
         fetchSpigotUpdates();
 
         // Initialize bstats
@@ -86,8 +89,9 @@ public final class LargeRaids extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        for (LargeRaid raid : raidManager.currentRaids)
-            raid.stopRaid();
+        if (raidManager != null)
+            for (LargeRaid raid : raidManager.currentRaids)
+                raid.stopRaid();
     }
 
     public void log(String message, Level level) {
@@ -215,11 +219,6 @@ public final class LargeRaids extends JavaPlugin {
                 return;
             }
         }
-    }
-
-    private void verifyServerVersion() {
-        if (!VersionUtil.isSupported())
-            log("Server implementation version not supported!", Level.FAIL);
     }
 
     private void fetchSpigotUpdates() {

@@ -69,6 +69,11 @@
 			<artifactId>largeraids-1_18_R1</artifactId>
 			<version>${revision}</version>
 		</dependency>
+		<dependency>
+			<groupId>com.solarrabbit</groupId>
+			<artifactId>largeraids-1_18_R2</artifactId>
+			<version>${revision}</version>
+		</dependency>
 	</dependencies>
 
 	<build>
