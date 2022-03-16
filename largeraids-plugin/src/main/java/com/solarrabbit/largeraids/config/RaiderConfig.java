@@ -52,11 +52,13 @@ public class RaiderConfig {
         for (EntityType type : DEFAULT_RAIDER_TYPES) {
             EventVanillaRaider vanillaRaider = new EventVanillaRaider(type);
             List<Integer> list = stringMappings.remove(type.name().toLowerCase());
-            mobsMap.put(vanillaRaider, list);
+            if (list != null)
+                mobsMap.put(vanillaRaider, list);
             // Counterparts raiders riding ravagers
             EventVanillaRaiderRider raiderRider = new EventVanillaRaiderRider(type);
             List<Integer> riderList = stringMappings.remove(type.name().toLowerCase() + "rider");
-            mobsMap.put(raiderRider, riderList);
+            if (riderList != null)
+                mobsMap.put(raiderRider, riderList);
         }
     }
 
