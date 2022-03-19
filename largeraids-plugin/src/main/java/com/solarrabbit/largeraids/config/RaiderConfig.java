@@ -14,9 +14,9 @@ import com.solarrabbit.largeraids.raid.mob.EventVanillaRaiderRider;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.EntityType;
-import io.lumine.xikage.mythicmobs.MythicMobs;
-import io.lumine.xikage.mythicmobs.mobs.MobManager;
-import io.lumine.xikage.mythicmobs.mobs.MythicMob;
+
+import io.lumine.mythic.api.MythicProvider;
+import io.lumine.mythic.api.mobs.MobManager;
 
 public class RaiderConfig {
     private static final EntityType[] DEFAULT_RAIDER_TYPES = new EntityType[] { EntityType.PILLAGER,
@@ -63,13 +63,10 @@ public class RaiderConfig {
     }
 
     private void loadMythicRaiders(Map<String, List<Integer>> stringMappings) {
-        MobManager manager = MythicMobs.inst().getMobManager();
-        for (Entry<String, List<Integer>> entry : stringMappings.entrySet()) {
-            MythicMob mob = manager.getMythicMob(entry.getKey());
-            if (mob != null) {
-                mobsMap.put(new EventMythicRaider(mob), entry.getValue());
-            }
-        }
+        MobManager manager = MythicProvider.get().getMobManager();
+        for (Entry<String, List<Integer>> entry : stringMappings.entrySet())
+            manager.getMythicMob(entry.getKey())
+                    .ifPresent(mob -> mobsMap.put(new EventMythicRaider(mob), entry.getValue()));
     }
 
     private Map<String, List<Integer>> getStringMappings() {
