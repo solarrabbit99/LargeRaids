@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.Map.Entry;
+
+import com.solarrabbit.largeraids.raid.mob.EventFireworkPillager;
 import com.solarrabbit.largeraids.raid.mob.EventMythicRaider;
 import com.solarrabbit.largeraids.raid.mob.EventRaider;
 import com.solarrabbit.largeraids.raid.mob.EventVanillaRaider;
@@ -44,6 +46,7 @@ public class RaiderConfig {
     private void init() {
         Map<String, List<Integer>> stringMappings = getStringMappings();
         loadVanillaRaiders(stringMappings);
+        loadCustomRaiders(stringMappings);
         if (Bukkit.getPluginManager().getPlugin("MythicMobs") != null)
             loadMythicRaiders(stringMappings);
     }
@@ -60,6 +63,13 @@ public class RaiderConfig {
             if (riderList != null)
                 mobsMap.put(raiderRider, riderList);
         }
+    }
+
+    private void loadCustomRaiders(Map<String, List<Integer>> stringMappings) {
+        EventFireworkPillager fireworkPillager = new EventFireworkPillager();
+        List<Integer> list = stringMappings.remove("fireworkpillager");
+        if (list != null)
+            mobsMap.put(fireworkPillager, list);
     }
 
     private void loadMythicRaiders(Map<String, List<Integer>> stringMappings) {
