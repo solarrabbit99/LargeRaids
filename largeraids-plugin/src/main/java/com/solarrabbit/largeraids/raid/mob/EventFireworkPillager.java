@@ -13,10 +13,14 @@ import org.bukkit.attribute.Attribute;
 import org.bukkit.block.banner.Pattern;
 import org.bukkit.block.banner.PatternType;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Firework;
 import org.bukkit.entity.Pillager;
+import org.bukkit.entity.Raider;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityShootBowEvent;
+import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.inventory.EntityEquipment;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BannerMeta;
@@ -38,7 +42,7 @@ public class EventFireworkPillager implements EventRaider, Listener {
         equipment.setItemInOffHand(getDefaultFirework());
         equipment.setHelmet(getDefaultBanner());
         PersistentDataContainer pdc = entity.getPersistentDataContainer();
-        pdc.set(getNamespacedKey(), PersistentDataType.BYTE, (byte) 0);
+        pdc.set(getPillagerNamespacedKey(), PersistentDataType.BYTE, (byte) 0);
 
         return entity;
     }
@@ -48,8 +52,24 @@ public class EventFireworkPillager implements EventRaider, Listener {
         if (evt.getEntityType() != EntityType.PILLAGER)
             return;
         Pillager pillager = (Pillager) evt.getEntity();
-        if (isFireworkPillager(pillager))
+        if (isFireworkPillager(pillager)) {
             pillager.getEquipment().setItemInOffHand(getDefaultFirework());
+            evt.getProjectile().getPersistentDataContainer().set(getFireworkNamespacedKey(), PersistentDataType.BYTE,
+                    (byte) 0);
+        }
+    }
+
+    @EventHandler
+    private void onDamageRaider(EntityDamageByEntityEvent evt) {
+        if (evt.getCause() != DamageCause.ENTITY_EXPLOSION)
+            return;
+        if (evt.getDamager().getType() != EntityType.FIREWORK)
+            return;
+        if (!(evt.getEntity() instanceof Raider))
+            return;
+        Firework firework = (Firework) evt.getDamager();
+        if (isPillagerFirework(firework))
+            evt.setCancelled(true);
     }
 
     private ItemStack getDefaultFirework() {
@@ -76,10 +96,19 @@ public class EventFireworkPillager implements EventRaider, Listener {
 
     private boolean isFireworkPillager(Pillager pillager) {
         PersistentDataContainer pdc = pillager.getPersistentDataContainer();
-        return pdc.has(getNamespacedKey(), PersistentDataType.BYTE);
+        return pdc.has(getPillagerNamespacedKey(), PersistentDataType.BYTE);
     }
 
-    private NamespacedKey getNamespacedKey() {
+    private boolean isPillagerFirework(Firework firework) {
+        PersistentDataContainer pdc = firework.getPersistentDataContainer();
+        return pdc.has(getFireworkNamespacedKey(), PersistentDataType.BYTE);
+    }
+
+    private NamespacedKey getPillagerNamespacedKey() {
         return new NamespacedKey(JavaPlugin.getPlugin(LargeRaids.class), "firework_pillager");
+    }
+
+    private NamespacedKey getFireworkNamespacedKey() {
+        return new NamespacedKey(JavaPlugin.getPlugin(LargeRaids.class), "pillager_firework");
     }
 }
