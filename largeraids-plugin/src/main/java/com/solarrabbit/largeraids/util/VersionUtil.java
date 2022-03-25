@@ -5,6 +5,7 @@ import com.solarrabbit.largeraids.nms.AbstractBlockPositionWrapper;
 import com.solarrabbit.largeraids.nms.AbstractCraftRaidWrapper;
 import com.solarrabbit.largeraids.nms.AbstractCraftRaiderWrapper;
 import com.solarrabbit.largeraids.nms.AbstractCraftServerWrapper;
+import com.solarrabbit.largeraids.nms.AbstractCraftVexWrapper;
 import com.solarrabbit.largeraids.nms.AbstractCraftWorldWrapper;
 import com.solarrabbit.largeraids.nms.AbstractMinecraftServerWrapper;
 import com.solarrabbit.largeraids.nms.AbstractPlayerEntityWrapper;
@@ -18,6 +19,7 @@ import org.bukkit.Raid;
 import org.bukkit.Server;
 import org.bukkit.World;
 import org.bukkit.entity.Raider;
+import org.bukkit.entity.Vex;
 
 public class VersionUtil {
     private static final String[] VERSIONS = new String[] { "v1_14_R1", "v1_15_R1", "v1_16_R3", "v1_17_R1",
@@ -176,6 +178,25 @@ public class VersionUtil {
                 return com.solarrabbit.largeraids.v1_18_R1.nms.PoiTypeWrapper.MASON;
             case "v1_18_R2":
                 return com.solarrabbit.largeraids.v1_18_R2.nms.PoiTypeWrapper.MASON;
+            default:
+                return null;
+        }
+    }
+
+    public static AbstractCraftVexWrapper getCraftVexWrapper(Vex vex) {
+        switch (getAPIVersion()) {
+            case "v1_14_R1":
+                return new com.solarrabbit.largeraids.v1_14.nms.CraftVexWrapper(vex);
+            case "v1_15_R1":
+                return new com.solarrabbit.largeraids.v1_15.nms.CraftVexWrapper(vex);
+            case "v1_16_R3":
+                return new com.solarrabbit.largeraids.v1_16.nms.CraftVexWrapper(vex);
+            case "v1_17_R1":
+                return new com.solarrabbit.largeraids.v1_17.nms.CraftVexWrapper(vex);
+            case "v1_18_R1":
+                return new com.solarrabbit.largeraids.v1_18_R1.nms.CraftVexWrapper(vex);
+            case "v1_18_R2":
+                return new com.solarrabbit.largeraids.v1_18_R2.nms.CraftVexWrapper(vex);
             default:
                 return null;
         }

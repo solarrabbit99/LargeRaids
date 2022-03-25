@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Map.Entry;
 
+import com.solarrabbit.largeraids.raid.mob.EventBomber;
 import com.solarrabbit.largeraids.raid.mob.EventFireworkPillager;
 import com.solarrabbit.largeraids.raid.mob.EventMythicRaider;
 import com.solarrabbit.largeraids.raid.mob.EventRaider;
@@ -70,6 +71,10 @@ public class RaiderConfig {
         List<Integer> list = stringMappings.remove("fireworkpillager");
         if (list != null)
             mobsMap.put(fireworkPillager, list);
+        EventBomber bomber = new EventBomber();
+        List<Integer> bomberList = stringMappings.remove("bomber");
+        if (list != null)
+            mobsMap.put(bomber, bomberList);
     }
 
     private void loadMythicRaiders(Map<String, List<Integer>> stringMappings) {
