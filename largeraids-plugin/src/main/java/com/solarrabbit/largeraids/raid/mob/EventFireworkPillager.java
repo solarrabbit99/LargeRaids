@@ -77,7 +77,7 @@ public class EventFireworkPillager implements EventRaider, Listener {
         FireworkMeta meta = (FireworkMeta) firework.getItemMeta();
         FireworkEffect effect = FireworkEffect.builder().with(Type.BALL_LARGE)
                 .withColor(Color.AQUA, Color.ORANGE, Color.FUCHSIA).flicker(true).build();
-        meta.addEffects(effect, effect, effect, effect, effect, effect, effect);
+        meta.addEffects(effect, effect, effect, effect, effect);
         firework.setItemMeta(meta);
         return firework;
     }
