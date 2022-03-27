@@ -2,6 +2,7 @@ package com.solarrabbit.largeraids.raid.mob;
 
 import com.solarrabbit.largeraids.LargeRaids;
 
+import org.bukkit.ChatColor;
 import org.bukkit.Color;
 import org.bukkit.DyeColor;
 import org.bukkit.FireworkEffect;
@@ -22,6 +23,7 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityShootBowEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.inventory.EntityEquipment;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BannerMeta;
 import org.bukkit.inventory.meta.FireworkMeta;
@@ -35,15 +37,15 @@ public class EventFireworkPillager implements EventRaider, Listener {
     @Override
     public Pillager spawn(Location location) {
         Pillager entity = (Pillager) location.getWorld().spawnEntity(location, EntityType.PILLAGER);
-
         entity.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(DEFAULT_MAX_HEALTH);
         entity.setHealth(DEFAULT_MAX_HEALTH);
         EntityEquipment equipment = entity.getEquipment();
         equipment.setItemInOffHand(getDefaultFirework());
         equipment.setHelmet(getDefaultBanner());
+        equipment.setHelmetDropChance(1.0f);
         PersistentDataContainer pdc = entity.getPersistentDataContainer();
         pdc.set(getPillagerNamespacedKey(), PersistentDataType.BYTE, (byte) 0);
-
+        entity.setCustomName("Firework Pillager");
         return entity;
     }
 
@@ -90,6 +92,9 @@ public class EventFireworkPillager implements EventRaider, Listener {
         meta.addPattern(new Pattern(DyeColor.RED, PatternType.STRIPE_SMALL));
         meta.addPattern(new Pattern(DyeColor.RED, PatternType.RHOMBUS_MIDDLE));
         meta.addPattern(new Pattern(DyeColor.YELLOW, PatternType.FLOWER));
+        meta.addPattern(new Pattern(DyeColor.BLACK, PatternType.BORDER));
+        meta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
+        meta.setDisplayName(ChatColor.GOLD.toString() + ChatColor.ITALIC + "Firework Pillager Banner");
         banner.setItemMeta(meta);
         return banner;
     }

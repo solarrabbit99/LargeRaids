@@ -3,6 +3,7 @@ package com.solarrabbit.largeraids.raid.mob;
 import com.solarrabbit.largeraids.LargeRaids;
 import com.solarrabbit.largeraids.util.VersionUtil;
 
+import org.bukkit.ChatColor;
 import org.bukkit.DyeColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -23,6 +24,7 @@ import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.entity.EntitySpawnEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.inventory.EntityEquipment;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BannerMeta;
 import org.bukkit.persistence.PersistentDataContainer;
@@ -39,7 +41,9 @@ public class EventBomber implements EventRaider, Listener {
         Spellcaster evoker = (Spellcaster) location.getWorld().spawnEntity(location, EntityType.EVOKER);
         EntityEquipment equipment = evoker.getEquipment();
         equipment.setHelmet(getDefaultBanner());
+        equipment.setHelmetDropChance(1.0f);
         evoker.getPersistentDataContainer().set(getBomberNamespacedKey(), PersistentDataType.BYTE, (byte) 0);
+        evoker.setCustomName("Bomber");
         return evoker;
     }
 
@@ -79,6 +83,7 @@ public class EventBomber implements EventRaider, Listener {
         if (isBomber((Spellcaster) owner)) {
             vex.getPersistentDataContainer().set(getVexNamespacedKey(), PersistentDataType.BYTE, (byte) 0);
             vex.getEquipment().setItemInMainHand(new ItemStack(Material.TNT));
+            vex.setCustomName("Bomber Vex");
         }
     }
 
@@ -126,6 +131,8 @@ public class EventBomber implements EventRaider, Listener {
         meta.addPattern(new Pattern(DyeColor.RED, PatternType.GRADIENT_UP));
         meta.addPattern(new Pattern(DyeColor.BLACK, PatternType.CIRCLE_MIDDLE));
         meta.addPattern(new Pattern(DyeColor.BLACK, PatternType.BORDER));
+        meta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
+        meta.setDisplayName(ChatColor.GOLD.toString() + ChatColor.ITALIC + "Bomber Banner");
         banner.setItemMeta(meta);
         return banner;
     }
