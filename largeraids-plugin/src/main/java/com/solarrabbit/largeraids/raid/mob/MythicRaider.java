@@ -8,10 +8,10 @@ import io.lumine.mythic.api.mobs.MythicMob;
 import io.lumine.mythic.bukkit.BukkitAdapter;
 import io.lumine.mythic.core.mobs.ActiveMob;
 
-public class EventMythicRaider implements EventRaider {
+public class MythicRaider implements EventRaider {
     private final MythicMob type;
 
-    public EventMythicRaider(MythicMob type) {
+    public MythicRaider(MythicMob type) {
         this.type = type;
     }
 

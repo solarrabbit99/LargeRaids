@@ -23,8 +23,8 @@ import com.solarrabbit.largeraids.config.trigger.TriggersConfig;
 import com.solarrabbit.largeraids.database.DatabaseAdapter;
 import com.solarrabbit.largeraids.raid.LargeRaid;
 import com.solarrabbit.largeraids.raid.RaidManager;
-import com.solarrabbit.largeraids.raid.mob.EventBomber;
-import com.solarrabbit.largeraids.raid.mob.EventFireworkPillager;
+import com.solarrabbit.largeraids.raid.mob.Bomber;
+import com.solarrabbit.largeraids.raid.mob.FireworkPillager;
 import com.solarrabbit.largeraids.support.Placeholder;
 import com.solarrabbit.largeraids.trigger.DropInLavaTriggerListener;
 import com.solarrabbit.largeraids.trigger.TimeBombTriggerListener;
@@ -85,8 +85,8 @@ public final class LargeRaids extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new BellListener(this), this);
 
         // Additional listeners for custom mobs
-        getServer().getPluginManager().registerEvents(new EventFireworkPillager(), this);
-        getServer().getPluginManager().registerEvents(new EventBomber(), this);
+        getServer().getPluginManager().registerEvents(new FireworkPillager(), this);
+        getServer().getPluginManager().registerEvents(new Bomber(), this);
 
         loadCommands();
         loadMessages();

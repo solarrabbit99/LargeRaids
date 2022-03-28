@@ -31,7 +31,7 @@ import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.plugin.java.JavaPlugin;
 
-public class EventFireworkPillager implements EventRaider, Listener {
+public class FireworkPillager implements EventRaider, Listener {
     private static final float DEFAULT_MAX_HEALTH = 48.0f;
 
     @Override

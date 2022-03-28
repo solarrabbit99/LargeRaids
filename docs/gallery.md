@@ -11,7 +11,7 @@ title: Gallery
 
 <center><h1 style="font-weight: bold">Bomber</h1></center>
 
-![Image](./assets/images/bomber.png){: .image-right } **Bombers** are raiders that summons bomber vexes and creating a line of explosion towards the target. Villagers/players caught directly in his line of explosions will be sent up high enough to die from fall damage if not under any kind of protection. The explosions created by the bomber have no effect on other raiders. TNTs dropped by bomber vexes, however, deal damage to anyone in the vicinity.
+![Image](./assets/images/bomber.png){: .image-right } **Bombers** are raiders that summons bomber vexes and creating a line of explosions towards the target. Villagers/players caught directly in his lines of explosions will be sent up high enough to die from fall damage if not under any kind of protection. The explosions created by the bomber have no effect on other raiders. TNTs dropped by bomber vexes, however, deal damage to anyone in the vicinity.
 
 <style type="text/css">
     .image-right {

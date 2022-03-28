@@ -5,11 +5,11 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Raider;
 import org.bukkit.entity.Ravager;
 
-public class EventVanillaRaiderRider implements EventRaider {
+public class VanillaRaiderRider implements EventRaider {
     private final EntityType type;
     private Raider rider;
 
-    public EventVanillaRaiderRider(EntityType type) {
+    public VanillaRaiderRider(EntityType type) {
         this.type = type;
     }
 

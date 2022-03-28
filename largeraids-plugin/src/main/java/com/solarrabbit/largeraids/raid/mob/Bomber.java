@@ -31,7 +31,7 @@ import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.plugin.java.JavaPlugin;
 
-public class EventBomber implements EventRaider, Listener {
+public class Bomber implements EventRaider, Listener {
     private static final float BOMBER_EXPLOSIVE_POWER = 1.0f;
     private static final float TNT_EXPLOSIVE_POWER = 1.5f;
     private static final int PRIMED_TNT_TICKS = 20;

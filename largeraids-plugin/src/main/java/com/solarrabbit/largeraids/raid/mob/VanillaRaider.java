@@ -4,10 +4,10 @@ import org.bukkit.Location;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Raider;
 
-public class EventVanillaRaider implements EventRaider {
+public class VanillaRaider implements EventRaider {
     private final EntityType type;
 
-    public EventVanillaRaider(EntityType type) {
+    public VanillaRaider(EntityType type) {
         this.type = type;
     }
 

@@ -7,12 +7,12 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Map.Entry;
 
-import com.solarrabbit.largeraids.raid.mob.EventBomber;
-import com.solarrabbit.largeraids.raid.mob.EventFireworkPillager;
-import com.solarrabbit.largeraids.raid.mob.EventMythicRaider;
+import com.solarrabbit.largeraids.raid.mob.Bomber;
+import com.solarrabbit.largeraids.raid.mob.FireworkPillager;
+import com.solarrabbit.largeraids.raid.mob.MythicRaider;
 import com.solarrabbit.largeraids.raid.mob.EventRaider;
-import com.solarrabbit.largeraids.raid.mob.EventVanillaRaider;
-import com.solarrabbit.largeraids.raid.mob.EventVanillaRaiderRider;
+import com.solarrabbit.largeraids.raid.mob.VanillaRaider;
+import com.solarrabbit.largeraids.raid.mob.VanillaRaiderRider;
 
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
@@ -54,12 +54,12 @@ public class RaiderConfig {
 
     private void loadVanillaRaiders(Map<String, List<Integer>> stringMappings) {
         for (EntityType type : DEFAULT_RAIDER_TYPES) {
-            EventVanillaRaider vanillaRaider = new EventVanillaRaider(type);
+            VanillaRaider vanillaRaider = new VanillaRaider(type);
             List<Integer> list = stringMappings.remove(type.name().toLowerCase());
             if (list != null)
                 mobsMap.put(vanillaRaider, list);
             // Counterparts raiders riding ravagers
-            EventVanillaRaiderRider raiderRider = new EventVanillaRaiderRider(type);
+            VanillaRaiderRider raiderRider = new VanillaRaiderRider(type);
             List<Integer> riderList = stringMappings.remove(type.name().toLowerCase() + "rider");
             if (riderList != null)
                 mobsMap.put(raiderRider, riderList);
@@ -67,11 +67,11 @@ public class RaiderConfig {
     }
 
     private void loadCustomRaiders(Map<String, List<Integer>> stringMappings) {
-        EventFireworkPillager fireworkPillager = new EventFireworkPillager();
+        FireworkPillager fireworkPillager = new FireworkPillager();
         List<Integer> list = stringMappings.remove("fireworkpillager");
         if (list != null)
             mobsMap.put(fireworkPillager, list);
-        EventBomber bomber = new EventBomber();
+        Bomber bomber = new Bomber();
         List<Integer> bomberList = stringMappings.remove("bomber");
         if (list != null)
             mobsMap.put(bomber, bomberList);
@@ -81,7 +81,7 @@ public class RaiderConfig {
         MobManager manager = MythicProvider.get().getMobManager();
         for (Entry<String, List<Integer>> entry : stringMappings.entrySet())
             manager.getMythicMob(entry.getKey())
-                    .ifPresent(mob -> mobsMap.put(new EventMythicRaider(mob), entry.getValue()));
+                    .ifPresent(mob -> mobsMap.put(new MythicRaider(mob), entry.getValue()));
     }
 
     private Map<String, List<Integer>> getStringMappings() {
