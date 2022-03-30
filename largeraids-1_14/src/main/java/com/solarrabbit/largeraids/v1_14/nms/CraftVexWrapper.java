@@ -6,6 +6,8 @@ import org.bukkit.craftbukkit.v1_14_R1.entity.CraftVex;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Vex;
 
+import net.minecraft.server.v1_14_R1.EntityInsentient;
+
 public class CraftVexWrapper implements AbstractCraftVexWrapper {
     private final Vex vex;
 
@@ -15,6 +17,7 @@ public class CraftVexWrapper implements AbstractCraftVexWrapper {
 
     @Override
     public LivingEntity getOwner() {
-        return (LivingEntity) ((CraftVex) vex).getHandle().l().getBukkitEntity();
+        EntityInsentient owner = ((CraftVex) vex).getHandle().l();
+        return owner == null ? null : (LivingEntity) owner.getBukkitEntity();
     }
 }

@@ -19,6 +19,7 @@ import org.bukkit.entity.TNTPrimed;
 import org.bukkit.entity.Vex;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.entity.EntitySpawnEvent;
@@ -73,7 +74,7 @@ public class Bomber implements EventRaider, Listener {
     }
 
     @EventHandler
-    private void onSummonVex(EntitySpawnEvent evt) {
+    private void onSummonVex(CreatureSpawnEvent evt) {
         if (evt.getEntityType() != EntityType.VEX)
             return;
         Vex vex = (Vex) evt.getEntity();

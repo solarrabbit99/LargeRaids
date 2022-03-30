@@ -25,6 +25,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockIgniteEvent;
 import org.bukkit.event.block.BlockIgniteEvent.IgniteCause;
+import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.EntityCombustByEntityEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntitySpawnEvent;
@@ -51,7 +52,7 @@ public class Necromancer implements EventRaider, Listener {
     }
 
     @EventHandler
-    private void onSummonVex(EntitySpawnEvent evt) {
+    private void onSummonVex(CreatureSpawnEvent evt) {
         if (evt.getEntityType() != EntityType.VEX)
             return;
         Vex vex = (Vex) evt.getEntity();
