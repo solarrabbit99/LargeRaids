@@ -97,7 +97,7 @@ public class RaiderConfig {
             mobsMap.put(necromancer, necromancerList);
 
         Juggernaut juggernaut = new Juggernaut();
-        List<Integer> juggernautList = stringMappings.remove("juggernaut");
+        List<Integer> juggernautList = stringMappings.remove("kingraider");
         if (juggernautList != null)
             mobsMap.put(juggernaut, juggernautList);
     }

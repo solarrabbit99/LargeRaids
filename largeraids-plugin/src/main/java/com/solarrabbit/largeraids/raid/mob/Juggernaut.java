@@ -53,7 +53,6 @@ public class Juggernaut implements EventBoss, RaiderRider, Listener {
         ravager.setHealth(RAVAGER_MAX_HEALTH);
         ravager.getPersistentDataContainer().set(getJuggernautNamespacedKey(), PersistentDataType.BYTE, (byte) 0);
         ravager.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, Integer.MAX_VALUE, 4));
-        createBossBar(ravager);
 
         Spellcaster rider = (Spellcaster) location.getWorld().spawnEntity(location, RIDER_TYPE);
         EntityEquipment equipment = rider.getEquipment();
@@ -61,7 +60,9 @@ public class Juggernaut implements EventBoss, RaiderRider, Listener {
         equipment.setHelmetDropChance(1.0f);
         rider.getPersistentDataContainer().set(getKingNamespacedKey(), PersistentDataType.BYTE, (byte) 0);
         rider.setCustomName("King Raider");
+
         createBossBar(rider);
+        createBossBar(ravager);
 
         ravager.addPassenger(rider);
         this.rider = rider;
