@@ -31,8 +31,9 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
 public class Juggernaut implements EventBoss, RaiderRider, Listener {
-    private static final float RAVAGER_MAX_HEALTH = 200.0f;
-    private static final int CONFUSION_TICK = 20 * 20;
+    private static final double RAVAGER_MAX_HEALTH = 300;
+    private static final double RAVAGER_ATTACK_DAMAGE = 48;
+    private static final int WEAKNESS_TICK = 20 * 20;
     private static final int INVISIBILITY_TICK = 20 * 60;
     private static final EntityType RIDER_TYPE = EntityType.EVOKER;
     private Raider rider;
@@ -42,8 +43,10 @@ public class Juggernaut implements EventBoss, RaiderRider, Listener {
         Ravager ravager = (Ravager) location.getWorld().spawnEntity(location, EntityType.RAVAGER);
         ravager.setCustomName("Juggernaut");
         ravager.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(RAVAGER_MAX_HEALTH);
+        ravager.getAttribute(Attribute.GENERIC_ATTACK_DAMAGE).setBaseValue(RAVAGER_ATTACK_DAMAGE);
         ravager.setHealth(RAVAGER_MAX_HEALTH);
         ravager.getPersistentDataContainer().set(getJuggernautNamespacedKey(), PersistentDataType.BYTE, (byte) 0);
+        ravager.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, Integer.MAX_VALUE, 4));
         createBossBar(ravager);
 
         Spellcaster rider = (Spellcaster) location.getWorld().spawnEntity(location, RIDER_TYPE);
@@ -72,7 +75,7 @@ public class Juggernaut implements EventBoss, RaiderRider, Listener {
             return;
         switch (evt.getSpell()) {
             case SUMMON_VEX:
-                caster.getTarget().addPotionEffect(new PotionEffect(PotionEffectType.CONFUSION, CONFUSION_TICK, 0));
+                caster.getTarget().addPotionEffect(new PotionEffect(PotionEffectType.WEAKNESS, WEAKNESS_TICK, 1));
                 break;
             case FANGS:
                 Entity vehicle = caster.getVehicle();
@@ -112,7 +115,7 @@ public class Juggernaut implements EventBoss, RaiderRider, Listener {
         meta.addPattern(new Pattern(DyeColor.BLACK, PatternType.TRIANGLE_TOP));
         meta.addPattern(new Pattern(DyeColor.BLACK, PatternType.BORDER));
         meta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
-        meta.setDisplayName(ChatColor.GOLD.toString() + ChatColor.ITALIC + "Juggernaut King Banner");
+        meta.setDisplayName(ChatColor.GOLD.toString() + ChatColor.ITALIC + "King Raider Banner");
         banner.setItemMeta(meta);
         return banner;
     }
