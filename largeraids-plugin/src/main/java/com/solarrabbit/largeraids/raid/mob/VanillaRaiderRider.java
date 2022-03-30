@@ -5,7 +5,7 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Raider;
 import org.bukkit.entity.Ravager;
 
-public class VanillaRaiderRider implements EventRaider {
+public class VanillaRaiderRider implements RaiderRider {
     private final EntityType type;
     private Raider rider;
 
@@ -21,6 +21,7 @@ public class VanillaRaiderRider implements EventRaider {
         return ravager;
     }
 
+    @Override
     public Raider getRider() {
         return rider;
     }

@@ -25,6 +25,7 @@ import com.solarrabbit.largeraids.raid.LargeRaid;
 import com.solarrabbit.largeraids.raid.RaidManager;
 import com.solarrabbit.largeraids.raid.mob.Bomber;
 import com.solarrabbit.largeraids.raid.mob.FireworkPillager;
+import com.solarrabbit.largeraids.raid.mob.Juggernaut;
 import com.solarrabbit.largeraids.raid.mob.Necromancer;
 import com.solarrabbit.largeraids.support.Placeholder;
 import com.solarrabbit.largeraids.trigger.DropInLavaTriggerListener;
@@ -32,6 +33,7 @@ import com.solarrabbit.largeraids.trigger.TimeBombTriggerListener;
 import com.solarrabbit.largeraids.trigger.Trigger;
 import com.solarrabbit.largeraids.trigger.TriggerManager;
 import com.solarrabbit.largeraids.trigger.omen.VillageAbsorbOmenListener;
+import com.solarrabbit.largeraids.util.BossBarCreator;
 import com.solarrabbit.largeraids.util.VersionUtil;
 import com.solarrabbit.largeraids.village.BellListener;
 import com.solarrabbit.largeraids.village.VillageManager;
@@ -84,11 +86,15 @@ public final class LargeRaids extends JavaPlugin {
         getServer().getPluginManager().registerEvents(triggerManager, this);
         villageManager = new VillageManager();
         getServer().getPluginManager().registerEvents(new BellListener(this), this);
+        BossBarCreator bossbarCreator = new BossBarCreator(raidManager);
+        bossbarCreator.init(this);
+        getServer().getPluginManager().registerEvents(bossbarCreator, this);
 
         // Additional listeners for custom mobs
         getServer().getPluginManager().registerEvents(new FireworkPillager(), this);
         getServer().getPluginManager().registerEvents(new Bomber(), this);
         getServer().getPluginManager().registerEvents(new Necromancer(), this);
+        getServer().getPluginManager().registerEvents(new Juggernaut(), this);
 
         loadCommands();
         loadMessages();
