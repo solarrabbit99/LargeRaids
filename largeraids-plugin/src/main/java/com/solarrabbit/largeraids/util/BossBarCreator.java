@@ -51,7 +51,7 @@ public class BossBarCreator implements Listener {
     }
 
     private void tick() {
-        Set<Raider> bosses = RAID_BOSSES.keySet();
+        Raider[] bosses = RAID_BOSSES.keySet().toArray(Raider[]::new);
         for (Raider boss : bosses) {
             updateBossBarProgress(boss);
             updateBossBarVisibility(boss);
