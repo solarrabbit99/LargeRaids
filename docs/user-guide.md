@@ -49,9 +49,9 @@ Refer to the [Configuration Guide](configurations.html).
 
 Disable the `land.combat.block-raids` option in Lands' configurations to use LargeRaids, as it triggers raids with fake players.
 
-**2. Why does the boss bar decrease in health as soon as the wave spawns?**
+**2. Why can't I damage raiders the second they spawn?**
 
-The spawned waves suffered entity cramming. The only way around this is to increase the entity cramming limit for that world.
+Raiders are given 1 second of invulnerability when they spawn to prevent them from getting entity cramming damage.
 
 **3. Why does my raid farm stop working?**
 
@@ -59,4 +59,4 @@ The plugin is designed to prevent farms. Waves will not spawn if the designated 
 
 **4. Why are raids stopping after loading?**
 
-Similar to normal raids, a large raid stops immediately if it finds no valid spawn points. Make sure that you do not have glass/barrier ceilings over the raid center.
+Similar to normal raids, a large raid stops immediately if it finds no valid spawn locations. Make sure that you do not have glass/barrier ceilings over the raid center.
