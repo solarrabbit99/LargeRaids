@@ -56,3 +56,7 @@ The spawned waves suffered entity cramming. The only way around this is to incre
 **3. Why does my raid farm stop working?**
 
 The plugin is designed to prevent farms. Waves will not spawn if the designated spawn location is out of the 96 block radius from the raid center.
+
+**4. Why are raids stopping after loading?**
+
+Similar to normal raids, a large raid stops immediately if it finds no valid spawn points. Make sure that you do not have glass/barrier ceilings over the raid center.
