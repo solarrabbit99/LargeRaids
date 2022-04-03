@@ -9,33 +9,59 @@ softdepend: [PlaceholderAPI, MythicMobs, Multiverse-Core]
 commands:
   lrreload:
     description: Reloads LargeRaids plugin configurations.
-    permission: largeraids.admin
+    permission: largeraids.reload
   lrstart:
     description: Start a large raid at player location or given center.
     usage: /<command> [player | center] [name]
-    permission: largeraids.admin
+    permission: largeraids.start
   lrskip:
     description: Skip the current wave.
-    permission: largeraids.admin
+    permission: largeraids.skip
   lrstop:
     description: Stop a large raid.
     usage: /<command> [player]
-    permission: largeraids.admin
+    permission: largeraids.stop
   lrgive:
     description: Give a player the summoning item.
     usage: /<command> <player> [amount]
-    permission: largeraids.admin
+    permission: largeraids.give
   lrcenters:
     description: Managing artificial villages.
     usage: /<command> [add | remove | show | hide] [name]
-    permission: largeraids.admin
+    permission: largeraids.centers
   lrglow:
     description: Outline all raiders in the current raid.
     permission: largeraids.glow
 
 permissions:
-  largeraids.admin:
-    description: Allow access to LargeRaids commands.
+  largeraids.*:
+    description: Allow access to all LargeRaids commands.
+    default: op
+    children:
+      largeraids.reload: true
+      largeraids.start: true
+      largeraids.skip: true
+      largeraids.stop: true
+      largeraids.give: true
+      largeraids.centers: true
+      largeraids.glow: true
+  largeraids.reload:
+    description: Allow access to lrreload command.
+    default: op
+  largeraids.start:
+    description: Allow access to lrstart command.
+    default: op
+  largeraids.skip:
+    description: Allow access to lrskip command.
+    default: op
+  largeraids.stop:
+    description: Allow access to lrskip command.
+    default: op
+  largeraids.give:
+    description: Allow access to lrgive command.
+    default: op
+  largeraids.centers:
+    description: Allow access to lrcenters command.
     default: op
   largeraids.glow:
     description: Allow access to lrglow command.
