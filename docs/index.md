@@ -40,7 +40,7 @@ Approach our [Discord server](https://discord.gg/YSv7pptDjE) or [Github Issues](
 
 <center><h1 style="font-family: Luminari">Sponsors</h1></center>
 
-[![StelleNode](https://cdn.discordapp.com/attachments/928421223958970369/928756914345631785/stellanode.gif)](https://stellanode.com/)
+[![StellaNode](https://stellanode.com/banner.gif)](https://stellanode.com/)
 
 Use code **`LARGERAIDS`** at checkout to receive a **15% discount** on the first month for any new StellaNode product.
 
