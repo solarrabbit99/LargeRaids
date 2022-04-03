@@ -24,6 +24,9 @@ raid:
   # configuration section below must also be at least the number of waves. Each wave
   # must have at least one raider.
   waves: 20
+  # All large raids will have the maximum number of waves as configured above, regardless
+  # of triggering mechanisms.
+  always-max-waves: false
   # To disable sounds, leave the sound fields blank.
   sounds:
     summon: ITEM_TRIDENT_THUNDER
@@ -215,6 +218,7 @@ This is a summary of what the full document should look like with proper indenta
 ```yml
 raid:
   waves: 20
+  always-max-waves: false
   sounds:
     summon: ITEM_TRIDENT_THUNDER
     victory: ENTITY_ENDER_DRAGON_DEATH

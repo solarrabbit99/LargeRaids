@@ -60,7 +60,9 @@ public class BossBarCreator implements Listener {
 
     private void updateBossBarProgress(Raider boss) {
         BossBar bar = RAID_BOSSES.get(boss);
-        bar.setProgress(boss.getHealth() / boss.getAttribute(Attribute.GENERIC_MAX_HEALTH).getBaseValue());
+        double progress = boss.getHealth() / boss.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue();
+        progress = Math.min(1, Math.max(0, progress));
+        bar.setProgress(progress);
     }
 
     private void updateBossBarVisibility(Raider boss) {

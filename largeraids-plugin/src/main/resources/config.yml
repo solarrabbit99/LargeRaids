@@ -2,6 +2,7 @@
 
 raid:
   waves: 20
+  always-max-waves: false
   sounds:
     summon: ITEM_TRIDENT_THUNDER
     victory: ENTITY_ENDER_DRAGON_DEATH

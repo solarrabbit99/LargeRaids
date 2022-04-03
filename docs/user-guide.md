@@ -30,8 +30,14 @@ Refer to the [Configuration Guide](configurations.html).
 
 ## Permissions
 
-- `largeraids.admin` - user able to perform plugin commands
-- `largeraids.glow` - user able to perform `/lrglow` command
+- `largeraids.*` - Allow access to all LargeRaids commands.
+- `largeraids.reload` - Allow access to `lrreload` command.
+- `largeraids.start` - Allow access to `lrstart` command.
+- `largeraids.skip` - Allow access to `lrskip` command.
+- `largeraids.stop` - Allow access to `lrskip` command.
+- `largeraids.give` - Allow access to `lrgive` command.
+- `largeraids.centers` - Allow access to `lrcenters` command.
+- `largeraids.glow` - Allow access to `lrglow` command.
 
 ## Limitations
 
