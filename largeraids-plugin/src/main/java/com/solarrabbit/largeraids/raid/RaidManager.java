@@ -68,11 +68,12 @@ public class RaidManager implements Listener {
 
     @EventHandler
     private void onSpawn(RaidSpawnWaveEvent evt) {
-        getLargeRaid(evt.getRaid()).ifPresent(largeRaid -> {
+        // TODO Confirm to prevent ConcurrentModificationException
+        Bukkit.getScheduler().runTask(plugin, () -> getLargeRaid(evt.getRaid()).ifPresent(largeRaid -> {
             setIdle();
             largeRaid.spawnWave();
             setActive();
-        });
+        }));
     }
 
     /**
