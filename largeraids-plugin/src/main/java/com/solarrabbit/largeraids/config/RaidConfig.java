@@ -14,6 +14,7 @@ public class RaidConfig {
     private final RaiderConfig raiderConfig;
 
     private final int maximumWaves;
+    private final boolean isAlwaysMax;
     private final boolean isTitleEnabled;
     private final String defaultWaveTitle;
     private final String finalWaveTitle;
@@ -25,6 +26,7 @@ public class RaidConfig {
         soundsConfig = new SoundsConfig(config.getConfigurationSection("sounds"));
         raiderConfig = new RaiderConfig(config.getConfigurationSection("mobs"));
         maximumWaves = config.getInt("waves");
+        isAlwaysMax = config.getBoolean("always-max-waves");
         ConfigurationSection waveAnnouncementConfig = config.getConfigurationSection("announce-waves");
         ConfigurationSection titleConfig = waveAnnouncementConfig.getConfigurationSection("title");
         isTitleEnabled = titleConfig.getBoolean("enabled");
@@ -46,6 +48,10 @@ public class RaidConfig {
 
     public int getMaximumWaves() {
         return maximumWaves;
+    }
+
+    public boolean isAlwaysMaxWaves() {
+        return isAlwaysMax;
     }
 
     public boolean isTitleEnabled() {

@@ -18,6 +18,8 @@ public abstract class Trigger implements Listener {
     }
 
     protected void triggerRaid(CommandSender triggerer, Location location, int omenLevel) {
+        if (plugin.getRaidConfig().isAlwaysMaxWaves())
+            omenLevel = plugin.getRaidConfig().getMaximumWaves();
         int maxRaids = plugin.getMiscConfig().getMaxRaid();
         if (maxRaids > 0 && plugin.getRaidManager().currentRaids.size() >= maxRaids)
             return;
