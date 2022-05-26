@@ -33,9 +33,10 @@ public class BossBarCreator implements Listener {
         raidManager = manager;
     }
 
-    public static void createRaidBossBar(Raider boss) {
+    public static BossBar createRaidBossBar(Raider boss) {
         BossBar bar = Bukkit.createBossBar(boss.getName(), BarColor.PURPLE, BarStyle.SOLID, BarFlag.DARKEN_SKY);
         registerEntity(boss, bar);
+        return bar;
     }
 
     @EventHandler

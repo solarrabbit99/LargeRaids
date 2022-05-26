@@ -23,10 +23,7 @@ import com.solarrabbit.largeraids.config.trigger.TriggersConfig;
 import com.solarrabbit.largeraids.database.DatabaseAdapter;
 import com.solarrabbit.largeraids.raid.LargeRaid;
 import com.solarrabbit.largeraids.raid.RaidManager;
-import com.solarrabbit.largeraids.raid.mob.Bomber;
-import com.solarrabbit.largeraids.raid.mob.FireworkPillager;
-import com.solarrabbit.largeraids.raid.mob.Juggernaut;
-import com.solarrabbit.largeraids.raid.mob.Necromancer;
+import com.solarrabbit.largeraids.raid.mob.manager.MobManagers;
 import com.solarrabbit.largeraids.support.Placeholder;
 import com.solarrabbit.largeraids.trigger.DropInLavaTriggerListener;
 import com.solarrabbit.largeraids.trigger.TimeBombTriggerListener;
@@ -58,6 +55,7 @@ public final class LargeRaids extends JavaPlugin {
 
     private Placeholder placeholder;
     private RaidManager raidManager;
+    private MobManagers mobManagers;
     private TriggerManager triggerManager;
     private VillageManager villageManager;
 
@@ -91,10 +89,9 @@ public final class LargeRaids extends JavaPlugin {
         getServer().getPluginManager().registerEvents(bossbarCreator, this);
 
         // Additional listeners for custom mobs
-        getServer().getPluginManager().registerEvents(new FireworkPillager(), this);
-        getServer().getPluginManager().registerEvents(new Bomber(), this);
-        getServer().getPluginManager().registerEvents(new Necromancer(), this);
-        getServer().getPluginManager().registerEvents(new Juggernaut(), this);
+        mobManagers = new MobManagers();
+        mobManagers.getListenerManagers()
+                .forEach(manager -> getServer().getPluginManager().registerEvents(manager, this));
 
         loadCommands();
         loadMessages();
@@ -156,6 +153,10 @@ public final class LargeRaids extends JavaPlugin {
 
     public RaidManager getRaidManager() {
         return raidManager;
+    }
+
+    public MobManagers getMobManagers() {
+        return mobManagers;
     }
 
     public TriggerManager getTriggerManager() {

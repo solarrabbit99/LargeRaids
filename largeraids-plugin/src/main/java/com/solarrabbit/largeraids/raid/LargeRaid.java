@@ -11,6 +11,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
+import java.util.function.Function;
 
 import com.mojang.authlib.GameProfile;
 import com.solarrabbit.largeraids.LargeRaids;
@@ -22,8 +23,7 @@ import com.solarrabbit.largeraids.nms.AbstractPlayerEntityWrapper;
 import com.solarrabbit.largeraids.nms.AbstractRaidWrapper;
 import com.solarrabbit.largeraids.nms.AbstractRaidsWrapper;
 import com.solarrabbit.largeraids.nms.AbstractWorldServerWrapper;
-import com.solarrabbit.largeraids.raid.mob.EventRaider;
-import com.solarrabbit.largeraids.raid.mob.RaiderRider;
+import com.solarrabbit.largeraids.raid.mob.RiderRaider;
 import com.solarrabbit.largeraids.util.VersionUtil;
 
 import org.bukkit.Bukkit;
@@ -150,16 +150,20 @@ public class LargeRaid {
         AbstractRaidWrapper nmsRaid = getCurrentNMSRaid();
 
         List<Raider> newRaiders = new ArrayList<>();
-        for (EventRaider raider : raidConfig.getRaiders().getWaveMobs(this.currentWave)) {
-            Raider entity = raider.spawn(loc);
-            nmsRaid.joinRaid(2, VersionUtil.getCraftRaiderWrapper(entity).getHandle(), null, true);
-            entity.setInvulnerable(true);
-            newRaiders.add(entity);
-            if (raider instanceof RaiderRider) {
-                Raider rider = ((RaiderRider) raider).getRider();
-                nmsRaid.joinRaid(2, VersionUtil.getCraftRaiderWrapper(rider).getHandle(), null, true);
-                rider.setInvulnerable(true);
-                newRaiders.add(rider);
+        for (Map.Entry<Function<Location, ? extends com.solarrabbit.largeraids.raid.mob.Raider>, Integer> kv : raidConfig
+                .getRaiders().getWaveMobs(this.currentWave).entrySet()) {
+            for (int i = 0; i < kv.getValue(); i++) {
+                com.solarrabbit.largeraids.raid.mob.Raider entity = kv.getKey().apply(loc);
+                Raider bukkitEntity = (Raider) entity.getBukkitEntity();
+                nmsRaid.joinRaid(2, VersionUtil.getCraftRaiderWrapper(bukkitEntity).getHandle(), null, true);
+                bukkitEntity.setInvulnerable(true);
+                newRaiders.add(bukkitEntity);
+                if (entity instanceof RiderRaider) {
+                    Raider ravager = (Raider) ((RiderRaider) entity).getVehicle();
+                    nmsRaid.joinRaid(2, VersionUtil.getCraftRaiderWrapper(ravager).getHandle(), null, true);
+                    ravager.setInvulnerable(true);
+                    newRaiders.add(ravager);
+                }
             }
         }
         Bukkit.getScheduler().runTaskLater(JavaPlugin.getPlugin(LargeRaids.class), () -> {

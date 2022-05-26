@@ -1,6 +1,7 @@
-package com.solarrabbit.largeraids.raid.mob;
+package com.solarrabbit.largeraids.raid.mob.manager;
 
 import com.solarrabbit.largeraids.LargeRaids;
+import com.solarrabbit.largeraids.raid.mob.KingRaider;
 import com.solarrabbit.largeraids.util.VersionUtil;
 
 import org.bukkit.ChatColor;
@@ -11,6 +12,7 @@ import org.bukkit.NamespacedKey;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.block.banner.Pattern;
 import org.bukkit.block.banner.PatternType;
+import org.bukkit.boss.BossBar;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
@@ -36,16 +38,15 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-public class Juggernaut implements EventBoss, RaiderRider, Listener {
+public class KingRaiderManager implements BossRaiderManager, Listener {
     private static final double RAVAGER_MAX_HEALTH = 300;
     private static final double RAVAGER_ATTACK_DAMAGE = 48;
     private static final double FANG_DAMAGE = 6;
     private static final int FIRE_TICK = 7 * 20;
     private static final EntityType RIDER_TYPE = EntityType.EVOKER;
-    private Raider rider;
 
     @Override
-    public Raider spawn(Location location) {
+    public KingRaider spawn(Location location) {
         Ravager ravager = (Ravager) location.getWorld().spawnEntity(location, EntityType.RAVAGER);
         ravager.setCustomName("Juggernaut");
         ravager.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(RAVAGER_MAX_HEALTH);
@@ -61,17 +62,11 @@ public class Juggernaut implements EventBoss, RaiderRider, Listener {
         rider.getPersistentDataContainer().set(getKingNamespacedKey(), PersistentDataType.BYTE, (byte) 0);
         rider.setCustomName("King Raider");
 
-        createBossBar(rider);
+        BossBar bossBar = createBossBar(rider);
         createBossBar(ravager);
 
         ravager.addPassenger(rider);
-        this.rider = rider;
-        return ravager;
-    }
-
-    @Override
-    public Raider getRider() {
-        return rider;
+        return new KingRaider(rider, ravager, bossBar);
     }
 
     @EventHandler
@@ -146,25 +141,6 @@ public class Juggernaut implements EventBoss, RaiderRider, Listener {
         item.addEnchantment(Enchantment.DAMAGE_ALL, 3);
         return item;
     }
-
-    // private ItemStack getDefaultBanner() {
-    // ItemStack banner = new ItemStack(Material.RED_BANNER);
-    // BannerMeta meta = (BannerMeta) banner.getItemMeta();
-    // meta.addPattern(new Pattern(DyeColor.YELLOW, PatternType.RHOMBUS_MIDDLE));
-    // meta.addPattern(new Pattern(DyeColor.RED, PatternType.CREEPER));
-    // meta.addPattern(new Pattern(DyeColor.YELLOW, PatternType.STRIPE_CENTER));
-    // meta.addPattern(new Pattern(DyeColor.RED, PatternType.STRIPE_TOP));
-    // meta.addPattern(new Pattern(DyeColor.RED, PatternType.STRIPE_BOTTOM));
-    // meta.addPattern(new Pattern(DyeColor.BLACK, PatternType.GRADIENT_UP));
-    // meta.addPattern(new Pattern(DyeColor.BLACK, PatternType.CURLY_BORDER));
-    // meta.addPattern(new Pattern(DyeColor.BLACK, PatternType.TRIANGLES_TOP));
-    // meta.addPattern(new Pattern(DyeColor.BLACK, PatternType.BORDER));
-    // meta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
-    // meta.setDisplayName(ChatColor.GOLD.toString() + ChatColor.ITALIC +
-    // "Juggernaut King Banner");
-    // banner.setItemMeta(meta);
-    // return banner;
-    // }
 
     private boolean isJuggernaut(Ravager entity) {
         PersistentDataContainer pdc = entity.getPersistentDataContainer();
