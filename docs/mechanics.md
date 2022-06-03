@@ -46,3 +46,7 @@ If `artificial-only` is enabled, then large raids can only be triggered around r
         margin-right: auto;
     }
 </style>
+
+## Miscellaneous
+
+Wandering traders have a _0.1%_ chance of dropping a written book upon death. It is a write-up on the trader's experience and witness on the tragedy of a raid.
