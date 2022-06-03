@@ -21,6 +21,8 @@ import com.solarrabbit.largeraids.config.RaidConfig;
 import com.solarrabbit.largeraids.config.RewardsConfig;
 import com.solarrabbit.largeraids.config.trigger.TriggersConfig;
 import com.solarrabbit.largeraids.database.DatabaseAdapter;
+import com.solarrabbit.largeraids.misc.BookGenerator;
+import com.solarrabbit.largeraids.misc.TraderBookListener;
 import com.solarrabbit.largeraids.raid.LargeRaid;
 import com.solarrabbit.largeraids.raid.RaidManager;
 import com.solarrabbit.largeraids.raid.mob.manager.MobManagers;
@@ -87,6 +89,8 @@ public final class LargeRaids extends JavaPlugin {
         BossBarCreator bossbarCreator = new BossBarCreator(raidManager);
         bossbarCreator.init(this);
         getServer().getPluginManager().registerEvents(bossbarCreator, this);
+        BookGenerator bookGen = new BookGenerator(this.getResource("traderbook.yml"));
+        getServer().getPluginManager().registerEvents(new TraderBookListener(bookGen), this);
 
         // Additional listeners for custom mobs
         mobManagers = new MobManagers();
